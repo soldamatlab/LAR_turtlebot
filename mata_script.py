@@ -1,8 +1,9 @@
 from __future__ import print_function
 
-from robolab_turtlebot import Turtlebot, Rate
+from robolab_turtlebot import Turtlebot, Rate, get_time
 
 turtle = Turtlebot()
+rate = Rate(10)
 
 # Names bumpers and events
 bumper_names = ['LEFT', 'CENTER', 'RIGHT']
@@ -20,7 +21,11 @@ def bumper_cb(msg):
     # Print the event
     print('{} bumper {}'.format(bumper, state))
 
-    turtle.cmd_velocity(linear=0, angular=0.1)
+    t = get_time()
+
+    while get_time() - t < 2.5:
+        turtle.cmd_velocity(linear=0, angular=1)
+        rate.sleep()
 
 
 def main():
