@@ -20,7 +20,7 @@ def bumper_cb(msg):
     # Print the event
     print('{} bumper {}'.format(bumper, state))
 
-    turtle.cmd_velocity(linear=0, angular=1000000)
+    turtle.cmd_velocity(linear=0, angular=0.1)
 
 
 def main():
