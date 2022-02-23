@@ -16,7 +16,7 @@ def do_for(duration, action):
         rate.sleep()
 
 def step():
-    turtle.cmd_velocity(linear=1, angular=0)
+    turtle.cmd_velocity(linear=0.1, angular=0)
 
 def rot1():
     turtle.cmd_velocity(linear=0, angular=1)
@@ -25,10 +25,11 @@ def rot2():
     turtle.cmd_velocity(linear=0, angular=-1)
 
 def dance():
-    do_for(0.5, step)
-    do_for(0.5, step)
-    do_for(0.5, rot1)
-    do_for(0.5, rot2)
+    do_for(0.2, step)
+    do_for(0.2, step)
+    do_for(0.1, rot1)
+    do_for(0.1, rot2)
+    do_for(0.1, rot1)
 
 
 
@@ -43,7 +44,8 @@ def bumper_cb(msg):
     # Print the event
     print('{} bumper {}'.format(bumper, state))
 
-    dance()
+    if state_names[msg.state] == 'PRESSED':
+        dance()
 
 
 def main():
