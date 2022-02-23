@@ -9,6 +9,28 @@ rate = Rate(10)
 bumper_names = ['LEFT', 'CENTER', 'RIGHT']
 state_names = ['RELEASED', 'PRESSED']
 
+def do_for(duration, action):
+    t = get_time()
+    while get_time() - t < duration:
+        action()
+        rate.sleep()
+
+def step():
+    turtle.cmd_velocity(linear=1, angular=0)
+
+def rot1():
+    turtle.cmd_velocity(linear=0, angular=1)
+
+def rot2():
+    turtle.cmd_velocity(linear=0, angular=-1)
+
+def dance():
+    do_for(0.5, step)
+    do_for(0.5, step)
+    do_for(0.5, rot1)
+    do_for(0.5, rot2)
+
+
 
 def bumper_cb(msg):
     """Bumber callback."""
@@ -21,11 +43,7 @@ def bumper_cb(msg):
     # Print the event
     print('{} bumper {}'.format(bumper, state))
 
-    t = get_time()
-
-    while get_time() - t < 2.5:
-        turtle.cmd_velocity(linear=0, angular=1)
-        rate.sleep()
+    dance()
 
 
 def main():
