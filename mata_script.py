@@ -24,12 +24,17 @@ def rot_left():
 def rot_right():
     turtle.cmd_velocity(linear=0, angular=-1)
 
+def stop():
+    turtle.cmd_velocity(linear=0, angular=0)
+
 def dance():
-    do_for(0.2, step)
-    do_for(0.2, step)
-    do_for(0.1, rot_left)
-    do_for(0.1, rot_right)
-    do_for(0.1, rot_left)
+    do_for(0.5, step)
+    do_for(0.5, step)
+    do_for(0.25, rot_left)
+    do_for(0.25, rot_right)
+    do_for(0.25, rot_left)
+    stop()
+
 
 
 
