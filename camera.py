@@ -4,7 +4,7 @@ import numpy as np
 
 GREEN = 60
 HUE_DIFF = 30
-SATUR_MIN = 150
+SATUR_MIN = 0
 VAL_MIN = 0
 
 
