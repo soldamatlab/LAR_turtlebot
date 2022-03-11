@@ -9,7 +9,11 @@ bumper_names = ['LEFT', 'CENTER', 'RIGHT']
 state_names = ['RELEASED', 'PRESSED']
 
 def button_cb(msg):
-    dance()
+    state = state_names[msg.state]
+    print('{} button {}'.format(msg.button, state))
+
+    if state_names[msg.state] == 'PRESSED':
+        dance()
 
 def bumper_cb(msg):
     bumper = bumper_names[msg.bumper]
