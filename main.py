@@ -13,7 +13,7 @@ def button_cb(msg):
         rgb = turtle.get_rgb_image()
         hsv = cv2.cvtColor(rgb, cv2.COLOR_BGR2HSV)
         shape = hsv.shape
-        print(hsv[Int(shape[0]/2),Int(shape[1]/2),:])
+        print(hsv[np.astype(shape[0]/2, int),np.astype(shape[1]/2, int),:])
 
 
 def main():
