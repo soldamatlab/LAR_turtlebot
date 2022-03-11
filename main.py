@@ -7,14 +7,15 @@ from camera import *
 turtle = Turtlebot(rgb=True, pc=True, depth=True)
 
 
-# def button_cb(msg):
-#     print('button cb')
-#     if msg.state == 0:
-#         # todo
+def button_cb(msg):
+    print('button cb')
+    if msg.state == 0:
+        img = rgb_to_hsv(turtle.get_rgb_image())
+        print(img[int(img.shape[0]/2),int(img.shape[1]/2),:])
 
 
 def main():
-    # turtle.register_button_event_cb(button_cb)
+    turtle.register_button_event_cb(button_cb)
 
     rate = Rate(10)
     window = Window("view")
