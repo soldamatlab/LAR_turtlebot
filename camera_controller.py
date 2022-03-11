@@ -9,3 +9,4 @@ class Window:
 
     def show(self, img):
         cv2.imshow(self.name, img)
+        cv2.waitKey(1)
