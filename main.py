@@ -2,7 +2,7 @@ from __future__ import print_function
 from robolab_turtlebot import Turtlebot, Rate
 import numpy as np
 import cv2
-from camera import Window
+from camera import *
 
 turtle = Turtlebot(rgb=True, pc=True, depth=True)
 
