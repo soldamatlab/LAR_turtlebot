@@ -3,7 +3,7 @@ import numpy as np
 
 
 GREEN = 65
-HUE_DIFF = 0
+HUE_DIFF = 200
 SATUR_MIN = 0
 VAL_MIN = 0
 
