@@ -24,7 +24,7 @@ def main():
 
         rgb = turtle.get_rgb_image()
         hsv = rgb_to_hsv(rgb)
-        img = img_threshold(hsv)
+        img = bool_to_rgb(img_threshold(hsv))
         window.show(img)
 
 
