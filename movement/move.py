@@ -10,7 +10,7 @@ state_names = ['RELEASED', 'PRESSED']
 
 def button_cb(msg):
     state = state_names[msg.state]
-    print('{} button {}'.format(msg.button, state))
+    print('button {} {}'.format(msg.button, state))
 
     if state_names[msg.state] == 'PRESSED':
         dance()
