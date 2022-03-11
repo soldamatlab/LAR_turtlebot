@@ -2,7 +2,7 @@ from __future__ import print_function
 
 from robolab_turtlebot import Turtlebot, Rate, get_time
 
-import dance
+from dance import dance
 
 turtle = Turtlebot()
 
