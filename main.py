@@ -1,4 +1,5 @@
 from robolab_turtlebot import Turtlebot, Rate
+from __future__ import print_function
 import numpy as np
 import cv2
 
@@ -15,5 +16,5 @@ if __name__ == '__main__':
     hsv = cv2.cvtColor(rgb, cv2.COLOR_BGR2HSV)
     print(type(hsv))
     print(hsv.shape)
-    
+
     main()
