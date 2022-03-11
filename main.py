@@ -15,14 +15,8 @@ def main():
         rate.sleep()
 
         rgb = turtle.get_rgb_image()
-        window.show(rgb)
-        # # hsv = cv2.cvtColor(rgb, cv2.COLOR_BGR2HSV)
-        # window = 'view'
-        #
-        # cv2.namedWindow(window)
-        # cv2.imshow(window, rgb)
-        # cv2.waitKey(1)
-
+        hsv = cv2.cvtColor(rgb, cv2.COLOR_BGR2HSV)
+        window.show(hsv)
 
 
 if __name__ == '__main__':
