@@ -29,11 +29,11 @@ def main():
     while not turtle.is_shutting_down():
         rate.sleep()
 
-        # rgb = turtle.get_rgb_image()
-        # hsv = rgb_to_hsv(rgb)
-        # img = bool_to_rgb(img_threshold(hsv))
-        # window_rgb.show(rgb)
-        # window_bool.show(img)
+        rgb = turtle.get_rgb_image()
+        hsv = rgb_to_hsv(rgb)
+        img = bool_to_rgb(img_threshold(hsv))
+        window_rgb.show(rgb)
+        window_bool.show(img)
 
 
 if __name__ == '__main__':
