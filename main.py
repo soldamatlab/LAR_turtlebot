@@ -10,7 +10,11 @@ turtle = Turtlebot(rgb=True, pc=True, depth=True)
 def button_cb(msg):
     print('button cb')
     if msg.state == 0:
-        img = rgb_to_hsv(turtle.get_rgb_image())
+        rgb = turtle.get_rgb_image()
+        img = rgb_to_hsv(rgb)
+        print("HUE")
+        print(img[int(img.shape[0]/2),int(img.shape[1]/2),:])
+        print("RGB")
         print(img[int(img.shape[0]/2),int(img.shape[1]/2),:])
 
 
