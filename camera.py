@@ -33,7 +33,7 @@ def img_threshold(hsv):
     hue = np.abs(hsv[:,:,0] - GREEN[0]) < HUE_DIFF
     satur = hsv[:,:,1] > SATUR_MIN
     val = hsv[:,:,2] > VAL_MIN
-    return hue and satur and val
+    return hue & satur & val
 
 
 def bool_to_rgb(bool):
