@@ -9,7 +9,7 @@ bumper_names = ['LEFT', 'CENTER', 'RIGHT']
 state_names = ['RELEASED', 'PRESSED']
 
 def do_for(duration, action):
-    rate = Rate(1)
+    rate = Rate(10)
     t = get_time()
     while get_time() - t < duration:
         action()
@@ -46,7 +46,7 @@ def bumper_cb(msg):
 def main():
     turtle.register_bumper_event_cb(bumper_cb)
 
-    rate = Rate(1)
+    rate = Rate(10)
     while not turtle.is_shutting_down():
         rate.sleep()
 
