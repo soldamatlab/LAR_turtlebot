@@ -37,4 +37,4 @@ def img_threshold(hsv):
 
 
 def bool_to_rgb(bool):
-    return np.repeat((np.copy(bool) * 255)[:,:,np.newaxis], 3, axis=2).astype(uint8)
+    return np.repeat((np.copy(bool) * 255)[:,:,np.newaxis], 3, axis=2).astype(np.uint8)
