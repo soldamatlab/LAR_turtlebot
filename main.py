@@ -1,4 +1,6 @@
 from robolab_turtlebot import Turtlebot, Rate
+import numpy as np
+import cv2
 
 turtle = Turtlebot(rgb=True)
 
@@ -10,6 +12,8 @@ def main():
 if __name__ == '__main__':
     turtle.wait_for_rgb_image()
     rgb = turtle.get_rgb_image()
-    print(type(rgb))
-
+    hsv = cv2.cvtColor(rgb, cv2.COLOR_BGR2HSV)
+    print(type(hsv))
+    print(hsv.shape)
+    
     main()
