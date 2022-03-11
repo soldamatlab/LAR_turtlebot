@@ -1,3 +1,11 @@
-from __future__ import print_function
+import cv2
 
-from robolab_turtlebot import Turtlebot
+
+class Window:
+
+    def __init__(self, name):
+        self.name = name
+        cv2.namedWindow(name)
+
+    def show(self, img):
+        cv2.imshow(self.name, img)
