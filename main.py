@@ -26,7 +26,6 @@ def main():
         hsv = rgb_to_hsv(rgb)
         img = bool_to_rgb(img_threshold(hsv))
         print(img.shape)
-        print(img)
         window.show(img)
 
 
