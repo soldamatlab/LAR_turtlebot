@@ -25,12 +25,6 @@ def main():
         rgb = turtle.get_rgb_image()
         hsv = rgb_to_hsv(rgb)
         img = bool_to_rgb(img_threshold(hsv))
-        print("HSV")
-        print(hsv.shape)
-        print(hsv.dtype)
-        print("IMG")
-        print(img.shape)
-        print(img.dtype)
         window.show(img)
 
 
