@@ -32,11 +32,11 @@ def pixel_threshold(hsv_pix):
 
 def img_threshold(hsv):
     hue = np.abs(hsv[:,:,0] - GREEN) < HUE_DIFF
-    print(hue)
+    print(all(hue))
     satur = hsv[:,:,1] > SATUR_MIN
-    print(satur)
+    print(all(satur))
     val = hsv[:,:,2] > VAL_MIN
-    print(val)
+    print(all(val))
     return hue & satur & val
 
 
