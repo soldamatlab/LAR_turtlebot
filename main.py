@@ -1,6 +1,6 @@
 from robolab_turtlebot import Turtlebot, Rate
 
-turtle = Turtlebot()
+turtle = Turtlebot(rgb=True)
 
 def main():
     rate = Rate(10)
