@@ -11,11 +11,12 @@ def button_cb(msg):
     print('button cb')
     if msg.state == 0:
         rgb = turtle.get_rgb_image()
-        img = rgb_to_hsv(rgb)
-        print("HUE")
-        print(img[int(img.shape[0]/2),int(img.shape[1]/2),:])
-        print("RGB")
-        print(rgb[int(img.shape[0]/2),int(img.shape[1]/2),:])
+        hsv = rgb_to_hsv(rgb)
+        # print("HUE")
+        # print(hsv[int(img.shape[0]/2),int(img.shape[1]/2),:])
+        # print("RGB")
+        # print(rgb[int(img.shape[0]/2),int(img.shape[1]/2),:])
+        img_threshold(hsv)
 
 
 def main():
@@ -28,11 +29,11 @@ def main():
     while not turtle.is_shutting_down():
         rate.sleep()
 
-        rgb = turtle.get_rgb_image()
-        hsv = rgb_to_hsv(rgb)
-        img = bool_to_rgb(img_threshold(hsv))
-        window_rgb.show(rgb)
-        window_bool.show(img)
+        # rgb = turtle.get_rgb_image()
+        # hsv = rgb_to_hsv(rgb)
+        # img = bool_to_rgb(img_threshold(hsv))
+        # window_rgb.show(rgb)
+        # window_bool.show(img)
 
 
 if __name__ == '__main__':
