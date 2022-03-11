@@ -10,6 +10,6 @@ def main():
 if __name__ == '__main__':
     turtle.wait_for_rgb_image()
     rgb = turtle.get_rgb_image()
-    print(rgb)
+    print(type(rgb))
 
     main()
