@@ -7,10 +7,10 @@ from camera import Window
 turtle = Turtlebot(rgb=True, pc=True, depth=True)
 
 
-def button_cb(msg):
-    print('button cb')
-    if msg.state == 0:
-        # todo
+# def button_cb(msg):
+#     print('button cb')
+#     if msg.state == 0:
+#         # todo
 
 
 def main():
