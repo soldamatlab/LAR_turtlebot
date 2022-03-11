@@ -1,5 +1,8 @@
 from robolab_turtlebot import Turtlebot, Rate
 
+import sys
+from scipy.misc import imsave
+
 turtle = Turtlebot(rgb=True)
 
 def main():
@@ -10,6 +13,6 @@ def main():
 if __name__ == '__main__':
     turtle.wait_for_rgb_image()
     rgb = turtle.get_rgb_image()
-    print(rgb)
+    imsave("rbg.png", rgb)
 
     main()
