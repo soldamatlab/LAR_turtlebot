@@ -15,7 +15,7 @@ def button_cb(msg):
         print("HUE")
         print(img[int(img.shape[0]/2),int(img.shape[1]/2),:])
         print("RGB")
-        print(img[int(img.shape[0]/2),int(img.shape[1]/2),:])
+        print(rgb[int(img.shape[0]/2),int(img.shape[1]/2),:])
 
 
 def main():
