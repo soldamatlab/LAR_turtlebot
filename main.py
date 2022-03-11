@@ -3,7 +3,7 @@ from robolab_turtlebot import Turtlebot, Rate
 import numpy as np
 import cv2
 
-turtle = Turtlebot(rgb=True)
+turtle = Turtlebot(rgb=True, pc=True, depth=True)
 
 def main():
     rate = Rate(10)
