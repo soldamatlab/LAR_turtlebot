@@ -1,5 +1,5 @@
-from robolab_turtlebot import Turtlebot, Rate
 from __future__ import print_function
+from robolab_turtlebot import Turtlebot, Rate
 import numpy as np
 import cv2
 
