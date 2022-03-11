@@ -2,7 +2,7 @@ from __future__ import print_function
 from robolab_turtlebot import Turtlebot, Rate
 import numpy as np
 import cv2
-from camera_controller import Window
+from camera import Window
 
 turtle = Turtlebot(rgb=True, pc=True, depth=True)
 
@@ -10,10 +10,7 @@ turtle = Turtlebot(rgb=True, pc=True, depth=True)
 def button_cb(msg):
     print('button cb')
     if msg.state == 0:
-        rgb = turtle.get_rgb_image()
-        hsv = cv2.cvtColor(rgb, cv2.COLOR_BGR2HSV)
-        shape = hsv.shape
-        print(hsv[int(shape[1]/2),int(shape[1]/2),:])
+        # todo
 
 
 def main():
@@ -26,8 +23,9 @@ def main():
         rate.sleep()
 
         rgb = turtle.get_rgb_image()
-        hsv = cv2.cvtColor(rgb, cv2.COLOR_BGR2HSV)
-        window.show(hsv)
+        hsv = rgb_to_hsv(rgb)
+        img = img_threshold(hsv)
+        window.show(img)
 
 
 if __name__ == '__main__':
