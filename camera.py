@@ -4,8 +4,8 @@ import numpy as np
 
 GREEN = 65
 HUE_DIFF = 200
-SATUR_MIN = 0
-VAL_MIN = 0
+SATUR_MIN = -1
+VAL_MIN = -1
 
 
 class Window:
@@ -32,6 +32,7 @@ def pixel_threshold(hsv_pix):
 
 def img_threshold(hsv):
     hue = np.abs(hsv[:,:,0] - GREEN) < HUE_DIFF
+    print(hue.shape)
     satur = hsv[:,:,1] > SATUR_MIN
     val = hsv[:,:,2] > VAL_MIN
     return hue & satur & val
