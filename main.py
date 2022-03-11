@@ -14,7 +14,7 @@ turtle = Turtlebot(rgb=True, pc=True, depth=True)
 
 
 def main():
-    turtle.register_button_event_cb(button_cb)
+    # turtle.register_button_event_cb(button_cb)
 
     rate = Rate(10)
     window = Window("view")
