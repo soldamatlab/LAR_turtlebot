@@ -8,7 +8,8 @@ def main():
         rate.sleep()
 
 if __name__ == '__main__':
-    img = turtle.get_rgb_image()
-    print(img)
+    turtle.wait_for_rgb_image()
+    rgb = turtle.get_rgb_image()
+    print(rgb)
 
     main()
