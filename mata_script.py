@@ -29,7 +29,7 @@ def stop():
 
 def dance():
     do_for(0.5, step)
-    stop()
+    do_for(0.1, stop)
     do_for(0.5, step)
     do_for(0.25, rot_left)
     do_for(0.25, rot_right)
