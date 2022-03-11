@@ -2,8 +2,8 @@ import cv2
 import numpy as np
 
 
-GREEN = 85
-HUE_DIFF = 60
+GREEN = 65
+HUE_DIFF = 15
 SATUR_MIN = 0
 VAL_MIN = 0
 
