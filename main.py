@@ -2,6 +2,7 @@ from __future__ import print_function
 from robolab_turtlebot import Turtlebot, Rate
 import numpy as np
 import cv2
+from scipy.misc import imsave
 
 turtle = Turtlebot(rgb=True)
 
