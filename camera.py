@@ -53,10 +53,10 @@ def bool_to_rgb(bin):
 
 def segment(bin, min_area=60):
     out = cv2.connectedComponentsWithStats(bin.astype(np.uint8))
-    print(type(out[0]))
-    for i in range(out[0]):
+    count = out[0]
+    for i in range(count):
         if out[2][i][4] < min_area:
-            out[0] = out[0] - 1
+            count -= 1
             out[2].pop(i)
             out[3].pop(i)
-    return Segments(out[0], out[2], out[3])
+    return Segments(count, out[2], out[3])
