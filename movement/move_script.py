@@ -19,10 +19,11 @@ def button_cb(msg):
             print('BUMPER odometry: {}'.format(odometry))
 
         if msg.button == 1:
-            print('Button 1 pressed. Do nothing.')
+            stop(turtle)
 
         if msg.button == 2:
-            dance()
+            #dance()
+            walk(turtle)
 
 def bumper_cb(msg):
     bumper = bumper_names[msg.bumper]
