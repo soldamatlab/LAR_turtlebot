@@ -12,10 +12,10 @@ def button_cb(msg):
     if msg.state == 0:
         rgb = turtle.get_rgb_image()
         hsv = rgb_to_hsv(rgb)
-        print("HUE")
-        print(hsv[int(img.shape[0]/2),int(img.shape[1]/2),:])
-        print("RGB")
-        print(rgb[int(img.shape[0]/2),int(img.shape[1]/2),:])
+        print("HSV")
+        print(hsv[int(hsv.shape[0]/2),int(hsv.shape[1]/2),:])
+        # print("RGB")
+        # print(rgb[int(rgb.shape[0]/2),int(rgb.shape[1]/2),:])
         img_threshold(hsv)
 
 
