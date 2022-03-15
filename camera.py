@@ -76,7 +76,7 @@ def segment(bin, min_area=60, info=False):
     count = 0
     params = []
     centroids = []
-    for i in range(count):
+    for i in range(out[0]):
         area = out[2][i][4]
         if info:
             print("area " + str(area))
