@@ -33,14 +33,15 @@ class Segments:
         self.centroids.delete(index)
 
     def print(self, index):
-        print("left: " + self.params[index][0] + ", top: " + self.params[index][1])
-        print("size: " + self.params[index][2] + " x " + self.params[index][3])
-        print("area: " + self.params[index][4])
-        print("center " + self.centroids[index])
+        print("left: " + str(self.params[index][0]) + ", top: " + str(self.params[index][1]))
+        print("size: " + str(self.params[index][2]) + " x " + str(self.params[index][3]))
+        print("area: " + str(self.params[index][4]))
+        print("center " + str(self.centroids[index]))
 
     def print_all(self):
+        print("ALL SEGMENTS:\n")
         for i in range(self.count):
-            print("segment " + i)
+            print("segment " + str(i))
             self.print(i)
             print("")
 
