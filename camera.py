@@ -70,6 +70,8 @@ def bool_to_rgb(bin):
 
 def segment(bin, min_area=60, info=False):
     out = cv2.connectedComponentsWithStats(bin.astype(np.uint8))
+    if info:
+        print("segment: received " + str(out[0]) + " segments")
 
     count = 0
     params = []
@@ -87,6 +89,9 @@ def segment(bin, min_area=60, info=False):
 
 
 def hw_ratio_filter(segments, target=1, max_diff=0.2, info=False):
+    if info:
+        print("hw_ratio_filter: received " + str(segments.count) + " segments")
+
     rm_indices = []
     for i in range(segments.count):
         ratio = float(segments.params[i][3]) / float(segments.params[i][2])
