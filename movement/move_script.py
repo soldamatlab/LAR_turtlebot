@@ -22,7 +22,11 @@ def bumper_cb(msg):
 
     if state_names[msg.state] == 'PRESSED':
         odometry = turtle.get_odometry()
-        print('odometry: {}'.format(odometry))
+        print('BUMPER odometry: {}'.format(odometry))
+        print('odometry type is {}'.format(type(odometry)))
+
+def walk_for(dist):
+    start = turtle.get_odometry()
 
 turtle = Turtlebot()
 def main():
