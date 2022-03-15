@@ -68,7 +68,7 @@ def bool_to_rgb(bin):
     return np.repeat((np.copy(bin) * 255)[:, :, np.newaxis], 3, axis=2).astype(np.uint8)
 
 
-def segment(bin, min_area=60, info=False):
+def segment(bin, min_area=1000, info=False):
     out = cv2.connectedComponentsWithStats(bin.astype(np.uint8))
     if info: print("segment: received " + str(out[0]) + " segments")
 
