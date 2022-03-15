@@ -37,5 +37,9 @@ def img_threshold(hsv):
     return hue & satur & val
 
 
-def bool_to_rgb(bool):
-    return np.repeat((np.copy(bool) * 255)[:,:,np.newaxis], 3, axis=2).astype(np.uint8)
+def bool_to_rgb(bin):
+    return np.repeat((np.copy(bin) * 255)[:, :, np.newaxis], 3, axis=2).astype(np.uint8)
+
+def segment(bin):
+    seg_out = cv2.connectedComponentsWithStats(bin.astype(np.uint8))
+    return seg_out
