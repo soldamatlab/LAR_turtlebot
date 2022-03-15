@@ -2,6 +2,7 @@ from __future__ import print_function
 
 from robolab_turtlebot import Turtlebot, Rate, get_time
 
+from movement import *
 from dance import dance
 
 # Names bumpers and events
@@ -13,20 +14,20 @@ def button_cb(msg):
     print('button {} {}'.format(msg.button, state))
 
     if state_names[msg.state] == 'PRESSED':
-        dance()
+        if msg.button == 0:
+            odometry = turtle.get_odometry()
+            print('BUMPER odometry: {}'.format(odometry))
+
+        if msg.button == 1:
+            print('Button 1 pressed. Do nothing.')
+
+        if msg.button == 2:
+            dance()
 
 def bumper_cb(msg):
     bumper = bumper_names[msg.bumper]
     state = state_names[msg.state]
     print('{} bumper {}'.format(bumper, state))
-
-    if state_names[msg.state] == 'PRESSED':
-        odometry = turtle.get_odometry()
-        print('BUMPER odometry: {}'.format(odometry))
-        print('odometry type is {}'.format(type(odometry)))
-
-def walk_for(dist):
-    start = turtle.get_odometry()
 
 turtle = Turtlebot()
 def main():
