@@ -59,7 +59,7 @@ def img_threshold(hsv):
     return hue & satur & val
 
 
-def bool_to_rgb(bin):
+def bin_to_rgb(bin):
     return np.repeat((np.copy(bin) * 255)[:, :, np.newaxis], 3, axis=2).astype(np.uint8)
 
 
