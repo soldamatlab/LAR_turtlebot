@@ -19,6 +19,16 @@ class Window:
         cv2.waitKey(1)
 
 
+class Segments:
+
+    # params = [leftest, highest, width, height, area]
+    def __init__(self, seg_count, params, centroids):
+        self.seg_count = seg_count
+        # self.labels = labels
+        self.params = params
+        self.centroids = centroids
+
+
 def rgb_to_hsv(rgb):
     return cv2.cvtColor(rgb, cv2.COLOR_BGR2HSV)
 
@@ -40,6 +50,12 @@ def img_threshold(hsv):
 def bool_to_rgb(bin):
     return np.repeat((np.copy(bin) * 255)[:, :, np.newaxis], 3, axis=2).astype(np.uint8)
 
-def segment(bin):
-    seg_out = cv2.connectedComponentsWithStats(bin.astype(np.uint8))
-    return seg_out
+
+def segment(bin, min_area=60):
+    out = cv2.connectedComponentsWithStats(bin.astype(np.uint8))
+    for i in range(out[0]):
+        if out[2][4][i] < min_area:
+            out[0] -= 1
+            out[2].pop(i)
+            out[3].pop(i)
+    return Segments(out[0], out[2], out[3])
