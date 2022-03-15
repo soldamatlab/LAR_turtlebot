@@ -97,3 +97,12 @@ def hw_ratio_filter(segments, target=1, max_diff=0.2, info=False):
 
     if info: print("")
     return segments
+
+
+# Changes shape of original point cloud!
+def recalculate_coordinates(point_cloud, K):
+    og_shape = point_cloud.shape()
+    point_cloud.reshape((og_shape[0] * og_shape[1], og_shape[2]))
+    new_point_cloud = point_cloud * K
+    new_point_cloud.reshape(og_shape)
+    return new_point_cloud
