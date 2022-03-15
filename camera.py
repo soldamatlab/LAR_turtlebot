@@ -70,37 +70,35 @@ def bool_to_rgb(bin):
 
 def segment(bin, min_area=60, info=False):
     out = cv2.connectedComponentsWithStats(bin.astype(np.uint8))
-    if info:
-        print("segment: received " + str(out[0]) + " segments")
+    if info: print("segment: received " + str(out[0]) + " segments")
 
     count = 0
     params = []
     centroids = []
     for i in range(1, out[0]):  # skip first
         area = out[2][i][4]
-        if info:
-            print("area " + str(area))
+        if info: print("area " + str(area))
         if area > min_area:
             count += 1
             params.append(out[2][i])
             centroids.append(out[3][i])
 
+    if info: print("")
     return Segments(count, params, centroids)
 
 
 def hw_ratio_filter(segments, target=1, max_diff=0.2, info=False):
-    if info:
-        print("hw_ratio_filter: received " + str(segments.count) + " segments")
+    if info: print("hw_ratio_filter: received " + str(segments.count) + " segments")
 
     rm_indices = []
     for i in range(segments.count):
         ratio = float(segments.params[i][3]) / float(segments.params[i][2])
-        if info:
-            print("ratio " + str(ratio))
+        if info: print("ratio " + str(ratio))
         if abs(ratio - target) > max_diff:
             rm_indices.append(i)
 
     for i in reversed(rm_indices):
         segments.remove(i)
 
+    if info: print("")
     return segments

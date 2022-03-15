@@ -14,7 +14,7 @@ def button_cb(msg):
         hsv = rgb_to_hsv(rgb)
         bin = img_threshold(hsv)
         segments = segment(bin, min_area=60, info=True)
-        segments = hw_ratio_filter(segments, target=7, max_diff=1, info=True)
+        segments = hw_ratio_filter(segments, target=6, max_diff=2, info=True)
         segments.print_all()
 
 
