@@ -39,7 +39,7 @@ class Segments:
         print("center " + str(self.centroids[index]))
 
     def print_all(self):
-        print("ALL SEGMENTS:\n")
+        print("ALL SEGMENTS: " + str(self.count) + "\n")
         for i in range(self.count):
             print("segment " + str(i))
             self.print(i)
