@@ -83,10 +83,12 @@ def segment(bin, min_area=60):
     return Segments(count, params, centroids)
 
 
-def hw_ratio_filter(segments, target=1, max_diff=0.2):
+def hw_ratio_filter(segments, target=1, max_diff=0.2, info=True):
     rm_indices = []
     for i in range(segments.count):
         ratio = float(segments.params[i][3]) / float(segments.params[i][2])
+        if info:
+            print("ratio " + str(ratio))
         if abs(ratio - target) > max_diff:
             rm_indices.append(i)
 
