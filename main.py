@@ -3,6 +3,7 @@ from robolab_turtlebot import Turtlebot, Rate
 import numpy as np
 import cv2
 from camera import *
+import CONST
 
 turtle = Turtlebot(rgb=True, pc=True, depth=True)
 
@@ -13,8 +14,8 @@ def button_cb(msg):
         rgb = turtle.get_rgb_image()
         hsv = rgb_to_hsv(rgb)
         bin = img_threshold(hsv)
-        segments = segment(bin, min_area=1000, info=True)
-        segments = hw_ratio_filter(segments, target=6, max_diff=1, info=True)
+        segments = segment(bin, min_area=CONST.MIN_AREA)
+        segments = hw_ratio_filter(segments, target=CONST.TARGET_RATIO, max_diff=CONST.MAX_RATIO_DIFF)
         segments.print_all()
 
 

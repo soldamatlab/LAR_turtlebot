@@ -1,11 +1,6 @@
 import cv2
 import numpy as np
-
-
-GREEN = 65
-HUE_DIFF = 15
-SATUR_MIN = 100
-VAL_MIN = 70
+import CONST
 
 
 class Window:
@@ -51,16 +46,16 @@ def rgb_to_hsv(rgb):
 
 
 def pixel_threshold(hsv_pix):
-    hue = abs(hsv_pix[0] - GREEN) < HUE_DIFF
-    satur = hsv_pix[1] > SATUR_MIN
-    val = hsv_pix[2] > VAL_MIN
+    hue = abs(hsv_pix[0] - CONST.GREEN) < CONST.HUE_DIFF
+    satur = hsv_pix[1] > CONST.SATUR_MIN
+    val = hsv_pix[2] > CONST.VAL_MIN
     return hue and satur and val
 
 
 def img_threshold(hsv):
-    hue = np.abs(hsv[:,:,0].astype(int) - GREEN) < HUE_DIFF
-    satur = hsv[:,:,1] > SATUR_MIN
-    val = hsv[:,:,2] > VAL_MIN
+    hue = np.abs(hsv[:,:,0].astype(int) - CONST.GREEN) < CONST.HUE_DIFF
+    satur = hsv[:,:,1] > CONST.SATUR_MIN
+    val = hsv[:,:,2] > CONST.VAL_MIN
     return hue & satur & val
 
 
