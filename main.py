@@ -13,8 +13,8 @@ def button_cb(msg):
         rgb = turtle.get_rgb_image()
         hsv = rgb_to_hsv(rgb)
         bin = img_threshold(hsv)
-        segments = segment(bin)
-        segments = hw_ratio_filter(segments, target=7, max_diff=1)
+        segments = segment(bin, min_area=60, info=True)
+        segments = hw_ratio_filter(segments, target=7, max_diff=1, info=True)
         segments.print_all()
 
 

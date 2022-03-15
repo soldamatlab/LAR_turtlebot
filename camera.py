@@ -68,14 +68,17 @@ def bool_to_rgb(bin):
     return np.repeat((np.copy(bin) * 255)[:, :, np.newaxis], 3, axis=2).astype(np.uint8)
 
 
-def segment(bin, min_area=60):
+def segment(bin, min_area=60, info=False):
     out = cv2.connectedComponentsWithStats(bin.astype(np.uint8))
 
     count = 0
     params = []
     centroids = []
     for i in range(count):
-        if out[2][i][4] > min_area:
+        area = out[2][i][4]
+        if info:
+            print("area " + str(area))
+        if area > min_area:
             count += 1
             params.append(out[2][i])
             centroids.append(out[3][i])
@@ -83,7 +86,7 @@ def segment(bin, min_area=60):
     return Segments(count, params, centroids)
 
 
-def hw_ratio_filter(segments, target=1, max_diff=0.2, info=True):
+def hw_ratio_filter(segments, target=1, max_diff=0.2, info=False):
     rm_indices = []
     for i in range(segments.count):
         ratio = float(segments.params[i][3]) / float(segments.params[i][2])
