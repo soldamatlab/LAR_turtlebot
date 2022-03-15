@@ -29,8 +29,8 @@ class Segments:
 
     def remove(self, index):
         self.count -= 1
-        self.params.delete(index)
-        self.centroids.delete(index)
+        self.params.pop(index)
+        self.centroids.pop(index)
 
     def print(self, index):
         print("left: " + str(self.params[index][0]) + ", top: " + str(self.params[index][1]))
@@ -76,7 +76,7 @@ def segment(bin, min_area=60, info=False):
     count = 0
     params = []
     centroids = []
-    for i in range(out[0]):
+    for i in range(1, out[0]):  # skip first
         area = out[2][i][4]
         if info:
             print("area " + str(area))
