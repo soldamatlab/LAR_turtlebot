@@ -16,7 +16,7 @@ def button_cb(msg):
     if state_names[msg.state] == 'PRESSED':
         if msg.button == 0:
             odometry = turtle.get_odometry()
-            print('BUMPER odometry: {}'.format(odometry))
+            print('odometry: {}'.format(odometry))
 
         if msg.button == 1:
             stop(turtle)
@@ -38,7 +38,7 @@ def main():
     turtle.wait_for_odometry()
     turtle.reset_odometry()
 
-    rate = Rate(10)
+    rate = Rate(1)
     while not turtle.is_shutting_down():
         rate.sleep()
 
