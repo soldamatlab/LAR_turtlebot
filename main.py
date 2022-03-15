@@ -39,7 +39,7 @@ def button_cb():
     segments = turtle.get_segments(CONST.MIN_AREA, CONST.TARGET_RATIO, CONST.MAX_RATIO_DIFF)
     depth_point_cloud = turtle.get_point_cloud()
     depth_K = turtle.get_depth_K()
-    bot_point_cloud = depth_K * depth_point_cloud
+    bot_point_cloud = depth_point_cloud * depth_K
     print(bot_point_cloud)
 
 
@@ -49,7 +49,6 @@ def main():
     rate = Rate(10)
     window_rgb = Window("rgb")
     window_bool = Window("bool")
-    window_depth = Window("depth")
 
     while not turtle.bot.is_shutting_down():
         rate.sleep()
