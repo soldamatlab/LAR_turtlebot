@@ -38,8 +38,8 @@ turtle = Turtle(rgb=True, pc=True, depth=True)
 
 def button_cb(msg):
     if msg.button == 0:
-        segments = turtle.get_segments()
-        segments.print_all()
+        sticks = turtle.get_segments()
+        sticks.print_all()
     if msg.button == 1:
         dance()
 
