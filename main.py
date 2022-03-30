@@ -4,6 +4,7 @@ import numpy as np
 import cv2
 from camera import *
 import CONST
+from dance import dance
 
 
 class Turtle:
@@ -36,11 +37,12 @@ turtle = Turtle(rgb=True, pc=True, depth=True)
 
 
 def button_cb():
-    segments = turtle.get_segments(CONST.MIN_AREA, CONST.TARGET_RATIO, CONST.MAX_RATIO_DIFF)
-    depth_point_cloud = turtle.get_point_cloud()
-    depth_K = turtle.get_depth_K()
-    bot_point_cloud = recalculate_coordinates(depth_point_cloud, depth_K)
-    print(bot_point_cloud)
+    # segments = turtle.get_segments(CONST.MIN_AREA, CONST.TARGET_RATIO, CONST.MAX_RATIO_DIFF)
+    # depth_point_cloud = turtle.get_point_cloud()
+    # depth_K = turtle.get_depth_K()
+    # bot_point_cloud = recalculate_coordinates(depth_point_cloud, depth_K)
+    # print(bot_point_cloud)
+    dance()
 
 
 def main():
