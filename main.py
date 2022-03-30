@@ -13,7 +13,7 @@ class Turtle:
         self.bot = Turtlebot(rgb=rgb, pc=pc, depth=depth)
 
     def register_button_event_cb(self, cb):
-        self.bot.register_button_event_cb(lambda msg: cb() if msg.state == 0 else None)
+        self.bot.register_button_event_cb(cb) # lambda msg: cb() if msg.state == 0 else None
 
     def get_rgb_image(self):
         return self.bot.get_rgb_image()
@@ -24,7 +24,7 @@ class Turtle:
     def get_depth_K(self):
         return self.bot.get_depth_K()
 
-    def get_segments(self, min_area, target_ratio, max_ratio_diff):
+    def get_segments(self, min_area=CONST.MIN_AREA, target_ratio=CONST.TARGET_RATIO, max_ratio_diff=CONST.MAX_RATIO_DIFF):
         rgb = self.get_rgb_image()
         hsv = rgb_to_hsv(rgb)
         bin = img_threshold(hsv)
@@ -36,13 +36,17 @@ class Turtle:
 turtle = Turtle(rgb=True, pc=True, depth=True)
 
 
-def button_cb():
-    # segments = turtle.get_segments(CONST.MIN_AREA, CONST.TARGET_RATIO, CONST.MAX_RATIO_DIFF)
+def button_cb(msg):
+    if msg.button == 0:
+        segments = turtle.get_segments()
+        segments.print_all()
+    if msg.button == 1:
+        dance()
+
     # depth_point_cloud = turtle.get_point_cloud()
     # depth_K = turtle.get_depth_K()
     # bot_point_cloud = recalculate_coordinates(depth_point_cloud, depth_K)
     # print(bot_point_cloud)
-    dance()
 
 
 def main():
