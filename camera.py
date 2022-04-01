@@ -39,7 +39,7 @@ class Segments:
         pixels = pc_shape[0] * pc_shape[1]
         pc = np.reshape(pc, (pixels, pc_shape[2]))
 
-        depth = []
+        depth = np.zeros(self.count, dtype=int)
         for i in range(0, self.count):
             bin = self.get_bin_img(i)
             bin = np.reshape(bin, (pixels))
