@@ -7,5 +7,3 @@ def drive(turtle):
         return
 
     max_sticks = np.argmax(sticks.areas())
-
-    A = sticks.
