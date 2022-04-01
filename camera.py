@@ -31,6 +31,7 @@ class Segments:
 
     def get_bin_img(self, segment):
         bin_mat = np.zeros_like(self.label_mat, dtype=int)
+        print(bin_mat)
         bin_mat[self.label_mat == self.label_dict[segment]] = 1
 
     def get_depth(self, pc):
@@ -42,7 +43,7 @@ class Segments:
         for i in range(0, self.count):
             bin = self.get_bin_img(i)
 
-            print(bin)
+            # print(bin)
             win = Window("TEST")
             win.show(bin_to_rgb(bin))
 
