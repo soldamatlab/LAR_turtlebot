@@ -16,16 +16,24 @@ class Window:
 
 class Segments:
 
-    # params = [leftest, highest, width, height, area]
-    def __init__(self, count, params, centroids):
-        self.count = count
-        self.params = params
-        self.centroids = centroids
+    def __init__(self, count, label_mat, label_dict, params, centroids):
+        self.count = count # number of segments
+        self.label_mat = label_mat # labels of pixels
+        self.label_dict = label_dict # label_dict[i] is the label of the i-th segment used in label_mat
+        self.params = params # params of each segment: params = [leftest, highest, width, height, area]
+        self.centroids = centroids # centroid of each segment
+        self.depth = None # median depth of each segment
 
     def remove(self, index):
         self.count -= 1
         self.params.pop(index)
         self.centroids.pop(index)
+
+    def get_depth(self, pc):
+        for i in range(0, self.count):
+            bin_mat = np.zeros_like(self.label_mat)
+            bin_mat[self.label_mat == i] = 1
+            # TODO
 
     def print(self, index):
         print("left: " + str(self.params[index][0]) + ", top: " + str(self.params[index][1]))
@@ -68,18 +76,22 @@ def segment(bin, min_area=1000, info=False):
     if info: print("segment: received " + str(out[0]) + " segments")
 
     count = 0
+    label_mat = out[1]
+    label_dict = []
     params = []
     centroids = []
+
     for i in range(1, out[0]):  # skip first
         area = out[2][i][4]
         if info: print("area " + str(area))
         if area > min_area:
             count += 1
+            label_dict.append(i)
             params.append(out[2][i])
             centroids.append(out[3][i])
 
     if info: print("")
-    return Segments(count, params, centroids)
+    return Segments(count, label_mat, label_dict, params, centroids)
 
 
 def hw_ratio_filter(segments, target=1, max_diff=0.2, info=False):
@@ -103,6 +115,6 @@ def pc_cam_to_bot(point_cloud, K):
     cam_pc = np.array(point_cloud)
     og_shape = np.shape(cam_pc)
     cam_pc = np.reshape(cam_pc, (og_shape[0] * og_shape[1], og_shape[2]))
-    bot_pc = np.matmul(cam_pc, K)
+    bot_pc = np.matmul(cam_pc, np.invert(K))
     bot_pc = np.reshape(bot_pc, og_shape)
     return bot_pc
