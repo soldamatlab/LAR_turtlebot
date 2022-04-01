@@ -33,7 +33,7 @@ class Turtle:
         return segments
 
 
-turtle = Turtle(rgb=True, pc=True, depth=True)
+turtle = Turtle(rgb=False, pc=True, depth=False)
 
 
 def button_cb(msg):
