@@ -23,6 +23,7 @@ def button_1():
 
 def main():
     rate = Rate(10)
+    w_rgb = Window("RGB")
     
     # INIT ACTIONS
     # (the sleep is necessary to avoid errors
