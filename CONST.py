@@ -1,11 +1,19 @@
 
 # POLE COLOR
 GREEN = 65  # 45 - 75
-BLUE = 100  # 95 - 
-RED = 5     #  0 - 
 HUE_DIFF = 25
-SATUR_MIN = 50
-VAL_MIN = 20    
+SATUR_MIN = 80
+VAL_MIN = 20
+
+BLUE = 100  # 95 - 
+#HUE_DIFF = 25
+#SATUR_MIN = 50
+#VAL_MIN = 20
+
+RED = 5     #  0 - 
+#HUE_DIFF = 25
+#SATUR_MIN = 50
+#VAL_MIN = 20
 
 # POLE SEGMENT
 MIN_AREA = 1000
