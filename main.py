@@ -7,15 +7,6 @@ from camera import *
 from dance import dance
 
 
-turtle = None
-if __name__ == '__main__':
-    turtle = Turtle(rgb=True, pc=True, depth=True)
-    turtle.register_button_cb(0, button_0)
-    turtle.register_button_cb(1, button_1)
-    turtle.register_button_cb(2, button_2)
-    main()
-
-
 def button_0():
     dance()
 
@@ -44,3 +35,12 @@ def main():
         # bin_img = bin_to_rgb(img_threshold(hsv))
         w_rgb.show(rgb)
         # w_bool.show(bin_img)
+
+
+turtle = None
+if __name__ == '__main__':
+    turtle = Turtle(rgb=True, pc=True, depth=True)
+    turtle.register_button_cb(0, button_0)
+    turtle.register_button_cb(1, button_1)
+    turtle.register_button_cb(2, button_2)
+    main()
