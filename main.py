@@ -18,6 +18,7 @@ def button_2():
 
 
 def main():
+    rate = Rate(10)
     w_rgb = Window("RGB")
     
     # INIT ACTIONS
@@ -27,7 +28,6 @@ def main():
     button_1()
     
     # MAIN LOOP
-    rate = Rate(10)
     while not turtle.bot.is_shutting_down():
         rate.sleep()
 
