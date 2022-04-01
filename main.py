@@ -40,7 +40,7 @@ class Turtle:
     def set_detect(self, color):
         set_to = -1
         if color == 0 or color == 'GREEN':
-            set_to = 1
+            set_to = 0
         elif color == 1 or color == 'BLUE':
             set_to = 1
         elif color == 2 or color == 'RED':
