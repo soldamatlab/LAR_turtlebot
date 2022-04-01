@@ -18,12 +18,13 @@ class Turtle:
     def get_rgb_image(self):
         return self.bot.get_rgb_image()
 
-    def get_point_cloud(self, try_again=True):
+    def get_point_cloud(self, try_again=True, convert_to_bot=True):
         pc = self.bot.get_point_cloud()
-        if not try_again:
-            return pc
-        while pc is None:
-            pc = self.bot.get_point_cloud()
+        if try_again:
+            while pc is None:
+                pc = self.bot.get_point_cloud()
+        if convert_to_bot:
+            pc = recalculate_coordinates(pc, self.get_depth_K)
         return pc
 
     def get_depth_K(self):
@@ -50,9 +51,7 @@ def button_cb(msg):
 
 def button_1():
     pc = turtle.get_point_cloud()
-    depth_K = turtle.get_depth_K()
-    bot_pc = recalculate_coordinates(pc, depth_K)
-    print(bot_pc)
+    print(pc)
 
 
 def main():
