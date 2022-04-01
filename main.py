@@ -6,6 +6,9 @@ import cv2
 from camera import *
 from dance import dance
 from color_harvest import *
+from driver import drive
+
+turtle = None
 
 
 def button_0():
@@ -20,6 +23,12 @@ def button_2():
 
 def main():
     rate = Rate(10)
+
+    turtle = Turtle(rgb=True, pc=True, depth=True)
+    turtle.register_button_cb(0, button_0)
+    turtle.register_button_cb(1, button_1)
+    turtle.register_button_cb(2, button_2)
+
     # w_rgb = Window("RGB")
     w_bin = Window("BIN")
     
@@ -32,7 +41,11 @@ def main():
     # MAIN LOOP
     while not turtle.bot.is_shutting_down():
         rate.sleep()
+        turtle.bot.cmd_velocity(linear=turtle.linear, angular=turtle.angular)
 
+        drive(turtle)
+
+        # Testing
         img_rgb = turtle.get_rgb_image()
         img_hsv = rgb_to_hsv(img_rgb)
         img_bin = img_threshold(img_hsv)
@@ -40,10 +53,5 @@ def main():
         w_bin.show(bin_to_rgb(img_bin))
 
 
-turtle = None
 if __name__ == '__main__':
-    turtle = Turtle(rgb=True, pc=True, depth=True)
-    turtle.register_button_cb(0, button_0)
-    turtle.register_button_cb(1, button_1)
-    turtle.register_button_cb(2, button_2)
     main()

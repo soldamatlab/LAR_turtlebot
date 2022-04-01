@@ -6,12 +6,22 @@ class Turtle:
 
     def __init__(self, rgb=True, pc=True, depth=True):
         self.bot = Turtlebot(rgb=rgb, pc=pc, depth=depth)
-        self.detect = 0 # 0 GREEN, 1 BLUE, 2 RED
+
+        self.linear = 0.
+        self.angular = 0.
 
         self.bot.register_button_event_cb(self.button_cb)
         self.button_0 = lambda : None
         self.button_1 = lambda : None
         self.button_2 = lambda : None
+
+    def set_speed(self, linear, angular):
+        self.linear = linear
+        self.angular = angular
+        self.bot.cmd_velocity(linear=linear, angular=angular)
+
+    def stop(self):
+        self.set_speed(0., 0.)
 
     def button_cb(self, msg):
         if msg.state == 1:
@@ -46,7 +56,7 @@ class Turtle:
     def get_depth_K(self):
         return self.bot.get_depth_K()
 
-    def get_segments(self,
+    def get_segments(self, color,
         pc=None,
         min_area=CONST.MIN_AREA,
         target_ratio=CONST.TARGET_RATIO,
@@ -63,20 +73,5 @@ class Turtle:
             segments.get_depth(pc)
         return segments
 
-    def set_detect(self, color):
-        set_to = -1
-        if color == 0 or color == 'GREEN':
-            set_to = 0
-        elif color == 1 or color == 'BLUE':
-            set_to = 1
-        elif color == 2 or color == 'RED':
-            set_to = 2
-        
-        if set_to == -1:
-            print("ERROR: set_detect called with [color]=" + str(color) + ". Choose from [0,1,2] or ['GREEN','BLUE','RED'].")
-        else:
-            self.detect = set_to
-            print("Detected color set to: " + str(self.detect))
-    
     def play_sound(self):
         self.bot.play_sound(sound_id=4)

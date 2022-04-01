@@ -24,6 +24,21 @@ class Segments:
         self.centroids = centroids # centroid of each segment
         self.depth = None # median depth of each segment
 
+    def leftest(self, i):
+        return params[i][0]
+
+    def highest(self, i):
+        return params[i][1]
+
+    def width(self, i):
+        return params[i][2]
+
+    def height(self, i):
+        return params[i][3]
+
+    def area(self, i):
+        return params[i][4]
+
     def remove(self, index):
         self.count -= 1
         self.params.pop(index)
@@ -81,7 +96,6 @@ def pixel_threshold(hsv_pix, color):
 
 def img_threshold(hsv, color):
     [target_hue, hue_diff, satur_min, val_min] = CONST.get_color_consts(color)
-
     hue = get_hue_diff(hsv[:,:,0].astype(int), target_hue) <= hue_diff
     satur = hsv[:,:,1] >= satur_min
     val = hsv[:,:,2] >= val_min
