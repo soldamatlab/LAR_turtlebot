@@ -7,5 +7,5 @@ VAL_MIN = 20 #70
 
 # POLE SEGMENT
 MIN_AREA = 1000
-TARGET_RATIO = 6.5
-MAX_RATIO_DIFF = 2
+TARGET_RATIO = 4.9 # ~6 when truly in center, ~3.5 when on the far side
+MAX_RATIO_DIFF = 1.5
