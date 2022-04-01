@@ -47,12 +47,12 @@ class Segments:
             print(np.shape(bin))
             print((pixels))
 
-            bin = np.reshape(bin, (pixels))
-            values = np.empty()
-            for p in range(0, pixels):
-                if bin[p] != 0:
-                    np.append(values, pc[p])
-            depth[i] = np.median(values)
+            # bin = np.reshape(bin, (pixels))
+            # values = np.empty()
+            # for p in range(0, pixels):
+            #     if bin[p] != 0:
+            #         np.append(values, pc[p])
+            # depth[i] = np.median(values)
 
         print("DONE")
 
