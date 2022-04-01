@@ -23,9 +23,6 @@ class Turtle:
         if try_again:
             while pc is None:
                 pc = self.bot.get_point_cloud()
-
-        print(pc) #TODO remove
-
         if convert_to_bot:
             pc = pc_cam_to_bot(pc, self.get_depth_K)
         return pc
