@@ -69,7 +69,7 @@ class Segments:
         pixels = pc_shape[0] * pc_shape[1]
         pc = np.reshape(pc, (pixels, pc_shape[2]))
 
-        coots = []
+        coors = []
         for i in range(0, self.count):
             bin = self.get_bin_img(i)
             bin = np.reshape(bin, (pixels))
@@ -78,7 +78,7 @@ class Segments:
                 if bin[p] != 0 and all(not np.isnan(c) for c in pc[p]):
                     values.append(pc[p])
             values = np.stack(values, axis=0)
-            coots.append(np.median(values, axis=0))
+            coors.append(np.median(values, axis=0))
 
         self.coors = coors
 
