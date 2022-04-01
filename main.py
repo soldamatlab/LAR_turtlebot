@@ -32,7 +32,7 @@ class Turtle:
         hsv = self.get_hsv_image()
         bin = img_threshold(hsv)
         segments = segment(bin, min_area=min_area)
-        segments = hw_ratio_filter(segments, target=target_ratio, max_diff=max_ratio_diff)
+        segments = hw_ratio_filter(segments, target=target_ratio, max_diff=max_ratio_diff, info=True)
         return segments
 
 
