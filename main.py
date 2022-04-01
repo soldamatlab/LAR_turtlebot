@@ -48,7 +48,7 @@ def button_cb(msg):
             if sticks.count > 0:
                 params = sticks.params[0]
                 hsv = turtle.get_hsv_image()
-                print("Centroid 0 hsv color: " + hsv[params[0] + int(params[2]/2), params[1] + int(params[3]/2)])
+                print("Centroid 0 hsv color: " + hsv[int(params[0]) + int(params[2]/2), int(params[1]) + int(params[3]/2)])
 
 
         if msg.button == 1:
