@@ -43,7 +43,7 @@ class Segments:
         for i in range(0, self.count):
             bin = self.get_bin_img(i)
             bin = np.reshape(bin, (pixels))
-            values = np.empty()
+            values = []
             for p in range(0, pixels):
                 if bin[p] != 0:
                     values.append(pc[p])
