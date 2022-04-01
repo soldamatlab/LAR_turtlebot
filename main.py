@@ -38,18 +38,12 @@ class Turtle:
         return segments
     
     def set_detect(self, color):
-        if color == 0 | color == 'GREEN':
+        if color == 0 or color == 'GREEN':
             self.detect = 0
-        elif color == 1 | color == 'BLUE':
+        elif color == 1 or color == 'BLUE':
             self.detect = 1
-        elif color == 2 | color == 'RED':
+        elif color == 2 or color == 'RED':
             self.detect = 2
-        elif color == 0:
-            print("WTF0")
-        elif color == 1:
-            print("WTF1")
-        elif color == 2:
-            print("WTF2")
         else:
             print("ERROR: set_detect called with [color]=" + str(color) + ". Choose from [0,1,2] or ['GREEN','BLUE','RED'].")
 
