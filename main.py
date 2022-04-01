@@ -37,7 +37,7 @@ turtle = Turtle(rgb=True, pc=True, depth=True)
 
 
 def button_cb(msg):
-    if msg.state == 'PRESSED':
+    if msg.state == 1: # PRESSED
         if msg.button == 0:
             sticks = turtle.get_segments()
             sticks.print_all()
