@@ -58,5 +58,5 @@ class Turtle:
             segments.get_depth(pc)
         return segments
     
-    def play_sound():
+    def play_sound(self):
         self.bot.play_sound(sound_id=4)
