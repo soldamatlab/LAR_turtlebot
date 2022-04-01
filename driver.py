@@ -1,6 +1,7 @@
+import CONST
 
 def drive(turtle):
-    sticks = turtle.get_segments(GREEN)
+    sticks = turtle.get_segments(CONST.GREEN)
 
     print(sticks.params[:,4])
 
