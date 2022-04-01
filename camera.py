@@ -41,28 +41,19 @@ class Segments:
             print("")
 
 
-def rgb_to_hsv(rgb):
-    return cv2.cvtColor(rgb, cv2.COLOR_BGR2HSV)
-
-
-def pixel_threshold(hsv_pix):
-    hue = abs(hsv_pix[0] - CONST.GREEN) < CONST.HUE_DIFF
-    satur = hsv_pix[1] > CONST.SATUR_MIN
-    val = hsv_pix[2] > CONST.VAL_MIN
+def pixel_threshold(hsv_pix, color):
+    [target_hue, hue_diff, satur_min, val_min] = CONST.get_color_consts(color)
+    hue = abs(hsv_pix[0] - target_hue) < hue_diff
+    satur = hsv_pix[1] > satur_min
+    val = hsv_pix[2] > val_min
     return hue and satur and val
 
 
 def img_threshold(hsv, color):
-    if color == 0:
-        target_hue = CONST.GREEN
-    elif color == 1:
-        target_hue = CONST.BLUE
-    elif color == 2:
-        target_hue = CONST.RED
-
-    hue = np.abs(hsv[:,:,0].astype(int) - target_hue) <= CONST.HUE_DIFF
-    satur = hsv[:,:,1] >= CONST.SATUR_MIN
-    val = hsv[:,:,2] >= CONST.VAL_MIN
+    [target_hue, hue_diff, satur_min, val_min] = CONST.get_color_consts(color)
+    hue = np.abs(hsv[:,:,0].astype(int) - target_hue) <= hue_diff
+    satur = hsv[:,:,1] >= satur_min
+    val = hsv[:,:,2] >= val_min
     return hue & satur & val
 
 
