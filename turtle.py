@@ -64,7 +64,7 @@ class Turtle:
         get_depth=True,
     ):
         hsv = self.get_hsv_image()
-        bin = img_threshold(hsv)
+        bin = img_threshold(hsv, color)
         segments = segment(bin, min_area=min_area)
         segments = hw_ratio_filter(segments, target=target_ratio, max_diff=max_ratio_diff)
         if get_depth:
