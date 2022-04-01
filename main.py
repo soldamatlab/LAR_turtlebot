@@ -15,11 +15,11 @@ def button_cb(msg):
     if msg.button == 1:
         button_1()
 
-
 # TODO remove
 def button_1():
     segments = turtle.get_segments()
 
+w_rgb = Window("rgb")
 
 def main():
     turtle.register_button_event_cb(button_cb)
@@ -28,16 +28,16 @@ def main():
     # window_rgb = Window("rgb")
     # window_bool = Window("bool")
 
-    button_1() #TODO remove
+    # button_1() #TODO remove
 
     while not turtle.bot.is_shutting_down():
         rate.sleep()
 
-        # rgb = turtle.get_rgb_image()
+        rgb = turtle.get_rgb_image()
         # hsv = rgb_to_hsv(rgb)
         # bin_img = bin_to_rgb(img_threshold(hsv))
-        # window_rgb.show(rgb)
-        # window_bool.show(bin_img)
+        w_rgb.show(rgb)
+        # w_bool.show(bin_img)
 
 
 if __name__ == '__main__':

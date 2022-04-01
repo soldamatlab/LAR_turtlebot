@@ -33,10 +33,6 @@ class Turtle:
         get_depth=True,
     ):
         rgb = self.get_rgb_image()
-
-        window = Window("RGB")
-        window.show(rgb)
-
         hsv = rgb_to_hsv(rgb)
         bin = img_threshold(hsv)
         segments = segment(bin, min_area=min_area)
