@@ -115,6 +115,6 @@ def pc_cam_to_bot(point_cloud, K):
     cam_pc = np.array(point_cloud)
     og_shape = np.shape(cam_pc)
     cam_pc = np.reshape(cam_pc, (og_shape[0] * og_shape[1], og_shape[2]))
-    bot_pc = np.matmul(cam_pc, np.invert(K))
+    bot_pc = np.matmul(cam_pc, np.linalg.inv(K))
     bot_pc = np.reshape(bot_pc, og_shape)
     return bot_pc
