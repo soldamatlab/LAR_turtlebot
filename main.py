@@ -11,7 +11,8 @@ def button_0():
     dance()
 
 def button_1():
-    return None
+    sticks = turtle.get_segments()
+    print(sticks.depth)
 
 def button_2():
     return None
