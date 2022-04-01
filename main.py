@@ -12,6 +12,7 @@ def button_0():
 
 def button_1():
     segments = turtle.get_segments()
+    print(segments.count)
     print(segments.depth)
 
 def button_2():
