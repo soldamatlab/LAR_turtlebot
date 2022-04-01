@@ -11,7 +11,7 @@ def print_center_color(turtle):
 def print_segment_color(turtle, sticks):
     if sticks.count > 0:
         hsv = turtle.get_hsv_image()
-        bin = img_threshold(hsv)
+        bin = img_threshold(hsv, turtle.detect)
 
         params = sticks.params[0]
         centroid = [int(sticks.centroids[0][0]), int(sticks.centroids[0][1])]
