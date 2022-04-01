@@ -26,6 +26,7 @@ def main():
 
     rate = Rate(10)
     
+    rate.sleep()
     button_1()
     
     while not turtle.bot.is_shutting_down():
