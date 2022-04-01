@@ -1,10 +1,12 @@
 from camera import img_threshold
 
 def print_center_color(turtle, sticks):
-    if sticks.count > 0:
-        hsv = turtle.get_hsv_image()
-        bin = img_threshold(hsv)
+    hsv = turtle.get_hsv_image()
+    bin = img_threshold(hsv)
+    print(hsv.shape)
+    print(bin.shape)
 
+    if sticks.count > 0:
         params = sticks.params[0]
         centroid = [int(sticks.centroids[0][0]), int(sticks.centroids[0][1])]
 
