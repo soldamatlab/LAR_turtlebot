@@ -63,6 +63,7 @@ def img_threshold(hsv, color):
 
 
 def get_hue_diff(hue_array, target_hue):
+    print(type(CONST.HUE_MAX))
     diff1 = np.abs(hue_array - target_hue)
     diff2 = np.abs(hue_array - (target_hue - CONST.HUE_MAX))
     return np.minimum(diff1, diff2)
