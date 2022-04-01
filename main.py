@@ -12,6 +12,7 @@ class Turtle:
 
     def __init__(self, rgb=True, pc=True, depth=True):
         self.bot = Turtlebot(rgb=rgb, pc=pc, depth=depth)
+        self.detect = 0 # 0 GREEN, 1 BLUE, 2 RED
 
     def register_button_event_cb(self, cb):
         self.bot.register_button_event_cb(cb) # lambda msg: cb() if msg.state == 0 else None
@@ -35,6 +36,17 @@ class Turtle:
         segments = segment(bin, min_area=min_area)
         segments = hw_ratio_filter(segments, target=target_ratio, max_diff=max_ratio_diff, info=True)
         return segments
+    
+    def set_detect(self, color):
+        if color == 0 | color == 'GREEN':
+            self.detect = 0
+        elif color == 1 | color == 'BLUE':
+            self.detect = 1
+        elif color == 2 | color == 'RED':
+            self.detect = 2
+        else:
+            print("ERROR: set_detect called with [color]=" + str(color) + ". Choose from [0,1,2] or ['GREEN','BLUE','RED'].")
+
 
 
 turtle = Turtle(rgb=True, pc=True, depth=True)
@@ -52,7 +64,7 @@ def button_cb(msg):
             print_center_color(turtle)
 
         if msg.button == 2:
-            dance()
+            rotate_detected_color(turtle)
 
     # depth_point_cloud = turtle.get_point_cloud()
     # depth_K = turtle.get_depth_K()

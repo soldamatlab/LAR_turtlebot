@@ -24,3 +24,12 @@ def print_segment_color(turtle, sticks):
         center_bool = bin[centroid[1], centroid[0]]
 
         print("Centroid 0 coords: " + str(centroid) + ", hsv color: " + str(center_color) + ", bool: " + str(center_bool))
+
+def rotate_detected_color(turtle):
+    if turtle.detect == 0:
+        turtle.set_detect(1)
+    if turtle.detect == 1:
+        turtle.set_detect(2)
+    if turtle.detect == 2:
+        turtle.set_detect(1)
+    
