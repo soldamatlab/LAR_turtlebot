@@ -16,9 +16,9 @@ def button_cb(msg):
         button_1()
 
 
+# TODO remove
 def button_1():
-    pc = turtle.get_point_cloud()
-    print(pc)
+    segments = turtle.get_segments()
 
 
 def main():
