@@ -41,8 +41,12 @@ class Segments:
         self.depth = np.zeros(self.count)
         for i in range(0, self.count):
             bin = self.get_bin_img(i)
+
+            win = Window("TEST")
+            win.show(bin_to_rgb(bin))
             print(np.shape(bin))
             print((pixels))
+
             bin = np.reshape(bin, (pixels))
             values = np.empty()
             for p in range(0, pixels):
