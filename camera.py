@@ -39,6 +39,21 @@ class Segments:
     def area(self, i):
         return self.params[i][4]
 
+    def leftests(self):
+        return [self.leftest(i) for i in range(0, sticks.count)]
+
+    def highests(self):
+        return [self.highest(i) for i in range(0, sticks.count)]
+
+    def widths(self):
+        return [self.width(i) for i in range(0, sticks.count)]
+
+    def heights(self):
+        return [self.height(i) for i in range(0, sticks.count)]
+
+    def areas(self):
+        return [self.area(i) for i in range(0, sticks.count)]
+
     def remove(self, index):
         self.count -= 1
         self.params.pop(index)
