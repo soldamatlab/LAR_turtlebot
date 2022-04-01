@@ -100,10 +100,9 @@ def hw_ratio_filter(segments, target=1, max_diff=0.2, info=False):
 
 
 def recalculate_coordinates(point_cloud, K):
-    old_point_cloud = np.asarray(point_cloud)
+    old_point_cloud = np.array(point_cloud)
 
-    print(type(point_cloud))
-    print(type(old_point_cloud))
+    print(old_point_cloud)
 
     og_shape = old_point_cloud.shape()
     old_point_cloud.reshape((og_shape[0] * og_shape[1], og_shape[2]))
