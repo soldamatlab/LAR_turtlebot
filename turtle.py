@@ -13,11 +13,8 @@ class Turtle:
     def get_rgb_image(self):
         return self.bot.get_rgb_image()
 
-    def get_point_cloud(self, try_again=True, convert_to_bot=True):
+    def get_point_cloud(self, convert_to_bot=True):
         pc = self.bot.get_point_cloud()
-        if try_again:
-            while pc is None:
-                pc = self.bot.get_point_cloud()
         if convert_to_bot:
             pc = pc_cam_to_bot(pc, self.get_depth_K())
         return pc
