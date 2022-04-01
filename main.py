@@ -30,8 +30,14 @@ def main():
 
     # button_1() #TODO remove
 
+    b = True
+
     while not turtle.bot.is_shutting_down():
         rate.sleep()
+
+        if b:
+            b = False
+            button_1()
 
         rgb = turtle.get_rgb_image()
         # hsv = rgb_to_hsv(rgb)
