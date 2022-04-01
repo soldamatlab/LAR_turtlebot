@@ -55,10 +55,26 @@ def pixel_threshold(hsv_pix, color):
 
 def img_threshold(hsv, color):
     [target_hue, hue_diff, satur_min, val_min] = CONST.get_color_consts(color)
-    hue = np.abs(hsv[:,:,0].astype(int) - target_hue) <= hue_diff
+    
+    hue = hue_diff(hsv[:,:,0].astype(int), target_hue) <= hue_diff
     satur = hsv[:,:,1] >= satur_min
     val = hsv[:,:,2] >= val_min
     return hue & satur & val
+
+
+def hue_diff(hue1, hue2):
+    if hue1 > hue2:
+        tmp = hue1
+        hue1 = hue2
+        hue2 = tmp
+    diff1 = hue2 - hue1
+    hue2 -= CONST.HUE_MAX
+    diff2 = hue1 - hue2
+    if diff1 < diff2:
+        return diff1
+    else:
+        return diff2
+
 
 
 def bin_to_rgb(bin):

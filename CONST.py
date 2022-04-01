@@ -1,4 +1,6 @@
 
+HUE_MAX = 180
+
 # POLE COLOR
 GREEN = 65  # 45 - 75
 G_HUE_DIFF = 25
