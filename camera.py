@@ -129,8 +129,7 @@ def hw_ratio_filter(segments, target=1, max_diff=0.2, info=False):
     return segments
 
 
-# TODO lambda (l)
-def pc_cam_to_bot(point_cloud, K, l=1):
+def pc_cam_to_bot(point_cloud, K, l=CONST.CAM_LAMBDA):
     cam_pc = np.array(point_cloud)
     og_shape = np.shape(cam_pc)
     cam_pc = np.reshape(cam_pc, (og_shape[0] * og_shape[1], og_shape[2]))
