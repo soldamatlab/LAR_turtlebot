@@ -41,6 +41,10 @@ class Segments:
             print("")
 
 
+def rgb_to_hsv(rgb):
+    return cv2.cvtColor(rgb, cv2.COLOR_BGR2HSV)
+
+
 def pixel_threshold(hsv_pix, color):
     [target_hue, hue_diff, satur_min, val_min] = CONST.get_color_consts(color)
     hue = abs(hsv_pix[0] - target_hue) < hue_diff
