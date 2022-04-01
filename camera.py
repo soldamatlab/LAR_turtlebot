@@ -34,11 +34,22 @@ class Segments:
         bin_mat[self.label_mat == self.label_dict[segment]] = 1
 
     def get_depth(self, pc):
+        pc_shape = np.shape(pc)
+        pixels = pc_shape[0] * pc_shape[1]
+        pc = np.reshape(pc, (pixels, pc_shape[2]))
+
         self.depth = np.zeros(self.count)
         for i in range(0, self.count):
-            bin_mat = self.get_bin_img(i)
-            print(np.shape(bin_mat))
-            print(np.shape(pc))
+            bin = self.get_bin_img(i)
+            bin = np.reshape(bin, (pixels))
+            values = np.empty()
+            for p in range(0, pixels)
+                if bin[p] != 0:
+                    np.append(values, pc[p])
+            depth[i] = np.median(values)
+
+        print("DONE")
+
 
     def print(self, index):
         print("left: " + str(self.params[index][0]) + ", top: " + str(self.params[index][1]))

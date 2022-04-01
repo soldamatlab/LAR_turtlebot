@@ -25,6 +25,7 @@ def main():
     # If any actions are to be performed here before the main loop,
     # uncomment the sleep below. (It is necessary to avoid exceptions.)
     rate.sleep()
+    turtle.play_sound()
     button_1()
     
     # MAIN LOOP
