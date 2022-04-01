@@ -4,7 +4,7 @@ import numpy as np
 import cv2
 from camera import *
 import CONST
-from dance import dance
+from movementdance import dance
 
 
 class Turtle:
