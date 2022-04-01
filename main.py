@@ -45,9 +45,9 @@ def button_cb(msg):
 
 def button_1():
     depth_point_cloud = turtle.get_point_cloud()
-    depth_K = turtle.get_depth_K()
-    bot_point_cloud = recalculate_coordinates(depth_point_cloud, depth_K)
-    print(bot_point_cloud)
+    # depth_K = turtle.get_depth_K()
+    # bot_point_cloud = recalculate_coordinates(depth_point_cloud, depth_K)
+    # print(bot_point_cloud)
 
 
 def main():
