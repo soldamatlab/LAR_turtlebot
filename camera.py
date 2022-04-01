@@ -22,7 +22,7 @@ class Segments:
         self.label_dict = label_dict # label_dict[i] is the label of the i-th segment used in label_mat
         self.params = params # params of each segment: params[i] = [leftest, highest, width, height, area]
         self.centroids = centroids # centroid of each segment
-        self.depth = None # median depth of each segment
+        self.coors = None # median depth of each segment
 
     def leftest(self, i):
         return self.params[i][0]
@@ -64,12 +64,12 @@ class Segments:
         bin_mat[self.label_mat == self.label_dict[segment]] = 1
         return bin_mat
 
-    def get_depth(self, pc):
+    def get_coors(self, pc):
         pc_shape = np.shape(pc)
         pixels = pc_shape[0] * pc_shape[1]
         pc = np.reshape(pc, (pixels, pc_shape[2]))
 
-        depth = []
+        coots = []
         for i in range(0, self.count):
             bin = self.get_bin_img(i)
             bin = np.reshape(bin, (pixels))
@@ -78,9 +78,9 @@ class Segments:
                 if bin[p] != 0 and all(not np.isnan(c) for c in pc[p]):
                     values.append(pc[p])
             values = np.stack(values, axis=0)
-            depth.append(np.median(values, axis=0))
+            coots.append(np.median(values, axis=0))
 
-        self.depth = depth
+        self.coors = coors
 
 
     def print(self, index):
