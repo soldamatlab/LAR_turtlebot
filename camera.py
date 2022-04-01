@@ -58,6 +58,7 @@ def img_threshold(hsv, color):
     
     print("TEST")
     print(type(hsv[:,:,0].astype(int)))
+    print(hsv[:,:,0].astype(int))
     print(type(target_hue))
     hue = get_hue_diff(hsv[:,:,0].astype(int), target_hue) <= hue_diff
     satur = hsv[:,:,1] >= satur_min
