@@ -48,7 +48,7 @@ def main():
         # Testing
         img_rgb = turtle.get_rgb_image()
         img_hsv = rgb_to_hsv(img_rgb)
-        img_bin = img_threshold(img_hsv)
+        img_bin = img_threshold(img_hsv, CONST.GREEN)
         # w_rgb.show(img_rgb)
         w_bin.show(bin_to_rgb(img_bin))
 
