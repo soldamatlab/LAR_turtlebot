@@ -17,6 +17,10 @@ class Turtle:
 
     def get_rgb_image(self):
         return self.bot.get_rgb_image()
+    
+    def get_hsv_image(self):
+        rgb = self.get_rgb_image()
+        return rgb_to_hsv(rgb)
 
     def get_point_cloud(self):
         return self.bot.get_point_cloud()
@@ -25,8 +29,7 @@ class Turtle:
         return self.bot.get_depth_K()
 
     def get_segments(self, min_area=CONST.MIN_AREA, target_ratio=CONST.TARGET_RATIO, max_ratio_diff=CONST.MAX_RATIO_DIFF):
-        rgb = self.get_rgb_image()
-        hsv = rgb_to_hsv(rgb)
+        hsv = self.get_hsv_image()
         bin = img_threshold(hsv)
         segments = segment(bin, min_area=min_area)
         segments = hw_ratio_filter(segments, target=target_ratio, max_diff=max_ratio_diff)
@@ -41,6 +44,14 @@ def button_cb(msg):
         if msg.button == 0:
             sticks = turtle.get_segments()
             sticks.print_all()
+
+            if sticks.count > 0:
+                coords = sticks.centroids[0]
+                print("coords type" + str(type(coords)))
+                hsv = turtle.get_hsv_image()
+                print("Centroid 0 hsv color: " + hsv(coords))
+
+
         if msg.button == 1:
             dance()
 
