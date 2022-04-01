@@ -69,7 +69,8 @@ def button_cb(msg):
             print_center_color(turtle)
 
         if msg.button == 2:
-            rotate_detected_color(turtle)
+            test_func()
+            #rotate_detected_color(turtle)
 
     # depth_point_cloud = turtle.get_point_cloud()
     # depth_K = turtle.get_depth_K()
