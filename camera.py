@@ -45,7 +45,7 @@ class Segments:
             bin = np.reshape(bin, (pixels))
             values = []
             for p in range(0, pixels):
-                if bin[p] != 0 and pc[p] != None:
+                if bin[p] != 0 and all(pc[p] != None):
                     values.append(pc[p])
             depth[i] = np.median(values)
 
