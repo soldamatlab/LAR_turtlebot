@@ -31,8 +31,8 @@ def main():
     while not turtle.bot.is_shutting_down():
         rate.sleep()
 
-        # rgb = turtle.get_rgb_image()
-        # w_rgb.show(rgb)
+        rgb = turtle.get_rgb_image()
+        w_rgb.show(rgb)
 
 
 turtle = None
