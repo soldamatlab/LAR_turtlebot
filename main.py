@@ -50,11 +50,9 @@ def button_cb(msg):
 
 def button_1():
     pc = turtle.get_point_cloud()
-    print(pc)
-
-    # depth_K = turtle.get_depth_K()
-    # bot_pc = recalculate_coordinates(pc, depth_K)
-    # print(bot_pc)
+    depth_K = turtle.get_depth_K()
+    bot_pc = recalculate_coordinates(pc, depth_K)
+    print(bot_pc)
 
 
 def main():
