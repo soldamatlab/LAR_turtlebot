@@ -34,11 +34,11 @@ class Segments:
         bin_mat[self.label_mat == self.label_dict[segment]] = 1
 
     def get_depth(self, pc):
+        self.depth = np.zeros(self.count)
         for i in range(0, self.count):
             bin_mat = self.get_bin_img(i)
-            
-            window = Window("test " + str(i))
-            window.show(bin_to_rgb(bin_mat))
+            print(size(bin_mat))
+            print(size(pc))
 
     def print(self, index):
         print("left: " + str(self.params[index][0]) + ", top: " + str(self.params[index][1]))
