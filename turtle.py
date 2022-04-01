@@ -33,7 +33,7 @@ class Turtle:
         return self.bot.get_rgb_image()
 
     def get_point_cloud(self, convert_to_bot=True):
-        pc = self.bot.get_point_cloud()
+        pc = np.array(self.bot.get_point_cloud())
         if convert_to_bot:
             pc = pc_cam_to_bot(pc, self.get_depth_K())
         return pc
@@ -55,7 +55,7 @@ class Turtle:
         segments = hw_ratio_filter(segments, target=target_ratio, max_diff=max_ratio_diff)
         if get_depth:
             if pc is None:
-                pc = self.get_point_cloud(convert_to_bot=True) #TODO
+                pc = self.get_point_cloud(convert_to_bot=True)
             segments.get_depth(pc)
         return segments
     
