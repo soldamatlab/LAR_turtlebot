@@ -38,15 +38,12 @@ turtle = Turtle(rgb=True, pc=True, depth=True)
 
 def button_cb(msg):
     if msg.button == 0:
-        sticks = turtle.get_segments()
-        sticks.print_all()
-    if msg.button == 1:
         dance()
-
-    # depth_point_cloud = turtle.get_point_cloud()
-    # depth_K = turtle.get_depth_K()
-    # bot_point_cloud = recalculate_coordinates(depth_point_cloud, depth_K)
-    # print(bot_point_cloud)
+    if msg.button == 1:
+        depth_point_cloud = turtle.get_point_cloud()
+        depth_K = turtle.get_depth_K()
+        bot_point_cloud = recalculate_coordinates(depth_point_cloud, depth_K)
+        print(bot_point_cloud)
 
 
 def main():
