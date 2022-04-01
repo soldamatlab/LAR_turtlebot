@@ -31,11 +31,8 @@ def main():
     while not turtle.bot.is_shutting_down():
         rate.sleep()
 
-        rgb = turtle.get_rgb_image()
-        # hsv = rgb_to_hsv(rgb)
-        # bin_img = bin_to_rgb(img_threshold(hsv))
-        w_rgb.show(rgb)
-        # w_bool.show(bin_img)
+        # rgb = turtle.get_rgb_image()
+        # w_rgb.show(rgb)
 
 
 turtle = None
