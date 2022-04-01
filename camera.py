@@ -25,19 +25,19 @@ class Segments:
         self.depth = None # median depth of each segment
 
     def leftest(self, i):
-        return params[i][0]
+        return self.params[i][0]
 
     def highest(self, i):
-        return params[i][1]
+        return self.params[i][1]
 
     def width(self, i):
-        return params[i][2]
+        return self.params[i][2]
 
     def height(self, i):
-        return params[i][3]
+        return self.params[i][3]
 
     def area(self, i):
-        return params[i][4]
+        return self.params[i][4]
 
     def remove(self, index):
         self.count -= 1
