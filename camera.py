@@ -64,18 +64,8 @@ def img_threshold(hsv, color):
 
 def get_hue_diff(hue_array, target_hue, info=False):
     diff1 = np.abs(hue_array - target_hue)
-    if info: print("DIFF1: " + str(diff1))
     diff2 = np.abs(hue_array - (target_hue + CONST.HUE_MAX))
-    if info: print("DIFF2: " + str(diff2))
     return np.minimum(diff1, diff2)
-
-
-def test_func():
-    print("TEST")
-    a = np.array([[1, 2],[178, 179]])
-    target = 1
-    diff = get_hue_diff(a, target, True)
-    print(diff)
 
 
 def bin_to_rgb(bin):
