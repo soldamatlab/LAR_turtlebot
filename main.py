@@ -20,7 +20,7 @@ def button_2():
 
 def main():
     rate = Rate(10)
-    w_rgb = Window("RGB")
+    # w_rgb = Window("RGB")
     w_bin = Window("BIN")
     
     # INIT ACTIONS
@@ -37,7 +37,7 @@ def main():
         img_rgb = turtle.get_rgb_image()
         img_hsv = rgb_to_hsv(img_rgb)
         img_bin = img_threshold(img_hsv)
-        w_rgb.show(img_rgb)
+        # w_rgb.show(img_rgb)
         w_bin.show(bin_to_rgb(img_bin))
 
 
