@@ -33,7 +33,7 @@ class Turtle:
         return segments
 
 
-turtle = Turtle(rgb=False, pc=True, depth=False)
+turtle = Turtle(rgb=True, pc=True, depth=True)
 
 
 def button_cb(msg):
@@ -44,10 +44,14 @@ def button_cb(msg):
 
 
 def button_1():
-    depth_point_cloud = turtle.get_point_cloud()
+    pc = None
+    while pc is None:
+        pc = turtle.get_point_cloud()
+    print(pc)
+    
     # depth_K = turtle.get_depth_K()
-    # bot_point_cloud = recalculate_coordinates(depth_point_cloud, depth_K)
-    # print(bot_point_cloud)
+    # bot_pc = recalculate_coordinates(pc, depth_K)
+    # print(bot_pc)
 
 
 def main():
