@@ -27,16 +27,11 @@ def main():
     # INIT ACTIONS
     # (the sleep is necessary to avoid errors
     # if any actions are to be performed before the main loop)
-    rate.sleep()
-    button_1()
+    # rate.sleep()
     
     # MAIN LOOP
     while not turtle.bot.is_shutting_down():
         rate.sleep()
-
-        if f:
-            f = False
-            button_1()
 
         rgb = turtle.get_rgb_image()
         # hsv = rgb_to_hsv(rgb)
