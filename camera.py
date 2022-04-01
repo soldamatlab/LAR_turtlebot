@@ -134,6 +134,7 @@ def pc_cam_to_bot(cam_pc, K, l=CONST.DEPTH_CAM_LAMBDA):
 
     cam_pc = np.reshape(cam_pc, (og_shape[0] * og_shape[1], og_shape[2]))
     cam_z = cam_pc[:,2]
+    print(cam_z)
     cam_pc[:,2] = 1
 
     bot_pc = l * np.matmul(cam_pc, np.linalg.inv(K))
