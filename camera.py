@@ -39,14 +39,14 @@ class Segments:
         pixels = pc_shape[0] * pc_shape[1]
         pc = np.reshape(pc, (pixels, pc_shape[2]))
 
-        self.depth = np.zeros(self.count)
+        self.depth = []
         for i in range(0, self.count):
             bin = self.get_bin_img(i)
             bin = np.reshape(bin, (pixels))
             values = np.empty()
             for p in range(0, pixels):
                 if bin[p] != 0:
-                    np.append(values, pc[p])
+                    values.append(pc[p])
             depth[i] = np.median(values)
 
         print("DONE")
