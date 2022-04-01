@@ -20,7 +20,7 @@ class Segments:
         self.count = count # number of segments
         self.label_mat = label_mat # labels of pixels
         self.label_dict = label_dict # label_dict[i] is the label of the i-th segment used in label_mat
-        self.params = params # params of each segment: params = [leftest, highest, width, height, area]
+        self.params = params # params of each segment: params[i] = [leftest, highest, width, height, area]
         self.centroids = centroids # centroid of each segment
         self.depth = None # median depth of each segment
 
@@ -36,6 +36,7 @@ class Segments:
         bin_mat = np.zeros_like(self.label_mat)
         bin_mat[self.label_mat == i] = 1
         
+        print("area" + str(self.params[i][4]))
         window = Window("test " + str(i))
         window.show(bin_to_rgb(bin_mat))
 
