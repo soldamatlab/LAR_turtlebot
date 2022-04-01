@@ -24,7 +24,7 @@ class Turtle:
             while pc is None:
                 pc = self.bot.get_point_cloud()
         if convert_to_bot:
-            pc = recalculate_coordinates(pc, self.get_depth_K)
+            pc = pc_cam_to_bot(pc, self.get_depth_K)
         return pc
 
     def get_depth_K(self):
