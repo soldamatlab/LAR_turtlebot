@@ -5,7 +5,7 @@ import cv2
 from camera import *
 import CONST
 from dance import dance
-from color_harvest import print_center_color
+from color_harvest import *
 
 
 class Turtle:
@@ -46,10 +46,12 @@ def button_cb(msg):
             sticks = turtle.get_segments()
             sticks.print_all()
 
-            print_center_color(turtle, sticks)
-
-
+            print_segment_color(turtle, sticks)
+        
         if msg.button == 1:
+            print_center_color(turtle)
+
+        if msg.button == 2:
             dance()
 
     # depth_point_cloud = turtle.get_point_cloud()

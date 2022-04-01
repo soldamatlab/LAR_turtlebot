@@ -1,6 +1,14 @@
 from camera import img_threshold
 
-def print_center_color(turtle, sticks):
+# prints hsv color of pixel in the center of the screen
+def print_center_color(turtle):
+    hsv = turtle.get_hsv_image()
+    shape = hsv.shape
+    center = [int(shape[0]/2), int(shape[1]/2)]
+    print("hsv color of screen-center pixel: " + str(hsv[center[0], center[1]]))
+
+# prints hsv color of centroid of first segment from [sticks]
+def print_segment_color(turtle, sticks):
     if sticks.count > 0:
         hsv = turtle.get_hsv_image()
         bin = img_threshold(hsv)
