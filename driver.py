@@ -1,4 +1,5 @@
 import CONST
+import numpy as np
 
 def drive(turtle):
     sticks = turtle.get_segments(CONST.GREEN)
