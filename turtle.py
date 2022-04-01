@@ -42,3 +42,6 @@ class Turtle:
                 pc = self.get_point_cloud()
             segments.get_depth(pc)
         return segments
+    
+    def play_sound():
+        self.bot.play_sound(sound_id=4)
