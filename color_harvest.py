@@ -1,4 +1,4 @@
-from main import img_threshold
+from camera import img_threshold
 
 def print_center_color(turtle, sticks):
     if sticks.count > 0:
