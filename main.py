@@ -11,6 +11,7 @@ def button_0():
     dance()
 
 def button_1():
+    print(turtle.get_depth_K)
     segments = turtle.get_segments()
     print(segments.depth)
 
