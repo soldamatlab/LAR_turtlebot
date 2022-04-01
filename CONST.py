@@ -12,8 +12,8 @@ B_HUE_DIFF = 25
 B_SATUR_MIN = 60
 B_VAL_MIN = 60
 
-RED = 5     #  0 - 
-R_HUE_DIFF = 10
+RED = 175     #  0 - 
+R_HUE_DIFF = 15
 R_SATUR_MIN = 0
 R_VAL_MIN = 0
 
