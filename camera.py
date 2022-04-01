@@ -40,19 +40,19 @@ class Segments:
         return self.params[i][4]
 
     def leftests(self):
-        return [self.leftest(i) for i in range(0, sticks.count)]
+        return [self.leftest(i) for i in range(0, self.count)]
 
     def highests(self):
-        return [self.highest(i) for i in range(0, sticks.count)]
+        return [self.highest(i) for i in range(0, self.count)]
 
     def widths(self):
-        return [self.width(i) for i in range(0, sticks.count)]
+        return [self.width(i) for i in range(0, self.count)]
 
     def heights(self):
-        return [self.height(i) for i in range(0, sticks.count)]
+        return [self.height(i) for i in range(0, self.count)]
 
     def areas(self):
-        return [self.area(i) for i in range(0, sticks.count)]
+        return [self.area(i) for i in range(0, self.count)]
 
     def remove(self, index):
         self.count -= 1
