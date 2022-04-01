@@ -5,6 +5,7 @@ import cv2
 from camera import *
 import CONST
 from dance import dance
+from color_harvest import print_center_color
 
 
 class Turtle:
@@ -45,12 +46,7 @@ def button_cb(msg):
             sticks = turtle.get_segments()
             sticks.print_all()
 
-            if sticks.count > 0:
-                params = sticks.params[0]
-                hsv = turtle.get_hsv_image()
-                center_coords = [int(params[0]) + int(params[2]/2), int(params[1]) + int(params[3]/2)]
-                center_color = str(hsv[center_coords[0], center_coords[1]])
-                print("Centroid 0 coords: " + str(center_coords) + ", hsv color: " + str(center_color))
+            print_center_color(turtle, sticks)
 
 
         if msg.button == 1:
