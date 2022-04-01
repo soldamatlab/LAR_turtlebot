@@ -30,10 +30,13 @@ class Segments:
         self.centroids.pop(index)
 
     def get_depth(self, pc):
-        for i in range(0, self.count):
-            bin_mat = np.zeros_like(self.label_mat)
-            bin_mat[self.label_mat == i] = 1
-            # TODO
+        # for i in range(0, self.count):
+        
+        bin_mat = np.zeros_like(self.label_mat)
+        bin_mat[self.label_mat == i] = 1
+        
+        window = Window("test")
+        window.show(bin_to_rgb(bin_mat))
 
     def print(self, index):
         print("left: " + str(self.params[index][0]) + ", top: " + str(self.params[index][1]))
@@ -111,6 +114,7 @@ def hw_ratio_filter(segments, target=1, max_diff=0.2, info=False):
     return segments
 
 
+# TODO lambda (l)
 def pc_cam_to_bot(point_cloud, K, l=1):
     cam_pc = np.array(point_cloud)
     og_shape = np.shape(cam_pc)
