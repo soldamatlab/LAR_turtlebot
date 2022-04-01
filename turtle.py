@@ -61,16 +61,16 @@ class Turtle:
         min_area=CONST.MIN_AREA,
         target_ratio=CONST.TARGET_RATIO,
         max_ratio_diff=CONST.MAX_RATIO_DIFF,
-        get_depth=True,
+        get_coors=True,
     ):
         hsv = self.get_hsv_image()
         bin = img_threshold(hsv, color)
         segments = segment(bin, min_area=min_area)
         segments = hw_ratio_filter(segments, target=target_ratio, max_diff=max_ratio_diff)
-        if get_depth:
+        if get_coors:
             if pc is None:
                 pc = self.get_point_cloud(convert_to_bot=True)
-            segments.get_depth(pc)
+            segments.get_coors(pc)
         return segments
 
     def play_sound(self):
