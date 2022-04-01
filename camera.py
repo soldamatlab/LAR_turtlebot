@@ -30,14 +30,12 @@ class Segments:
         self.centroids.pop(index)
 
     def get_depth(self, pc):
-        # for i in range(0, self.count):
-        i = 0
-        
-        bin_mat = np.zeros_like(self.label_mat)
-        bin_mat[self.label_mat == i] = 1
-        
-        window = Window("test")
-        window.show(bin_to_rgb(bin_mat))
+        for i in range(0, self.count):
+            bin_mat = np.zeros_like(self.label_mat)
+            bin_mat[self.label_mat == i] = 1
+            
+            window = Window("test " + str(i))
+            window.show(bin_to_rgb(bin_mat))
 
     def print(self, index):
         print("left: " + str(self.params[index][0]) + ", top: " + str(self.params[index][1]))
