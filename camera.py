@@ -29,14 +29,14 @@ class Segments:
         self.params.pop(index)
         self.centroids.pop(index)
 
+    def get_bin_img(self, segment):
+        bin_mat = np.zeros_like(self.label_mat)
+        bin_mat[self.label_mat == self.label_dict[segment]] = 1
+
     def get_depth(self, pc):
         for i in range(0, self.count):
-        # i = 0
-
-            bin_mat = np.zeros_like(self.label_mat)
-            bin_mat[self.label_mat == self.label_dict[i]] = 1
+            bin_mat = self.get_bin_img(i)
             
-            print("area" + str(self.params[i][4]))
             window = Window("test " + str(i))
             window.show(bin_to_rgb(bin_mat))
 
