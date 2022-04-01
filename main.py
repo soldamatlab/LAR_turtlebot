@@ -21,9 +21,10 @@ def main():
     w_rgb = Window("RGB")
     
     # INIT ACTIONS
-    # (the sleep is necessary to avoid errors
-    # if any actions are to be performed before the main loop)
-    # rate.sleep()
+    # If any actions are to be performed here before the main loop,
+    # uncomment the sleep below. (It is necessary to avoid exceptions.)
+    rate.sleep()
+    button_1()
     
     # MAIN LOOP
     rate = Rate(10)

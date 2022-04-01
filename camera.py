@@ -31,6 +31,7 @@ class Segments:
 
     def get_depth(self, pc):
         # for i in range(0, self.count):
+        i = 0
         
         bin_mat = np.zeros_like(self.label_mat)
         bin_mat[self.label_mat == i] = 1
