@@ -68,7 +68,6 @@ def get_hue_diff(hue_array, target_hue):
     return np.minimum(diff1, diff2)
 
 
-
 def bin_to_rgb(bin):
     return np.repeat((np.copy(bin) * 255)[:, :, np.newaxis], 3, axis=2).astype(np.uint8)
 
