@@ -5,6 +5,7 @@ import numpy as np
 import cv2
 from camera import *
 from dance import dance
+from color_harvest import *
 
 
 def button_0():

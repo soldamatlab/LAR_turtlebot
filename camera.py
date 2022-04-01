@@ -71,18 +71,27 @@ def rgb_to_hsv(rgb):
     return cv2.cvtColor(rgb, cv2.COLOR_BGR2HSV)
 
 
-def pixel_threshold(hsv_pix):
-    hue = abs(hsv_pix[0] - CONST.GREEN) < CONST.HUE_DIFF
-    satur = hsv_pix[1] > CONST.SATUR_MIN
-    val = hsv_pix[2] > CONST.VAL_MIN
+def pixel_threshold(hsv_pix, color):
+    [target_hue, hue_diff, satur_min, val_min] = CONST.get_color_consts(color)
+    hue = abs(hsv_pix[0] - target_hue) < hue_diff
+    satur = hsv_pix[1] > satur_min
+    val = hsv_pix[2] > val_min
     return hue and satur and val
 
 
-def img_threshold(hsv):
-    hue = np.abs(hsv[:,:,0].astype(int) - CONST.GREEN) <= CONST.HUE_DIFF
-    satur = hsv[:,:,1] >= CONST.SATUR_MIN
-    val = hsv[:,:,2] >= CONST.VAL_MIN
+def img_threshold(hsv, color):
+    [target_hue, hue_diff, satur_min, val_min] = CONST.get_color_consts(color)
+
+    hue = get_hue_diff(hsv[:,:,0].astype(int), target_hue) <= hue_diff
+    satur = hsv[:,:,1] >= satur_min
+    val = hsv[:,:,2] >= val_min
     return hue & satur & val
+
+
+def get_hue_diff(hue_array, target_hue, info=False):
+    diff1 = np.abs(hue_array - target_hue)
+    diff2 = np.abs(hue_array - (target_hue + CONST.HUE_MAX))
+    return np.minimum(diff1, diff2)
 
 
 def bin_to_rgb(bin):
@@ -112,7 +121,7 @@ def segment(bin, min_area=1000, info=False):
     return Segments(count, label_mat, label_dict, params, centroids)
 
 
-def hw_ratio_filter(segments, target=1, max_diff=0.2, info=False):
+def hw_ratio_filter(segments, target=CONST.TARGET_RATIO, max_diff=CONST.MAX_RATIO_DIFF, info=False):
     if info: print("hw_ratio_filter: received " + str(segments.count) + " segments")
 
     rm_indices = []
