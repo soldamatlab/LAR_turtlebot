@@ -50,7 +50,6 @@ class Segments:
             depth[i] = np.median(values)
 
         self.depth = depth
-        print("DONE")
 
 
     def print(self, index):
