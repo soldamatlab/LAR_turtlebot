@@ -45,7 +45,11 @@ class Turtle:
         elif color == 2 | color == 'RED':
             self.detect = 2
         elif color == 0:
-            print("WTF")
+            print("WTF0")
+        elif color == 1:
+            print("WTF1")
+        elif color == 2:
+            print("WTF2")
         else:
             print("ERROR: set_detect called with [color]=" + str(color) + ". Choose from [0,1,2] or ['GREEN','BLUE','RED'].")
 
