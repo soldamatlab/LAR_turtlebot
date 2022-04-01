@@ -44,11 +44,9 @@ class Segments:
             bin = self.get_bin_img(i)
             bin = np.reshape(bin, (pixels))
             values = []
-            print(pc[0])
             for p in range(0, pixels):
-                if bin[p] != 0:
+                if bin[p] != 0 and all(not np.isnan(c) for c in pc[p]):
                     values.append(pc[p])
-            print(values[0])
             depth[i] = np.median(values)
 
         self.depth = depth
