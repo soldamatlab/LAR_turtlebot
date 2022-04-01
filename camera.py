@@ -37,8 +37,8 @@ class Segments:
         self.depth = np.zeros(self.count)
         for i in range(0, self.count):
             bin_mat = self.get_bin_img(i)
-            print(size(bin_mat))
-            print(size(pc))
+            print(np.shape(bin_mat))
+            print(np.shape(pc))
 
     def print(self, index):
         print("left: " + str(self.params[index][0]) + ", top: " + str(self.params[index][1]))
