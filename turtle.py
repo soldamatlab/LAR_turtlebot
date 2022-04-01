@@ -13,12 +13,13 @@ class Turtle:
         self.button_2 = lambda : None
 
     def button_cb(self, msg):
-        if msg.button == 0:
-            self.button_0()
-        elif msg.button == 1:
-            self.button_1()
-        elif msg.button == 2:
-            self.button_2()
+        if msg.state == 1:
+            if msg.button == 0:
+                self.button_0()
+            elif msg.button == 1:
+                self.button_1()
+            elif msg.button == 2:
+                self.button_2()
 
     def register_button_cb(self, button, cb):
         if button == 0:

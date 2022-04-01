@@ -16,7 +16,11 @@ def button_1():
     print(segments.depth)
 
 def button_2():
-    return None
+    arr = []
+    arr.append(np.array([0,0,0])
+    arr.append(np.array([1,2,3]))
+    arr.append(np.array([5,5,5]))
+    print(np.median(arr, axis=0))
 
 
 def main():
@@ -29,7 +33,7 @@ def main():
     # uncomment the sleep below. (It is necessary to avoid exceptions.)
     rate.sleep()
     # turtle.play_sound()
-    button_1()
+    button_2()
     
     # MAIN LOOP
     while not turtle.bot.is_shutting_down():
