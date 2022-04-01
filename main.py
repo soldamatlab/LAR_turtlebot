@@ -84,7 +84,7 @@ def main():
 
         rgb = turtle.get_rgb_image()
         hsv = rgb_to_hsv(rgb)
-        bin_img = bin_to_rgb(img_threshold(hsv))
+        bin_img = bin_to_rgb(img_threshold(hsv, turtle.detect))
         window_rgb.show(rgb)
         window_bool.show(bin_img)
 
