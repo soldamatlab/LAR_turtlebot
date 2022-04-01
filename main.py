@@ -40,10 +40,14 @@ def button_cb(msg):
     if msg.button == 0:
         dance()
     if msg.button == 1:
-        depth_point_cloud = turtle.get_point_cloud()
-        depth_K = turtle.get_depth_K()
-        bot_point_cloud = recalculate_coordinates(depth_point_cloud, depth_K)
-        print(bot_point_cloud)
+        button_1()
+
+
+def button_1():
+    depth_point_cloud = turtle.get_point_cloud()
+    depth_K = turtle.get_depth_K()
+    bot_point_cloud = recalculate_coordinates(depth_point_cloud, depth_K)
+    print(bot_point_cloud)
 
 
 def main():
@@ -53,7 +57,7 @@ def main():
     # window_rgb = Window("rgb")
     # window_bool = Window("bool")
 
-    button_cb(1) #TODO remove
+    button_1() #TODO remove
 
     while not turtle.bot.is_shutting_down():
         rate.sleep()
