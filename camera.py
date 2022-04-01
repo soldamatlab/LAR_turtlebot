@@ -30,7 +30,7 @@ class Segments:
         self.centroids.pop(index)
 
     def get_bin_img(self, segment):
-        bin_mat = np.zeros_like(self.label_mat)
+        bin_mat = np.zeros_like(self.label_mat, dtype=int)
         bin_mat[self.label_mat == self.label_dict[segment]] = 1
 
     def get_depth(self, pc):
@@ -42,10 +42,9 @@ class Segments:
         for i in range(0, self.count):
             bin = self.get_bin_img(i)
 
+            print(np.shape(bin))
             win = Window("TEST")
             win.show(bin_to_rgb(bin))
-            print(np.shape(bin))
-            print((pixels))
 
             # bin = np.reshape(bin, (pixels))
             # values = np.empty()
