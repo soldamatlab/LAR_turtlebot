@@ -6,7 +6,7 @@ def print_center_color(turtle, sticks):
         bin = img_threshold(hsv)
 
         params = sticks.params[0]
-        centroid = sticks.centroids[0]
+        centroid = [int(sticks.centroids[0][0]), int(sticks.centroids[0][1])]
 
         #center_coords = [int(params[0]) + int(params[2]/2), int(params[1]) + int(params[3]/2)]
         #center_color = hsv[center_coords[0], center_coords[1]]
