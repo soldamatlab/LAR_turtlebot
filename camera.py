@@ -31,8 +31,8 @@ class Segments:
 
     def get_bin_img(self, segment):
         bin_mat = np.zeros_like(self.label_mat, dtype=int)
-        print(bin_mat)
         bin_mat[self.label_mat == self.label_dict[segment]] = 1
+        print(bin_mat)
 
     def get_depth(self, pc):
         pc_shape = np.shape(pc)
