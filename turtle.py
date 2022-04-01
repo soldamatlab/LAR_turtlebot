@@ -55,7 +55,7 @@ class Turtle:
         segments = hw_ratio_filter(segments, target=target_ratio, max_diff=max_ratio_diff)
         if get_depth:
             if pc is None:
-                pc = self.get_point_cloud(convert_to_bot=True) #TODO
+                pc = self.get_point_cloud(convert_to_bot=False) #TODO
             segments.get_depth(pc)
         return segments
     
