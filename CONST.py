@@ -3,7 +3,7 @@
 GREEN = 65  # 45 - 75
 HUE_DIFF = 25
 SATUR_MIN = 60
-VAL_MIN = 20
+VAL_MIN = 60
 
 BLUE = 100  # 95 - 
 #HUE_DIFF = 25
