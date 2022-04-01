@@ -28,8 +28,8 @@ def print_segment_color(turtle, sticks):
 def rotate_detected_color(turtle):
     if turtle.detect == 0:
         turtle.set_detect(1)
-    if turtle.detect == 1:
+    elif turtle.detect == 1:
         turtle.set_detect(2)
-    if turtle.detect == 2:
+    elif turtle.detect == 2:
         turtle.set_detect(0)
     
