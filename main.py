@@ -22,13 +22,15 @@ def button_1():
 
 
 def main():
-    turtle.register_button_event_cb(button_cb)
-
     rate = Rate(10)
     
+    # INIT ACTIONS
+    # (the sleep is necessary to avoid errors
+    # if any actions are to be performed before the main loop)
     rate.sleep()
     button_1()
     
+    # MAIN LOOP
     while not turtle.bot.is_shutting_down():
         rate.sleep()
 

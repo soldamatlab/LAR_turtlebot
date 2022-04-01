@@ -7,8 +7,18 @@ class Turtle:
     def __init__(self, rgb=True, pc=True, depth=True):
         self.bot = Turtlebot(rgb=rgb, pc=pc, depth=depth)
 
-    def register_button_event_cb(self, cb):
-        self.bot.register_button_event_cb(cb) # lambda msg: cb() if msg.state == 0 else None
+        self.bot.register_button_event_cb(self.button_cb)
+        self.button_0 = lambda : None
+        self.button_1 = lambda : None
+        self.button_2 = lambda : None
+
+    def button_cb(self, msg):
+        if msg.button == 0:
+            self.button_0()
+        elif msg.button == 1:
+            self.button_1()
+        elif msg.button == 2:
+            self.button_2()
 
     def get_rgb_image(self):
         return self.bot.get_rgb_image()
