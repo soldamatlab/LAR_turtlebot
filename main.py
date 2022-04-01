@@ -32,6 +32,7 @@ def main():
 
     while not turtle.bot.is_shutting_down():
         rate.sleep()
+        turtle.bot.play_sound(sound_id=4)
 
         # rgb = turtle.get_rgb_image()
         # hsv = rgb_to_hsv(rgb)
