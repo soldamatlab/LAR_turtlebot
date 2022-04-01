@@ -11,8 +11,7 @@ def button_0():
     dance()
 
 def button_1():
-    sticks = turtle.get_segments()
-    print(sticks.depth)
+    return None
 
 def button_2():
     return None
@@ -26,9 +25,8 @@ def main():
     # INIT ACTIONS
     # If any actions are to be performed here before the main loop,
     # uncomment the sleep below. (It is necessary to avoid exceptions.)
-    rate.sleep()
+    # rate.sleep()
     # turtle.play_sound()
-    button_1()
     
     # MAIN LOOP
     while not turtle.bot.is_shutting_down():
