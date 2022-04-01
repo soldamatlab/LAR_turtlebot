@@ -42,7 +42,7 @@ class Segments:
         for i in range(0, self.count):
             bin = self.get_bin_img(i)
 
-            print(np.shape(bin))
+            print(bin)
             win = Window("TEST")
             win.show(bin_to_rgb(bin))
 
