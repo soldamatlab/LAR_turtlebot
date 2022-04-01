@@ -31,10 +31,10 @@ class Segments:
 
     def get_depth(self, pc):
         # for i in range(0, self.count):
-        i = 1
+        i = 0
 
         bin_mat = np.zeros_like(self.label_mat)
-        bin_mat[self.label_mat == i] = 1
+        bin_mat[self.label_mat == self.label_dict[i]] = 1
         
         print("area" + str(self.params[i][4]))
         window = Window("test " + str(i))
