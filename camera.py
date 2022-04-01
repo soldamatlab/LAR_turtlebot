@@ -32,7 +32,7 @@ class Segments:
     def get_bin_img(self, segment):
         bin_mat = np.zeros_like(self.label_mat, dtype=int)
         bin_mat[self.label_mat == self.label_dict[segment]] = 1
-        print(bin_mat)
+        return bin_mat
 
     def get_depth(self, pc):
         pc_shape = np.shape(pc)
@@ -42,17 +42,12 @@ class Segments:
         self.depth = np.zeros(self.count)
         for i in range(0, self.count):
             bin = self.get_bin_img(i)
-
-            # print(bin)
-            win = Window("TEST")
-            win.show(bin_to_rgb(bin))
-
-            # bin = np.reshape(bin, (pixels))
-            # values = np.empty()
-            # for p in range(0, pixels):
-            #     if bin[p] != 0:
-            #         np.append(values, pc[p])
-            # depth[i] = np.median(values)
+            bin = np.reshape(bin, (pixels))
+            values = np.empty()
+            for p in range(0, pixels):
+                if bin[p] != 0:
+                    np.append(values, pc[p])
+            depth[i] = np.median(values)
 
         print("DONE")
 
