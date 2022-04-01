@@ -6,23 +6,23 @@ import cv2
 from camera import *
 from dance import dance
 
-turtle = Turtle(rgb=True, pc=True, depth=True)
+def button_0():
+    dance()
 
-
-def button_cb(msg):
-    if msg.button == 0:
-        dance()
-    if msg.button == 1:
-        button_1()
-
-
-# TODO remove
 def button_1():
     segments = turtle.get_segments()
 
+def button_2():
+    return None
+
 
 def main():
+    turtle = Turtle(rgb=True, pc=True, depth=True)
+    turtle.register_button_cb(0, button_0)
+    turtle.register_button_cb(1, button_1)
+    turtle.register_button_cb(2, button_2)
     rate = Rate(10)
+
     w_rgb = Window("RGB")
     
     # INIT ACTIONS

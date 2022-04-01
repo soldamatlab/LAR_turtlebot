@@ -20,6 +20,14 @@ class Turtle:
         elif msg.button == 2:
             self.button_2()
 
+    def register_button_cb(self, button, cb):
+        if button == 0:
+            self.button_0 = cb
+        elif button == 1:
+            self.button_1 = cb
+        elif button == 2:
+            self.button_2 = cb
+
     def get_rgb_image(self):
         return self.bot.get_rgb_image()
 
