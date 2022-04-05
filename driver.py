@@ -13,6 +13,8 @@ class Driver:
         self.counter = 0
 
     def drive(self):
+        if INFO:
+            print()
         self.counter += 1
         self.main.perform()
 
@@ -35,7 +37,8 @@ class Activity:
         return None
 
     def perform(self):
-        print(str(self.driver.counter) + ": " + str(type(self)) + " perform")
+        if INFO:
+            print(str(self.driver.counter) + ": " + str(type(self)) + " perform")
         if self._first:
             self._first = False
             self.start()
@@ -131,7 +134,7 @@ class Turn(Activity):
     def perform(self):
         Activity.perform(self)
 
-        if self.turn_for - (1000 * (time.perf_counter() - self.start_time)) < CONST.SLEEP / 2:
+        if 1000 * (self.turn_for - (time.perf_counter() - self.start_time)) < CONST.SLEEP / 2:
             self.turtle.stop()
             self.end()
 
