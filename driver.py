@@ -130,16 +130,10 @@ class Turn(Activity):
 
     def start(self):
         self.turtle.set_speed(0, self.speed)
+        print("SPEED: " + str(self.speed))
 
     def perform(self):
         Activity.perform(self)
-
-        print()
-        print("DEBUG:")
-        print("turn_for: " + str(self.turn_for))
-        print("now: " + str(time.perf_counter()))
-        print("start: " + str(self.start_time))
-        print()
 
         if 1000 * (self.turn_for - (time.perf_counter() - self.start_time)) < CONST.SLEEP / 2:
             self.turtle.stop()
