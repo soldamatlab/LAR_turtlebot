@@ -53,13 +53,13 @@ class MainActivity(Activity):
             return self.activity.perform()
 
         if self.activity is None:
-            return self.do(FindTwoSticks(self, self))
+            return self.do(FindTwoSticks(self, self.driver))
 
         if isinstance(self.activity, FindTwoSticks):
             sticks = self.ret
             self.ret = None
             target = np.mean(sticks, axis=0)
-            return self.do(Goto(self, self, target))
+            return self.do(Goto(self, self.driver, target))
 
 
 class FindTwoSticks(Activity):
