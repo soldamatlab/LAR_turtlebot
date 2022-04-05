@@ -6,15 +6,39 @@ class Driver:
 
     def __init__(self, turtle):
         self.turtle = turtle
-        self.activity = None
+        self.activity = FindTwoSticks(self, self)
+        self.ret = None
 
     def drive(self):
-
-        if not (self.activity is None):
-            self.activity.perform(self)
+        if self.activity is not None:
+            self.activity.perform()
             return
 
-        sticks = self.turtle.get_segments(CONST.GREEN)
+        print("RET: " + str(self.ret))
+
+
+# Abstract Activity
+class Activity:
+
+    def __init__(self, parent, driver):
+        self.parent = parent
+        self.driver = driver
+        self.turtle = driver.turtle
+        self.ret = None
+
+    # def perform(self):
+
+    def end(self):
+        self.parent.activity = None
+
+
+class FindTwoSticks(Activity):
+
+    def __init__(self, parent, driver):
+        Activity.__init__(self, parent, driver)
+
+    def perform(self):
+        sticks = self.driver.turtle.get_segments(CONST.GREEN)
 
         if sticks.count < 2:
             self.turtle.set_speed(0, np.pi / 12)
@@ -24,23 +48,24 @@ class Driver:
         A = sticks.coors[max_sticks[0]]
         B = sticks.coors[max_sticks[1]]
 
-        avg_coor = (A + B) / 2
+        self.parent.ret = (A, B)
+        self.end()
 
-        self.activity = A_goto(self, avg_coor)
 
+class Goto(Activity):
 
-class A_goto:
+    def __init__(self, parent, driver, target):
+        Activity.__init__(self, parent, driver)
 
-    def __init__(self, driver, target):
         x = target[0]
         z = target[2]
         self.dist = np.sqrt(x ** 2 + z ** 2)
         self.alpha = np.arccos(z / self.dist)
 
-        driver.turtle.reset_odometry()
+        self.turtle.reset_odometry()
 
-    def perform(self, driver):
-        odometry = driver.turtle.get_odometry()
+    def perform(self):
+        odometry = self.turtle.get_odometry()
 
         # if odometry.angle < self.alpha:
         #
