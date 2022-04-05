@@ -73,6 +73,8 @@ class MainActivity(Activity):
             target = np.mean(sticks, axis=0)
             return self.do(Goto(self, self.driver, target))
 
+        self.end()
+
 
 class FindTwoSticks(Activity):
 
@@ -133,10 +135,7 @@ class Turn(Activity):
     def perform(self):
         Activity.perform(self)
 
-        self.turtle.set_speed(0, self.speed)
-
         if 1000 * (self.turn_for - (time.perf_counter() - self.start_time)) < CONST.SLEEP / 2:
-            print("TURN STOP") # TODO rem
             self.turtle.stop()
             self.end()
 
