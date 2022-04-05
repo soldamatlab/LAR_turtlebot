@@ -2,14 +2,18 @@ import CONST
 import numpy as np
 import time
 
+INFO = True
+
 
 class Driver:
 
     def __init__(self, turtle):
         self.turtle = turtle
         self.main = MainActivity(None, self)
+        self.counter = 0
 
     def drive(self):
+        self.counter += 1
         self.main.perform()
 
 
@@ -26,7 +30,7 @@ class Activity:
         self.ret = None
 
     def perform(self):
-        return None
+        print(str(self.driver.counter) + ": " + str(type(self)) + " perform")
 
     def do(self, activity):
         self.activity = activity
@@ -43,6 +47,8 @@ class MainActivity(Activity):
         Activity.__init__(self, parent, driver)
 
     def perform(self):
+        Activity.perform(self)
+
         if self.busy:
             return self.activity.perform()
 
@@ -62,6 +68,8 @@ class FindTwoSticks(Activity):
         Activity.__init__(self, parent, driver)
 
     def perform(self):
+        Activity.perform(self)
+
         sticks = self.driver.turtle.get_segments(CONST.GREEN)
 
         if sticks.count < 2:
@@ -87,6 +95,8 @@ class Goto(Activity):
         self.alpha = np.arccos(z / self.dist)
 
     def perform(self):
+        Activity.perform(self)
+
         if self.busy:
             return self.activity.perform()
 
@@ -108,6 +118,8 @@ class Turn(Activity):
         self.start = time.perf_counter()
 
     def perform(self):
+        Activity.perform(self)
+
         if self.turn_for - (1000 * (time.perf_counter() - self.start)) > CONST.SLEEP / 2:
             self.turtle.set_speed(0, self.speed)
         else:
@@ -123,6 +135,8 @@ class Forward(Activity):
         self.turtle.reset_odometry()
 
     def perform(self):
+        Activity.perform(self)
+
         odometry = self.turtle.get_odometry()
         if self.dist - odometry[2] > self.speed * (CONST.SLEEP / 1000) / 2:
             self.turtle.set_speed(self.speed, 0)
