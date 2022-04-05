@@ -22,7 +22,7 @@ def button_2():
     return None
 
 
-def main():
+if __name__ == '__main__':
     rate = Rate(10)
 
     turtle = Turtle(rgb=True, pc=True, depth=True)
@@ -40,7 +40,7 @@ def main():
     # INIT ACTIONS
     # rate.sleep()
     # turtle.play_sound()
-    
+
     # MAIN LOOP
     while not turtle.bot.is_shutting_down():
         rate.sleep()
@@ -54,7 +54,3 @@ def main():
         img_bin = img_threshold(img_hsv, CONST.GREEN)
         # w_rgb.show(img_rgb)
         w_bin.show(bin_to_rgb(img_bin))
-
-
-if __name__ == '__main__':
-    main()

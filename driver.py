@@ -1,6 +1,7 @@
 import CONST
 import numpy as np
 
+
 class Driver:
 
     def __init__(self, turtle):
@@ -39,4 +40,14 @@ class A_goto:
         driver.turtle.reset_odometry()
 
     def perform(self, driver):
-        a = 5
+        odometry = driver.turtle.get_odometry()
+
+        # if odometry.angle < self.alpha:
+        #
+        #     return
+        #
+        # if odometry.dist < self.dist:
+        #
+        #     return
+        #
+        # driver.activity = None
