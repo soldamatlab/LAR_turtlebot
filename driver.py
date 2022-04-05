@@ -50,8 +50,9 @@ class MainActivity(Activity):
             return self.do(FindTwoSticks(self, self))
 
         if isinstance(self.activity, FindTwoSticks):
-            target = self.ret
+            sticks = self.ret
             self.ret = None
+            target = np.mean(sticks, dims=1)
             return self.do(Goto(self, self, target))
 
 
