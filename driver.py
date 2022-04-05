@@ -5,6 +5,7 @@ def drive(turtle):
     sticks = turtle.get_segments(CONST.GREEN)
 
     if sticks.count < 2:
+        turtle.set_speed(0, np.pi / 12)
         return
 
     max_sticks = np.argsort(sticks.areas())
@@ -12,3 +13,5 @@ def drive(turtle):
     B = sticks.coors[max_sticks[1]]
     print(A)
     print(B)
+
+    turtle.set_speed(0, 0)
