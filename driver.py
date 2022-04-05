@@ -69,7 +69,6 @@ class MainActivity(Activity):
 
         if isinstance(self.activity, FindTwoSticks):
             sticks = self.ret
-            print("STICKS: " + str(sticks)) # TODO rem
             self.ret = None
             target = np.mean(sticks, axis=0)
             return self.do(Goto(self, self.driver, target))
