@@ -1,16 +1,42 @@
 import CONST
 import numpy as np
 
-def drive(turtle):
-    sticks = turtle.get_segments(CONST.GREEN)
+class Driver:
 
-    if sticks.count < 2:
-        turtle.set_speed(0, np.pi / 12)
-        return
+    def __init__(self, turtle):
+        self.turtle = turtle
+        self.activity = None
 
-    max_sticks = np.argsort(sticks.areas())
-    A = sticks.coors[max_sticks[0]]
-    B = sticks.coors[max_sticks[1]]
-    print(str(A) + " ; " + str(B))
+    def drive(self):
 
-    turtle.set_speed(0, 0)
+        if not (self.activity is None):
+            self.activity.perform(self)
+            return
+
+        sticks = self.turtle.get_segments(CONST.GREEN)
+
+        if sticks.count < 2:
+            self.turtle.set_speed(0, np.pi / 12)
+            return
+
+        max_sticks = np.argsort(sticks.areas())
+        A = sticks.coors[max_sticks[0]]
+        B = sticks.coors[max_sticks[1]]
+
+        avg_coor = (A + B) / 2
+
+        self.activity = A_goto(self, avg_coor)
+
+
+class A_goto:
+
+    def __init__(self, driver, target):
+        x = target[0]
+        z = target[2]
+        self.dist = np.sqrt(x ** 2 + z ** 2)
+        self.alpha = np.arccos(z / self.dist)
+
+        driver.turtle.reset_odometry()
+
+    def perform(self, driver):
+        a = 5

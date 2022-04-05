@@ -22,7 +22,7 @@ class Segments:
         self.label_dict = label_dict # label_dict[i] is the label of the i-th segment used in label_mat
         self.params = params # params of each segment: params[i] = [leftest, highest, width, height, area]
         self.centroids = centroids # centroid of each segment
-        self.coors = None # median depth of each segment
+        self.coors = None # median coors of each segment, x->right, y->down, z->forward
 
     def leftest(self, i):
         return self.params[i][0]

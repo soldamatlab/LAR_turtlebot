@@ -1,3 +1,4 @@
+import numpy as np
 from robolab_turtlebot import Turtlebot
 import CONST
 from camera import *
@@ -75,3 +76,9 @@ class Turtle:
 
     def play_sound(self):
         self.bot.play_sound(sound_id=4)
+
+    def reset_odometry(self):
+        self.bot.reset_odometry()
+
+    def get_odometry(self):
+        return self.bot.get_odometry()

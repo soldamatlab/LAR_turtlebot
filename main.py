@@ -6,7 +6,7 @@ import cv2
 from camera import *
 from dance import dance
 from color_harvest import *
-from driver import drive
+from driver import Driver
 
 turtle = None
 
@@ -15,7 +15,8 @@ def button_0():
     dance()
 
 def button_1():
-    return None
+    odometry = turtle.get_odometry()
+    print('odometry: {}'.format(odometry))
 
 def button_2():
     return None
@@ -28,13 +29,15 @@ def main():
     turtle.register_button_cb(0, button_0)
     turtle.register_button_cb(1, button_1)
     turtle.register_button_cb(2, button_2)
+    turtle.bot.wait_for_odometry()
+    turtle.reset_odometry()
+
+    driver = Driver(turtle)
 
     # w_rgb = Window("RGB")
     w_bin = Window("BIN")
-    
+
     # INIT ACTIONS
-    # If any actions are to be performed here before the main loop,
-    # uncomment the sleep below. (It is necessary to avoid exceptions.)
     # rate.sleep()
     # turtle.play_sound()
     
@@ -43,9 +46,9 @@ def main():
         rate.sleep()
         turtle.bot.cmd_velocity(linear=turtle.linear, angular=turtle.angular)
 
-        drive(turtle)
+        driver.drive()
 
-        # Testing
+        # Testing window
         img_rgb = turtle.get_rgb_image()
         img_hsv = rgb_to_hsv(img_rgb)
         img_bin = img_threshold(img_hsv, CONST.GREEN)
