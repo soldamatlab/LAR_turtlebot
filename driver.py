@@ -52,7 +52,7 @@ class MainActivity(Activity):
         if isinstance(self.activity, FindTwoSticks):
             sticks = self.ret
             self.ret = None
-            target = np.mean(sticks, dims=1)
+            target = np.mean(sticks)
             return self.do(Goto(self, self, target))
 
 
