@@ -7,6 +7,7 @@ from camera import *
 from dance import dance
 from color_harvest import *
 from driver import Driver
+import CONST
 
 turtle = None
 
@@ -23,7 +24,7 @@ def button_2():
 
 
 if __name__ == '__main__':
-    rate = Rate(10)
+    rate = Rate(CONST.RATE)
 
     turtle = Turtle(rgb=True, pc=True, depth=True)
     turtle.register_button_cb(0, button_0)

@@ -1,4 +1,7 @@
 
+RATE = 10
+SLEEP = 1000 / RATE
+
 HUE_MAX = 180
 
 # POLE COLORS
