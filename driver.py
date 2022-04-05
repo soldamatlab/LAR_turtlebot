@@ -129,8 +129,7 @@ class Turn(Activity):
         self.start_time = time.perf_counter()
 
     def start(self):
-        d_speed = (self.speed / 2 * np.pi) * 360
-        self.turtle.set_speed(0, d_speed)
+        self.turtle.set_speed(0, self.speed)
 
     def perform(self):
         Activity.perform(self)
