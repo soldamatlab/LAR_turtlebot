@@ -81,13 +81,15 @@ class FindTwoSticks(Activity):
     def __init__(self, parent, driver):
         Activity.__init__(self, parent, driver)
 
+    def start(self):
+        self.turtle.set_speed(0, np.pi / 12)
+
     def perform(self):
         Activity.perform(self)
 
         sticks = self.driver.turtle.get_segments(CONST.GREEN)
 
         if sticks.count < 2:
-            self.turtle.set_speed(0, np.pi / 12)
             return
 
         max_sticks = np.argsort(sticks.areas())

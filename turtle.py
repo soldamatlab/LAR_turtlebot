@@ -17,6 +17,7 @@ class Turtle:
         self.button_2 = lambda : None
 
     def set_speed(self, linear, angular):
+        print("SET_SPEED: " + str(linear) + " " + str(angular)) # TODO rem
         self.linear = linear
         self.angular = angular  # positive: left, negative: right
         self.bot.cmd_velocity(linear=linear, angular=angular)
