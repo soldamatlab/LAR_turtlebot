@@ -17,7 +17,7 @@ class Turtle:
 
     def set_speed(self, linear, angular):
         self.linear = linear
-        self.angular = angular
+        self.angular = angular  # positive: left, negative: right
         self.bot.cmd_velocity(linear=linear, angular=angular)
 
     def stop(self):

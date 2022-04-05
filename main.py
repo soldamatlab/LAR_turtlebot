@@ -30,7 +30,7 @@ def main():
     turtle.register_button_cb(2, button_2)
 
     # w_rgb = Window("RGB")
-    # w_bin = Window("BIN")
+    w_bin = Window("BIN")
     
     # INIT ACTIONS
     # If any actions are to be performed here before the main loop,
@@ -46,11 +46,11 @@ def main():
         drive(turtle)
 
         # Testing
-        # img_rgb = turtle.get_rgb_image()
-        # img_hsv = rgb_to_hsv(img_rgb)
-        # img_bin = img_threshold(img_hsv, CONST.GREEN)
+        img_rgb = turtle.get_rgb_image()
+        img_hsv = rgb_to_hsv(img_rgb)
+        img_bin = img_threshold(img_hsv, CONST.GREEN)
         # w_rgb.show(img_rgb)
-        # w_bin.show(bin_to_rgb(img_bin))
+        w_bin.show(bin_to_rgb(img_bin))
 
 
 if __name__ == '__main__':
