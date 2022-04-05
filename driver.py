@@ -39,9 +39,13 @@ class Activity:
     def perform(self):
         if INFO:
             print(str(self.driver.counter) + ": " + str(type(self)) + " perform")
+
         if self._first:
             self._first = False
             self.start()
+
+        if self.busy:
+            return self.activity.perform()
 
     def do(self, activity):
         self.activity = activity
@@ -59,9 +63,6 @@ class MainActivity(Activity):
 
     def perform(self):
         Activity.perform(self)
-
-        if self.busy:
-            return self.activity.perform()
 
         if self.activity is None:
             return self.do(FindTwoSticks(self, self.driver))
@@ -92,6 +93,7 @@ class FindTwoSticks(Activity):
         B = sticks.coors[max_sticks[1]]
 
         self.parent.ret = (A, B)
+        self.turtle.stop()
         self.end()
 
 
@@ -107,9 +109,6 @@ class Goto(Activity):
 
     def perform(self):
         Activity.perform(self)
-
-        if self.busy:
-            return self.activity.perform()
 
         if self.activity is None:
             return self.do(Turn(self, self.driver, self.alpha))
@@ -129,12 +128,15 @@ class Turn(Activity):
         self.start_time = time.perf_counter()
 
     def start(self):
-        self.turtle.set_speed(0, np.pi / 12)
+        self.turtle.set_speed(0, self.speed)
 
     def perform(self):
         Activity.perform(self)
 
+        self.turtle.set_speed(0, self.speed)
+
         if 1000 * (self.turn_for - (time.perf_counter() - self.start_time)) < CONST.SLEEP / 2:
+            print("TURN STOP") # TODO rem
             self.turtle.stop()
             self.end()
 
