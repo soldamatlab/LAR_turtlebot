@@ -123,7 +123,7 @@ class Turn(Activity):
         Activity.__init__(self, parent, driver)
         self.speed = speed
         self.turn_for = degree / speed
-        self.start = time.perf_counter()
+        self.start_time = time.perf_counter()
 
     def start(self):
         self.turtle.set_speed(0, self.speed)
@@ -131,7 +131,7 @@ class Turn(Activity):
     def perform(self):
         Activity.perform(self)
 
-        if self.turn_for - (1000 * (time.perf_counter() - self.start)) < CONST.SLEEP / 2:
+        if self.turn_for - (1000 * (time.perf_counter() - self.start_time)) < CONST.SLEEP / 2:
             self.turtle.stop()
             self.end()
 
