@@ -29,8 +29,16 @@ class Activity:
         self.busy = False
         self.ret = None
 
+        self._first = True
+
+    def start(self):
+        return None
+
     def perform(self):
         print(str(self.driver.counter) + ": " + str(type(self)) + " perform")
+        if self._first:
+            self._first = False
+            self.start()
 
     def do(self, activity):
         self.activity = activity
@@ -117,12 +125,14 @@ class Turn(Activity):
         self.turn_for = degree / speed
         self.start = time.perf_counter()
 
+    def start(self):
+        self.turtle.set_speed(0, self.speed)
+
     def perform(self):
         Activity.perform(self)
 
-        if self.turn_for - (1000 * (time.perf_counter() - self.start)) > CONST.SLEEP / 2:
-            self.turtle.set_speed(0, self.speed)
-        else:
+        if self.turn_for - (1000 * (time.perf_counter() - self.start)) < CONST.SLEEP / 2:
+            self.turtle.stop()
             self.end()
 
 
@@ -134,11 +144,13 @@ class Forward(Activity):
         self.speed = speed
         self.turtle.reset_odometry()
 
+    def start(self):
+        self.turtle.set_speed(self.speed, 0)
+
     def perform(self):
         Activity.perform(self)
 
         odometry = self.turtle.get_odometry()
-        if self.dist - odometry[2] > self.speed * (CONST.SLEEP / 1000) / 2:
-            self.turtle.set_speed(self.speed, 0)
-        else:
+        if self.dist - odometry[2] < self.speed * (CONST.SLEEP / 1000) / 2:
+            self.turtle.stop()
             self.end()
