@@ -80,7 +80,7 @@ class MainActivity(Activity):
         if isinstance(self.activity, FindTwoSticks):
             stick_mean = self.ret
             self.ret = None
-            dist = stick_mean + self.overshoot
+            dist = stick_mean[2] + self.overshoot
             return self.do(Forward(self, self.driver, dist))
 
         self.end()
@@ -123,13 +123,13 @@ class FindTwoSticks(Activity):
         # TODO
         stick_mean = sticks.coors[0]
 
-        if self.center:
-            if not self.centered(stick_mean):
-                if stick_mean[0] < 0:
-                    self.turtle.set_speed(0, self.speed)
-                else:
-                    self.turtle.set_speed(0, -self.speed)
-                return
+        # if self.center:
+        #     if not self.centered(stick_mean):
+        #         if stick_mean[0] < 0:
+        #             self.turtle.set_speed(0, self.speed)
+        #         else:
+        #             self.turtle.set_speed(0, -self.speed)
+        #         return
 
         self.parent.ret = stick_mean
         self.turtle.stop()
