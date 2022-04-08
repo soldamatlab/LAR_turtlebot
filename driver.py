@@ -185,6 +185,7 @@ class Forward(Activity):
             return self.activity.perform()
 
         odometry = self.turtle.get_odometry()
+        print(odometry)  #TODO rem
         if self.dist - odometry[2] < self.speed * (CONST.SLEEP / 1000) / 2:
             self.turtle.stop()
             self.end()
