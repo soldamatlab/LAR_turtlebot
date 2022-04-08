@@ -13,7 +13,7 @@ class Driver:
         self.main = MainActivity(self, self)
         self.counter = 0
 
-        self.color = CONST.BLUE
+        self.color = CONST.GREEN
 
     def drive(self):
         if not self.busy:
@@ -75,7 +75,7 @@ class MainActivity(Activity):
             return self.activity.perform()
 
         if self.activity is None or isinstance(self.activity, Forward):
-            return self.do(FindTwoSticks(self, self.driver))
+            return self.do(FindTwoSticks(self, self.driver, window=True))
 
         if isinstance(self.activity, FindTwoSticks):
             A, B = self.ret
