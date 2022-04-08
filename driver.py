@@ -61,6 +61,11 @@ class Activity:
     def end(self):
         self.parent.busy = False
 
+    def pop_ret(self):
+        ret = self.ret
+        self.ret = None
+        return ret
+
 
 class MainActivity(Activity):
 
@@ -75,19 +80,21 @@ class MainActivity(Activity):
             return self.activity.perform()
 
         if self.activity is None or isinstance(self.activity, Forward):
-            return self.do(FindTwoSticks(self, self.driver, window=True))
+            return self.do(FindGate(self, self.driver, window=True))
 
-        if isinstance(self.activity, FindTwoSticks):
-            # TODO
-            dist = 0.2
+        if isinstance(self.activity, FindGate):
+            return self.do(MeasureGateDist(self, self.driver))
+
+        if isinstance(self.activity, FindGate):
+            dist = self.pop_ret()
             return self.do(Forward(self, self.driver, dist))
 
         self.end()
 
 
-class FindTwoSticks(Activity):
+class FindGate(Activity):
 
-    def __init__(self, parent, driver, speed=np.pi/12, center_limit=60, window=False):
+    def __init__(self, parent, driver, speed=np.pi/8, center_limit=12, window=False):
         Activity.__init__(self, parent, driver)
         self.speed = speed
         self.center_limit = center_limit # in pixels
@@ -109,7 +116,6 @@ class FindTwoSticks(Activity):
             self.w_bin.show(bin_to_rgb(bin_img))
 
         if sticks.count < 2:
-            if INFO: print("searching for sticks")
             self.turtle.set_speed(0, self.dir * self.speed)
             return
 
@@ -117,19 +123,37 @@ class FindTwoSticks(Activity):
         center = (sticks.centroids[args[0]] + sticks.centroids[args[1]]) / 2
 
         diff = center[0] - (np.shape(bin_img)[1] / 2)
-        if INFO: print("DIFF: " + str(diff))
         if abs(diff) > self.center_limit:
             if diff < 0:
-                if INFO: print("center to left")
                 self.dir = 1
                 self.turtle.set_speed(0, self.speed)
             else:
-                if INFO: print("center to right")
                 self.dir = -1
                 self.turtle.set_speed(0, -self.speed)
             return
 
         self.turtle.stop()
+        self.end()
+
+
+class MeasureGateDist(Activity):
+
+    def __init__(self, parent, driver):
+        Activity.__init__(self, parent, driver)
+
+    def perform(self):
+        Activity.perform_init(self)
+
+        sticks = self.driver.turtle.get_segments(self.driver.color)
+        if sticks.count < 2:
+            return self.perform()
+
+        pc = self.turtle.get_point_cloud()
+        sticks.calculate_coors(pc)
+
+        args = np.argsort(sticks.areas())
+        center = (sticks.coors[args[0]] + sticks.coors[args[1]]) / 2
+        self.parent.ret = center[2]
         self.end()
 
 

@@ -64,7 +64,7 @@ class Segments:
         bin_mat[self.label_mat == self.label_dict[segment]] = 1
         return bin_mat
 
-    def get_coors(self, pc):
+    def calculate_coors(self, pc):
         pc_shape = np.shape(pc)
         pixels = pc_shape[0] * pc_shape[1]
         pc = np.reshape(pc, (pixels, pc_shape[2]))

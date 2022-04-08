@@ -104,7 +104,7 @@ class Turtle:
         if get_coors:
             if pc is None:
                 pc = self.get_point_cloud(convert_to_bot=True)
-            segments.get_coors(pc)
+            segments.calculate_coors(pc)
         return segments
 
     def play_sound(self):
