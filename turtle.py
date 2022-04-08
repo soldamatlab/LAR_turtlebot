@@ -84,6 +84,6 @@ class Turtle:
     def reset_odometry(self):
         self.bot.reset_odometry()
 
-    #
+    # x->forward, y->sideways, z->angle
     def get_odometry(self):
         return self.bot.get_odometry()

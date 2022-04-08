@@ -10,7 +10,7 @@ class Driver:
     def __init__(self, turtle):
         self.turtle = turtle
         self.busy = True
-        self.main = Forward(self, self, 0.30) #MainActivity(self, self)
+        self.main = MainActivity(self, self)
         self.counter = 0
 
     def drive(self):
@@ -182,7 +182,6 @@ class Forward(Activity):
             return self.activity.perform()
 
         odometry = self.turtle.get_odometry()
-        print(odometry)  #TODO rem
         if self.dist - odometry[0] < self.speed * (CONST.SLEEP / 1000) / 2:
             self.turtle.stop()
             self.end()
