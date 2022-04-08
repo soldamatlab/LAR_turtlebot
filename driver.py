@@ -117,6 +117,8 @@ class GoThroughGate(Activity):
             if dist is None:
                 return self.do(FindGate(self, self.driver, self.color, window=self.window))
             else:
+                if self.went_forward == 0:
+                    dist /= 2
                 return self.do(Forward(self, self.driver, dist))
 
         if isinstance(self.activity, Forward):
