@@ -114,9 +114,9 @@ class FindTwoSticks(Activity):
             return
 
         print(sticks.count)
-        print(np.shape(sticks.areas))
+        print(np.shape(sticks.areas()))
         print(np.shape(sticks.centroids))
-        args = np.argsort(sticks.areas)
+        args = np.argsort(sticks.areas())
         center = (sticks.centroids[args[0]] + sticks.centroids[args[1]]) / 2
 
         diff = center[1] - (np.shape(bin_img)[1] / 2)
