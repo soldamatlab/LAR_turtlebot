@@ -15,9 +15,13 @@ class Driver:
 
     def drive(self):
         if not self.busy:
-            return None # TODO
+            if INFO:
+                print("\nEND")
+            return None  # TODO
+
         if INFO:
             print()
+
         self.counter += 1
         self.turtle.keep_speed()
         self.main.perform()
@@ -40,7 +44,7 @@ class Activity:
     def start(self):
         return None
 
-    def perform(self):
+    def perform_init(self):
         if INFO:
             print(str(self.driver.counter) + ": " + str(type(self)) + " perform")
 
@@ -48,8 +52,7 @@ class Activity:
             self._first = False
             self.start()
 
-        if self.busy:
-            return self.activity.perform()
+    # def perform(self)
 
     def do(self, activity):
         self.activity = activity
@@ -66,7 +69,9 @@ class MainActivity(Activity):
         Activity.__init__(self, parent, driver)
 
     def perform(self):
-        Activity.perform(self)
+        Activity.perform_init(self)
+        if self.busy:
+            return self.activity.perform()
 
         if self.activity is None:
             return self.do(FindTwoSticks(self, self.driver))
@@ -89,7 +94,9 @@ class FindTwoSticks(Activity):
         self.turtle.set_speed(0, np.pi / 12)
 
     def perform(self):
-        Activity.perform(self)
+        Activity.perform_init(self)
+        if self.busy:
+            return self.activity.perform()
 
         sticks = self.driver.turtle.get_segments(CONST.GREEN)
 
@@ -116,7 +123,9 @@ class Goto(Activity):
         self.alpha = np.arccos(z / self.dist)
 
     def perform(self):
-        Activity.perform(self)
+        Activity.perform_init(self)
+        if self.busy:
+            return self.activity.perform()
 
         if self.activity is None:
             return self.do(Turn(self, self.driver, self.alpha))
@@ -139,7 +148,9 @@ class Turn(Activity):
         self.turtle.set_speed(0, self.speed)
 
     def perform(self):
-        Activity.perform(self)
+        Activity.perform_init(self)
+        if self.busy:
+            return self.activity.perform()
 
         if 1000 * (self.turn_for - (time.perf_counter() - self.start_time)) < CONST.SLEEP / 2:
             self.turtle.stop()
@@ -158,7 +169,9 @@ class Forward(Activity):
         self.turtle.set_speed(self.speed, 0)
 
     def perform(self):
-        Activity.perform(self)
+        Activity.perform_init(self)
+        if self.busy:
+            return self.activity.perform()
 
         odometry = self.turtle.get_odometry()
         if self.dist - odometry[2] < self.speed * (CONST.SLEEP / 1000) / 2:
