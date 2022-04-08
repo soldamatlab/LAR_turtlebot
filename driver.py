@@ -85,7 +85,7 @@ class MainActivity(Activity):
 
 class FindTwoSticks(Activity):
 
-    def __init__(self, parent, driver, center=True, speed=np.pi/12, center_limit=0.05):
+    def __init__(self, parent, driver, center=True, speed=np.pi/12, center_limit=0.015):
         Activity.__init__(self, parent, driver)
         self.center = center
         self.speed = speed
