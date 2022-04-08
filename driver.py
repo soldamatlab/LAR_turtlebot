@@ -22,8 +22,6 @@ class Driver:
         self.main.perform()
         self.turtle.keep_speed()
 
-        print("SPEED: " + str(self.turtle.linear) + " " + str(self.turtle.angular)) #TODO
-
 
 # Abstract Activity
 class Activity:
@@ -72,7 +70,7 @@ class MainActivity(Activity):
             return self.activity.perform()
 
         if self.activity is None:
-            return self.do(FindTwoSticks(self, self.driver))
+            return self.do(FindTwoSticks(self, self.driver, CONST.BLUE))
 
         if isinstance(self.activity, FindTwoSticks):
             A, B = self.ret
@@ -85,8 +83,9 @@ class MainActivity(Activity):
 
 class FindTwoSticks(Activity):
 
-    def __init__(self, parent, driver, center=True, speed=np.pi/12, center_limit=0.015):
+    def __init__(self, parent, driver, color, center=True, speed=np.pi/12, center_limit=0.015):
         Activity.__init__(self, parent, driver)
+        self.color = color
         self.center = center
         self.speed = speed
         self.center_limit = center_limit
@@ -96,7 +95,7 @@ class FindTwoSticks(Activity):
         if self.busy:
             return self.activity.perform()
 
-        sticks = self.driver.turtle.get_segments(CONST.GREEN)
+        sticks = self.driver.turtle.get_segments(self.color)
 
         if sticks.count < 2:
             self.turtle.set_speed(0, self.speed)
@@ -125,7 +124,7 @@ class FindTwoSticks(Activity):
 
 class Forward(Activity):
 
-    def __init__(self, parent, driver, dist, speed=0.15):
+    def __init__(self, parent, driver, dist, speed=0.005):
         Activity.__init__(self, parent, driver)
         self.dist = dist
         self.speed = speed

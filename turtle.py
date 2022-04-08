@@ -16,6 +16,10 @@ class Turtle:
         self.button_0 = lambda: None
         self.button_1 = lambda: None
         self.button_2 = lambda: None
+        self.bot.register_bumper_event_cb(self.bumper_cb)
+        self.bumper_left = lambda: None
+        self.bumper_center = lambda: None
+        self.bumper_right = lambda: None
 
     def set_speed(self, linear, angular):
         self.linear = linear
@@ -43,6 +47,27 @@ class Turtle:
             self.button_1 = cb
         elif button == 2:
             self.button_2 = cb
+
+    def bumper_cb(self, msg):
+        if msg.state == 1:
+            if msg.bumper == "LEFT":
+                self.bumper_left()
+            elif msg.bumper == "CENTER":
+                self.bumper_center()
+            elif msg.bumper == "RIGHT":
+                self.bumper_right()
+
+    def register_bumper_cb(self, bumper, cb):
+        if bumper == "ALL":
+            self.register_bumper_cb("LEFT", cb)
+            self.register_bumper_cb("CENTER", cb)
+            self.register_bumper_cb("RIGHT", cb)
+        elif bumper == "LEFT":
+            self.bumper_left = cb
+        elif bumper == "CENTER":
+            self.bumper_center = cb
+        elif bumper == "RIGHT":
+            self.bumper_right = cb
 
     def get_rgb_image(self):
         return self.bot.get_rgb_image()
