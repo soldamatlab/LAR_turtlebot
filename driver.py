@@ -2,7 +2,7 @@ import CONST
 import numpy as np
 import time
 
-INFO = True
+INFO = False
 
 
 class Driver:
@@ -61,6 +61,9 @@ class MainActivity(Activity):
 
     def __init__(self, parent, driver):
         Activity.__init__(self, parent, driver)
+
+    def start(self):
+        print("MainActivity.start")
 
     def perform(self):
         Activity.perform(self)
