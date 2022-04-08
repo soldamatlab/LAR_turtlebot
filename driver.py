@@ -19,7 +19,7 @@ class Driver:
         if INFO: print()
 
         self.counter += 1
-        self.turtle.keep_speed()
+        # self.turtle.keep_speed()
         self.main.perform()
 
         print("SPEED: " + str(self.turtle.linear) + " " + str(self.turtle.angular)) #TODO
