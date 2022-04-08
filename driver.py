@@ -75,7 +75,7 @@ class MainActivity(Activity):
             return self.activity.perform()
 
         if self.activity is None or isinstance(self.activity, Forward):
-            return self.do(FindTwoSticks(self, self.driver, window=True))
+            return self.do(FindTwoSticks(self, self.driver, window=False))
 
         if isinstance(self.activity, FindTwoSticks):
             A, B = self.ret
@@ -88,7 +88,7 @@ class MainActivity(Activity):
 
 class FindTwoSticks(Activity):
 
-    def __init__(self, parent, driver, center=True, speed=np.pi/12, center_limit=0.015, window=False):
+    def __init__(self, parent, driver, center=True, speed=np.pi/12, center_limit=0.02, window=False):
         Activity.__init__(self, parent, driver)
         self.center = center
         self.speed = speed
