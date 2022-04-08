@@ -111,7 +111,7 @@ class FindTwoSticks(Activity):
         if self.window:
             self.w_bin.show(bin_to_rgb(bin_img))
 
-        if sticks.count < 2:
+        if sticks.count < 1: #TODO
             self.turtle.set_speed(0, self.speed)
             return
 
@@ -122,9 +122,6 @@ class FindTwoSticks(Activity):
 
         # TODO
         stick_mean = sticks.coors[0]
-        print(stick_mean)
-        print(stick_mean[0])
-        quit()
 
         if self.center:
             if not self.centered(stick_mean):
