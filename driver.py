@@ -10,7 +10,7 @@ class Driver:
     def __init__(self, turtle):
         self.turtle = turtle
         self.busy = True
-        self.main = MainActivity(self, self)
+        self.main = Forward(self, self, 0.30) #MainActivity(self, self)
         self.counter = 0
 
     def drive(self):
@@ -120,7 +120,7 @@ class FindTwoSticks(Activity):
     @staticmethod
     def centered(A, B):
         stick_mean = (A + B) / 2
-        return abs(stick_mean[0]) < 0.12  #TODO make this robust
+        return abs(stick_mean[0]) < 0.04  #TODO make this robust
 
 
 # class Goto(Activity):
