@@ -77,7 +77,6 @@ class MainActivity(Activity):
             A, B = self.ret
             self.ret = None
             dist = ((A + B) / 2)[2]
-            print("DIST: " + str(dist))
             return self.do(Forward(self, self.driver, dist))
 
         self.end()
@@ -85,12 +84,14 @@ class MainActivity(Activity):
 
 class FindTwoSticks(Activity):
 
-    def __init__(self, parent, driver, center=True):
+    def __init__(self, parent, driver, center=True, speed=np.pi/12, center_limit=0.02):
         Activity.__init__(self, parent, driver)
         self.center = center
+        self.speed = speed
+        self.center_limit = center_limit
 
     def start(self):
-        self.turtle.set_speed(0, np.pi / 12)
+        self.turtle.set_speed(0, self.speed)
 
     def perform(self):
         Activity.perform_init(self)
@@ -105,19 +106,22 @@ class FindTwoSticks(Activity):
         max_sticks = np.argsort(sticks.areas())
         A = sticks.coors[max_sticks[0]]
         B = sticks.coors[max_sticks[1]]
+        stick_mean = (A + B) / 2
 
         if self.center:
-            if not self.centered(A, B):
+            if not self.centered(stick_mean):
+                if stick_mean[0] < 0:
+                    self.turtle.set_speed(0, self.speed)
+                else:
+                    self.turtle.set_speed(0, -self.speed)
                 return
 
         self.parent.ret = (A, B)
         self.turtle.stop()
         self.end()
 
-    @staticmethod
-    def centered(A, B):
-        stick_mean = (A + B) / 2
-        return abs(stick_mean[0]) < 0.04  #TODO make this robust
+    def centered(self, stick_mean):
+        return abs(stick_mean[0]) < self.center_limit
 
 
 # class Goto(Activity):
