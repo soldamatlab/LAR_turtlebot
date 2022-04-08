@@ -22,6 +22,8 @@ class Driver:
         self.turtle.keep_speed()
         self.main.perform()
 
+        print("SPEED: " + str(self.turtle.linear) + " " + str(self.turtle.angular)) #TODO
+
 
 # Abstract Activity
 class Activity:
