@@ -15,12 +15,9 @@ class Driver:
 
     def drive(self):
         if not self.busy:
-            if INFO:
-                print("\nEND")
-            return None  # TODO
+            return None  #TODO
 
-        if INFO:
-            print()
+        if INFO: print()
 
         self.counter += 1
         self.turtle.keep_speed()
@@ -186,6 +183,6 @@ class Forward(Activity):
 
         odometry = self.turtle.get_odometry()
         print(odometry)  #TODO rem
-        if self.dist - odometry[2] < self.speed * (CONST.SLEEP / 1000) / 2:
+        if self.dist - odometry[0] < self.speed * (CONST.SLEEP / 1000) / 2:
             self.turtle.stop()
             self.end()
