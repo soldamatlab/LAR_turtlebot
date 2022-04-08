@@ -118,8 +118,10 @@ class GoThroughGate(Activity):
                 return self.do(FindGate(self, self.driver, self.color, window=self.window))
             else:
                 if self.went_forward == 0:
+                    print("--------------------------------------------------- FIRST")
                     return self.do(Forward(self, self.driver, dist / 100))
                 else:
+                    print("--------------------------------------------------- SECOND")
                     return self.do(Forward(self, self.driver, dist + 0.15))
 
         if isinstance(self.activity, Forward):
