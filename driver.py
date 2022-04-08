@@ -119,7 +119,7 @@ class FindTwoSticks(Activity):
         print(np.shape(bin_img))
         print(center)
 
-        diff = center[1] - (np.shape(bin_img)[1] / 2)
+        diff = center[1] - (np.shape(bin_img)[0] / 2)
         if abs(diff) > self.center_limit:
             if diff < 0:
                 self.turtle.set_speed(0, -self.speed)
