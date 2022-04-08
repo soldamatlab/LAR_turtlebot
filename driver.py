@@ -130,7 +130,7 @@ class FindGate(Activity):
 
         hsv = self.turtle.get_hsv_image()
         bin_img = img_threshold(hsv, self.driver.color)
-        sticks = self.driver.turtle.get_segments(self.driver.color, bin_img=bin_img, min_area=4000)
+        sticks = self.driver.turtle.get_segments(self.driver.color, bin_img=bin_img, min_area=2500)
 
         print("\nAREAS")
         print(sticks.areas())
