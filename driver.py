@@ -87,7 +87,7 @@ class MainActivity(Activity):
 
 class FindTwoSticks(Activity):
 
-    def __init__(self, parent, driver, speed=np.pi/12, center_limit=20, window=False):
+    def __init__(self, parent, driver, speed=np.pi/12, center_limit=60, window=False):
         Activity.__init__(self, parent, driver)
         self.speed = speed
         self.center_limit = center_limit # in pixels
@@ -116,10 +116,8 @@ class FindTwoSticks(Activity):
         args = np.argsort(sticks.areas())
         center = (sticks.centroids[args[0]] + sticks.centroids[args[1]]) / 2
 
-        print(np.shape(bin_img))
-        print(center)
-
-        diff = center[1] - (np.shape(bin_img)[0] / 2)
+        diff = center[1] - (np.shape(bin_img)[1] / 2)
+        print(diff)
         if abs(diff) > self.center_limit:
             if diff < 0:
                 self.turtle.set_speed(0, -self.speed)
