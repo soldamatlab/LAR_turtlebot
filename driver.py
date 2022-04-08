@@ -9,10 +9,13 @@ class Driver:
 
     def __init__(self, turtle):
         self.turtle = turtle
-        self.main = MainActivity(None, self)
+        self.busy = True
+        self.main = MainActivity(self, self)
         self.counter = 0
 
     def drive(self):
+        if not self.busy:
+            return None # TODO
         if INFO:
             print()
         self.counter += 1
