@@ -117,6 +117,7 @@ class FindTwoSticks(Activity):
         center = (sticks.centroids[args[0]] + sticks.centroids[args[1]]) / 2
 
         diff = center[1] - (np.shape(bin_img)[1] / 2)
+        if INFO: print("DIFF: " + str(diff))
         if abs(diff) > self.center_limit:
             if diff < 0:
                 if INFO: print("center to left")
