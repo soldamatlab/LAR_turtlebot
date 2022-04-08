@@ -3,6 +3,8 @@ from robolab_turtlebot import Turtlebot
 import CONST
 from camera import *
 
+INFO = True
+
 
 class Turtle:
 
@@ -26,6 +28,7 @@ class Turtle:
         self.angular = angular  # positive: left, negative: right
 
     def keep_speed(self):
+        if INFO: print("TURTLE_SPEED: " + str(self.linear) + " " + str(self.angular))
         self.bot.cmd_velocity(linear=self.linear, angular=self.angular)
 
     def stop(self):
