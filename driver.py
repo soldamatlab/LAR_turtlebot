@@ -118,12 +118,12 @@ class FindTwoSticks(Activity):
         max_sticks = np.argsort(sticks.areas())
         A = sticks.coors[max_sticks[0]]
         B = sticks.coors[max_sticks[1]]
-        stick_mean = (A + B) / 2
+        mean = (A[0] + B[0]) / 2
 
         self.turtle.set_speed(0, self.speed)
         return
 
-        self.parent.ret = stick_mean
+        self.parent.ret = mean
         self.turtle.stop()
         self.end()
 
