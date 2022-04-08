@@ -89,9 +89,6 @@ class FindTwoSticks(Activity):
         self.speed = speed
         self.center_limit = center_limit
 
-    def start(self):
-        self.turtle.set_speed(0, self.speed)
-
     def perform(self):
         Activity.perform_init(self)
         if self.busy:
@@ -100,6 +97,7 @@ class FindTwoSticks(Activity):
         sticks = self.driver.turtle.get_segments(CONST.GREEN)
 
         if sticks.count < 2:
+            self.turtle.set_speed(0, self.speed)
             return
 
         max_sticks = np.argsort(sticks.areas())
