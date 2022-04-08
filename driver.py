@@ -114,8 +114,8 @@ class FindTwoSticks(Activity):
             return
 
         print(sticks.count)
-        print(shape(sticks.areas))
-        print(shape(sticks.centroids))
+        print(np.shape(sticks.areas))
+        print(np.shape(sticks.centroids))
         args = np.argsort(sticks.areas)
         center = (sticks.centroids[args[0]] + sticks.centroids[args[1]]) / 2
 
