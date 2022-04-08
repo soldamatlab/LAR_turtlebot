@@ -53,7 +53,7 @@ if __name__ == '__main__':
 
     # MAIN LOOP
     while not turtle.bot.is_shutting_down():
-        rate.sleep()
+        # rate.sleep() #TODO
 
         driver.drive()
 
