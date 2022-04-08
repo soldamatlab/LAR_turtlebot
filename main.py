@@ -20,7 +20,7 @@ def button_1():
     print('odometry: {}'.format(odometry))
 
 def button_2():
-    return None
+    turtle.stop()
 
 
 if __name__ == '__main__':

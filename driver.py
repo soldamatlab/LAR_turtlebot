@@ -120,7 +120,7 @@ class FindTwoSticks(Activity):
     @staticmethod
     def centered(A, B):
         stick_mean = (A + B) / 2
-        return abs(stick_mean[0]) < 8  #TODO make this robust
+        return abs(stick_mean[0]) < 0.12  #TODO make this robust
 
 
 # class Goto(Activity):
