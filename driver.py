@@ -75,7 +75,7 @@ class MainActivity(Activity):
             return self.activity.perform()
 
         if self.activity is None or isinstance(self.activity, Forward):
-            return self.do(FindTwoSticks(self, self.driver, window=False))
+            return self.do(FindTwoSticks(self, self.driver, window=True))
 
         if isinstance(self.activity, FindTwoSticks):
             # TODO
