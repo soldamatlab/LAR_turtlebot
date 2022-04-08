@@ -1,5 +1,6 @@
 import CONST
 import numpy as np
+from camera import *
 
 INFO = True
 
@@ -87,18 +88,28 @@ class MainActivity(Activity):
 
 class FindTwoSticks(Activity):
 
-    def __init__(self, parent, driver, center=True, speed=np.pi/12, center_limit=0.015):
+    def __init__(self, parent, driver, center=True, speed=np.pi/12, center_limit=0.015, window=False):
         Activity.__init__(self, parent, driver)
         self.center = center
         self.speed = speed
         self.center_limit = center_limit
+        self.window = window
+
+        if window:
+            self.w_bin = Window("FindTwoSticks")
 
     def perform(self):
         Activity.perform_init(self)
         if self.busy:
             return self.activity.perform()
 
-        sticks = self.driver.turtle.get_segments(self.driver.color)
+        hsv = self.turtle.get_hsv_image()
+        bin_img = img_threshold(hsv, self.driver.color)
+        sticks = self.driver.turtle.get_segments(self.driver.color, bin_img=bin_img)
+
+        # Testing window
+        if self.window:
+            self.w_bin.show(bin_to_rgb(bin_img))
 
         if sticks.count < 2:
             self.turtle.set_speed(0, self.speed)

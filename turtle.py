@@ -89,15 +89,17 @@ class Turtle:
         return self.bot.get_depth_K()
 
     def get_segments(self, color,
+        bin_img=None,
         pc=None,
         min_area=CONST.MIN_AREA,
         target_ratio=CONST.TARGET_RATIO,
         max_ratio_diff=CONST.MAX_RATIO_DIFF,
         get_coors=True,
     ):
-        hsv = self.get_hsv_image()
-        bin = img_threshold(hsv, color)
-        segments = segment(bin, min_area=min_area)
+        if bin_img is None:
+            hsv = self.get_hsv_image()
+            bin_img = img_threshold(hsv, color)
+        segments = segment(bin_img, min_area=min_area)
         segments = hw_ratio_filter(segments, target=target_ratio, max_diff=max_ratio_diff)
         if get_coors:
             if pc is None:
