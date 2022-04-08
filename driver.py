@@ -97,6 +97,7 @@ class FindTwoSticks(Activity):
         sticks = self.driver.turtle.get_segments(CONST.GREEN)
 
         if sticks.count < 2:
+            print("NEVIDIM") #TODO
             self.turtle.set_speed(0, self.speed)
             return
 
@@ -108,8 +109,10 @@ class FindTwoSticks(Activity):
         if self.center:
             if not self.centered(stick_mean):
                 if stick_mean[0] < 0:
+                    print("TURN LEFT") #TODO
                     self.turtle.set_speed(0, self.speed)
                 else:
+                    print("TURN RIGHT") #TODO
                     self.turtle.set_speed(0, -self.speed)
                 return
 
