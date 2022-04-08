@@ -86,11 +86,11 @@ class MainActivity(Activity):
             return self.activity.perform()
 
         if self.activity is None:
-            return self.do(GoThroughGate(self, self.driver, self.driver.color, window=True))
+            return self.do(GoThroughGate(self, self.driver, self.driver.color, window=False))
 
         if isinstance(self.activity, GoThroughGate):
             self.driver.change_color()
-            return self.do(GoThroughGate(self, self.driver, self.driver.color, window=True))
+            return self.do(GoThroughGate(self, self.driver, self.driver.color, window=False))
 
 
 class GoThroughGate(Activity):
@@ -127,7 +127,7 @@ class GoThroughGate(Activity):
         if isinstance(self.activity, Forward):
             if self.went_forward == 0:
                 self.went_forward += 1
-                return self.do(FindGate(self, self.driver, self.color, window=True))
+                return self.do(FindGate(self, self.driver, self.color, window=self.window))
             else:
                 self.end()
 
@@ -213,9 +213,9 @@ class Forward(Activity):
         Activity.__init__(self, parent, driver)
         self.dist = dist
         self.speed = speed
-        self.turtle.reset_odometry()
 
     def start(self):
+        self.turtle.reset_odometry()
         self.turtle.set_speed(self.speed, 0)
 
     def perform(self):
