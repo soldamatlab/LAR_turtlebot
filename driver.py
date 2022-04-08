@@ -130,8 +130,8 @@ class Goto(Activity):
         if self.activity is None:
             return self.do(Turn(self, self.driver, self.alpha))
 
-        if isinstance(self.activity, Turn):
-            return self.do(Forward(self, self.driver, self.dist))
+        # if isinstance(self.activity, Turn): TODO
+        #     return self.do(Forward(self, self.driver, self.dist))
 
         self.end()
 
@@ -159,7 +159,7 @@ class Turn(Activity):
 
 class Forward(Activity):
 
-    def __init__(self, parent, driver, dist, speed=0.05):
+    def __init__(self, parent, driver, dist, speed=0.15):
         Activity.__init__(self, parent, driver)
         self.dist = dist
         self.speed = speed
