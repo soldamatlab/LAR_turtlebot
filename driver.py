@@ -119,7 +119,7 @@ class GoThroughGate(Activity):
             else:
                 if self.went_forward == 0:
                     print("--------------------------------------------------- FIRST")
-                    return self.do(Forward(self, self.driver, dist / 100))
+                    return self.do(Forward(self, self.driver, dist / 3))
                 else:
                     print("--------------------------------------------------- SECOND")
                     return self.do(Forward(self, self.driver, dist + 0.15))
