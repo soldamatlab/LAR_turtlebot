@@ -78,9 +78,9 @@ class MainActivity(Activity):
             return self.do(FindTwoSticks(self, self.driver, window=False))
 
         if isinstance(self.activity, FindTwoSticks):
-            A, B = self.ret
+            stick_mean = self.ret
             self.ret = None
-            dist = ((A + B) / 2)[2] + self.overshoot
+            dist = stick_mean + self.overshoot
             return self.do(Forward(self, self.driver, dist))
 
         self.end()
@@ -131,7 +131,7 @@ class FindTwoSticks(Activity):
                     self.turtle.set_speed(0, -self.speed)
                 return
 
-        self.parent.ret = (A, B)
+        self.parent.ret = stick_mean
         self.turtle.stop()
         self.end()
 
