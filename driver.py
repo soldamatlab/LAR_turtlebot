@@ -94,7 +94,7 @@ class MainActivity(Activity):
 
 class FindGate(Activity):
 
-    def __init__(self, parent, driver, speed=np.pi/8, center_limit=12, window=False):
+    def __init__(self, parent, driver, speed=np.pi/8, center_limit=32, window=False):
         Activity.__init__(self, parent, driver)
         self.speed = speed
         self.center_limit = center_limit # in pixels
