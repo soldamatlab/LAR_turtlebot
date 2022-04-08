@@ -3,6 +3,7 @@ from robolab_turtlebot import Turtlebot
 import CONST
 from camera import *
 
+
 class Turtle:
 
     def __init__(self, rgb=True, pc=True, depth=True):
@@ -12,14 +13,17 @@ class Turtle:
         self.angular = 0.
 
         self.bot.register_button_event_cb(self.button_cb)
-        self.button_0 = lambda : None
-        self.button_1 = lambda : None
-        self.button_2 = lambda : None
+        self.button_0 = lambda: None
+        self.button_1 = lambda: None
+        self.button_2 = lambda: None
 
     def set_speed(self, linear, angular):
         self.linear = linear
         self.angular = angular  # positive: left, negative: right
         self.bot.cmd_velocity(linear=linear, angular=angular)
+
+    def keep_speed(self):
+        self.bot.cmd_velocity(linear=self.linear, angular=self.angular)
 
     def stop(self):
         self.set_speed(0., 0.)

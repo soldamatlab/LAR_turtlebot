@@ -16,6 +16,7 @@ class Driver:
         if INFO:
             print()
         self.counter += 1
+        self.turtle.keep_speed()
         self.main.perform()
 
 

@@ -45,7 +45,6 @@ if __name__ == '__main__':
     # MAIN LOOP
     while not turtle.bot.is_shutting_down():
         rate.sleep()
-        turtle.bot.cmd_velocity(linear=turtle.linear, angular=turtle.angular)
 
         driver.drive()
 
