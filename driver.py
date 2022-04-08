@@ -105,7 +105,7 @@ class FindTwoSticks(Activity):
 
         hsv = self.turtle.get_hsv_image()
         bin_img = img_threshold(hsv, self.driver.color)
-        sticks = self.driver.turtle.get_segments(self.driver.color, bin_img=bin_img)
+        sticks = self.driver.turtle.get_segments(self.driver.color, bin_img=bin_img, get_coors=False)
 
         # Testing window
         if self.window:
@@ -114,11 +114,6 @@ class FindTwoSticks(Activity):
         if sticks.count < 2:
             self.turtle.set_speed(0, self.speed)
             return
-
-        max_sticks = np.argsort(sticks.areas())
-        A = sticks.coors[max_sticks[0]]
-        B = sticks.coors[max_sticks[1]]
-        mean = (A[0] + B[0]) / 2
 
         self.turtle.set_speed(0, self.speed)
         return
