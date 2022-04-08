@@ -16,8 +16,12 @@ def button_0():
     dance()
 
 def button_1():
-    odometry = turtle.get_odometry()
-    print('odometry: {}'.format(odometry))
+    if driver.color == CONST.RED:
+        driver.color = CONST.GREEN
+    elif driver.color == CONST.GREEN:
+        driver.color = CONST.BLUE
+    elif driver.color == CONST.BLUE:
+        driver.color = CONST.RED
 
 def button_2():
     turtle.stop()
