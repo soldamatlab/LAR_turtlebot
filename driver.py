@@ -115,7 +115,7 @@ class FindTwoSticks(Activity):
         self.end()
 
     @staticmethod
-    def centered(self, A, B):
+    def centered(A, B):
         stick_mean = (A + B) / 2
         return abs(stick_mean[0]) < 15  #TODO
 
