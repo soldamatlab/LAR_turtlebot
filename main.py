@@ -16,12 +16,13 @@ def button_0():
     dance()
 
 def button_1():
-    if driver.color == CONST.RED:
-        driver.color = CONST.GREEN
-    elif driver.color == CONST.GREEN:
-        driver.color = CONST.BLUE
-    elif driver.color == CONST.BLUE:
-        driver.color = CONST.RED
+    # if driver.color == CONST.RED:
+    #     driver.color = CONST.GREEN
+    # elif driver.color == CONST.GREEN:
+    #     driver.color = CONST.BLUE
+    # elif driver.color == CONST.BLUE:
+    #     driver.color = CONST.RED
+    return None
 
 def button_2():
     turtle.stop()
