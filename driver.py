@@ -118,7 +118,7 @@ class FindTwoSticks(Activity):
         # max_sticks = np.argsort(sticks.areas())
         A = sticks.coors[0] #TODO use max_sticks
         B = sticks.coors[1]
-        stick_mean = (A + B) / 2
+        stick_mean = A #(A + B) / 2 #TODO
 
         if self.center:
             if not self.centered(stick_mean):
