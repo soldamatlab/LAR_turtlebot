@@ -113,6 +113,9 @@ class FindTwoSticks(Activity):
             self.turtle.set_speed(0, self.speed)
             return
 
+        print(sticks.count)
+        print(shape(sticks.areas))
+        print(shape(sticks.centroids))
         args = np.argsort(sticks.areas)
         center = (sticks.centroids[args[0]] + sticks.centroids[args[1]]) / 2
 
