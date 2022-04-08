@@ -20,7 +20,10 @@ def button_1():
     print('odometry: {}'.format(odometry))
 
 def button_2():
-    return None
+    turtle.stop()
+
+def bumper():
+    quit()
 
 
 if __name__ == '__main__':
@@ -30,6 +33,7 @@ if __name__ == '__main__':
     turtle.register_button_cb(0, button_0)
     turtle.register_button_cb(1, button_1)
     turtle.register_button_cb(2, button_2)
+    turtle.register_bumper_cb("ALL", bumper)
     turtle.bot.wait_for_odometry()
     turtle.reset_odometry()
 
