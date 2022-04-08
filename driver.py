@@ -22,8 +22,15 @@ class Driver:
         if INFO: print()
 
         self.counter += 1
-        self.main.perform()
-        self.turtle.keep_speed()
+        # self.main.perform()
+        # self.turtle.keep_speed()
+
+        hsv = self.turtle.get_hsv_image()
+        bin_img = img_threshold(hsv, self.color)
+        sticks = self.turtle.get_segments(self.color, bin_img=bin_img)
+
+        print("\nAREAS")
+        print(sticks.areas())
 
     def change_color(self):
         if self.color == CONST.GREEN or self.color == CONST.RED:
