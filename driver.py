@@ -103,13 +103,13 @@ class FindTwoSticks(Activity):
         if self.busy:
             return self.activity.perform()
 
-        hsv = self.turtle.get_hsv_image()
-        bin_img = img_threshold(hsv, self.driver.color)
-        sticks = self.driver.turtle.get_segments(self.driver.color, bin_img=bin_img)
-
-        # Testing window
-        if self.window:
-            self.w_bin.show(bin_to_rgb(bin_img))
+        # hsv = self.turtle.get_hsv_image()
+        # bin_img = img_threshold(hsv, self.driver.color)
+        # sticks = self.driver.turtle.get_segments(self.driver.color, bin_img=bin_img)
+        #
+        # # Testing window
+        # if self.window:
+        #     self.w_bin.show(bin_to_rgb(bin_img))
 
         self.turtle.set_speed(0, np.pi/12)
         return #TODO
