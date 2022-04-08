@@ -111,32 +111,21 @@ class FindTwoSticks(Activity):
         if self.window:
             self.w_bin.show(bin_to_rgb(bin_img))
 
-        if sticks.count < 1: #TODO
+        if sticks.count < 2:
             self.turtle.set_speed(0, self.speed)
             return
 
-        # max_sticks = np.argsort(sticks.areas())
-        # A = sticks.coors[max_sticks[0]]
-        # B = sticks.coors[max_sticks[1]]
-        # stick_mean = (A + B) / 2
+        max_sticks = np.argsort(sticks.areas())
+        A = sticks.coors[max_sticks[0]]
+        B = sticks.coors[max_sticks[1]]
+        stick_mean = (A + B) / 2
 
-        # TODO
-        stick_mean = sticks.coors[0]
-
-        # if self.center:
-        #     if not self.centered(stick_mean):
-        #         if stick_mean[0] < 0:
-        #             self.turtle.set_speed(0, self.speed)
-        #         else:
-        #             self.turtle.set_speed(0, -self.speed)
-        #         return
+        self.turtle.set_speed(0, self.speed)
+        return
 
         self.parent.ret = stick_mean
         self.turtle.stop()
         self.end()
-
-    def centered(self, stick_mean):
-        return abs(stick_mean[0]) < self.center_limit
 
 
 class Forward(Activity):

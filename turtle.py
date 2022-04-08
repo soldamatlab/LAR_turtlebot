@@ -53,11 +53,11 @@ class Turtle:
 
     def bumper_cb(self, msg):
         if msg.state == 1:
-            if msg.bumper == "LEFT":
+            if msg.bumper == 0:
                 self.bumper_left()
-            elif msg.bumper == "CENTER":
+            elif msg.bumper == 1:
                 self.bumper_center()
-            elif msg.bumper == "RIGHT":
+            elif msg.bumper == 2:
                 self.bumper_right()
 
     def register_bumper_cb(self, bumper, cb):
