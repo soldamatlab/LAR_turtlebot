@@ -72,8 +72,6 @@ class MainActivity(Activity):
     def __init__(self, parent, driver):
         Activity.__init__(self, parent, driver)
 
-        self.overshoot = 0.2
-
     def perform(self):
         Activity.perform_init(self)
         if self.busy:
@@ -87,14 +85,17 @@ class MainActivity(Activity):
 
         if isinstance(self.activity, MeasureGateDist):
             dist = self.pop_ret()
-            return self.do(Forward(self, self.driver, dist))
+            if dist is None:
+                return self.do(FindGate(self, self.driver, window=True))
+            else:
+                return self.do(Forward(self, self.driver, dist + 0.15))
 
         self.end()
 
 
 class FindGate(Activity):
 
-    def __init__(self, parent, driver, speed=np.pi/8, center_limit=32, window=False):
+    def __init__(self, parent, driver, speed=np.pi/8, center_limit=20, window=False):
         Activity.__init__(self, parent, driver)
         self.speed = speed
         self.center_limit = center_limit # in pixels
@@ -138,15 +139,21 @@ class FindGate(Activity):
 
 class MeasureGateDist(Activity):
 
-    def __init__(self, parent, driver):
+    def __init__(self, parent, driver, attempts=12):
         Activity.__init__(self, parent, driver)
+        self.attempts = attempts
 
     def perform(self):
         Activity.perform_init(self)
 
+        if self.attempts == 0:
+            if INFO: print("\n MeasureGateDist FAILED")
+            self.parent.ret = None
+            self.end()
+
         sticks = self.driver.turtle.get_segments(self.driver.color)
         if sticks.count < 2:
-            if INFO: print("NEVIDIM GATE")
+            self.attempts -= 1
             return self.perform()
 
         pc = self.turtle.get_point_cloud()
