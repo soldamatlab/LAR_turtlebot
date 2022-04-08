@@ -92,14 +92,13 @@ class FindTwoSticks(Activity):
         self.speed = speed
         self.center_limit = center_limit # in pixels
         self.window = window
+        self.dir = 1
 
         if window:
             self.w_bin = Window("FindTwoSticks")
 
     def perform(self):
         Activity.perform_init(self)
-        if self.busy:
-            return self.activity.perform()
 
         hsv = self.turtle.get_hsv_image()
         bin_img = img_threshold(hsv, self.driver.color)
@@ -110,19 +109,20 @@ class FindTwoSticks(Activity):
             self.w_bin.show(bin_to_rgb(bin_img))
 
         if sticks.count < 2:
-            self.turtle.set_speed(0, self.speed)
+            self.turtle.set_speed(0, self.dir * self.speed)
             return
 
         args = np.argsort(sticks.areas())
         center = (sticks.centroids[args[0]] + sticks.centroids[args[1]]) / 2
 
         diff = center[1] - (np.shape(bin_img)[1] / 2)
-        print(diff)
         if abs(diff) > self.center_limit:
             if diff < 0:
-                self.turtle.set_speed(0, -self.speed)
-            else:
+                self.dir = 1
                 self.turtle.set_speed(0, self.speed)
+            else:
+                self.dir = -1
+                self.turtle.set_speed(0, -self.speed)
             return
 
         self.turtle.stop()
@@ -142,8 +142,6 @@ class Forward(Activity):
 
     def perform(self):
         Activity.perform_init(self)
-        if self.busy:
-            return self.activity.perform()
 
         odometry = self.turtle.get_odometry()
         if self.dist - odometry[0] < self.speed * (CONST.SLEEP / 1000) / 2:
