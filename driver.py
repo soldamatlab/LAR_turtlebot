@@ -95,7 +95,7 @@ class MainActivity(Activity):
 
 class FindGate(Activity):
 
-    def __init__(self, parent, driver, speed=np.pi/8, center_limit=20, window=False):
+    def __init__(self, parent, driver, speed=np.pi/8, center_limit=12, window=False):
         Activity.__init__(self, parent, driver)
         self.speed = speed
         self.center_limit = center_limit # in pixels
@@ -124,17 +124,18 @@ class FindGate(Activity):
         center = (sticks.centroids[args[0]] + sticks.centroids[args[1]]) / 2
 
         diff = center[0] - (np.shape(bin_img)[1] / 2)
-        if abs(diff) > self.center_limit:
-            if diff < 0:
-                self.dir = 1
-                self.turtle.set_speed(0, self.speed)
-            else:
-                self.dir = -1
-                self.turtle.set_speed(0, -self.speed)
-            return
 
-        self.turtle.stop()
-        self.end()
+        if diff < 0:
+            new_dir = 1
+        else:
+            new_dir = -1
+
+        if new_dir != self.dir and abs(diff) < self.center_limit:
+            self.turtle.stop()
+            self.end()
+
+        self.dir = new_dir
+        self.turtle.set_speed(0, self.dir * self.speed)
 
 
 class MeasureGateDist(Activity):
