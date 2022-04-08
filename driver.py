@@ -78,9 +78,8 @@ class MainActivity(Activity):
             return self.do(FindTwoSticks(self, self.driver, window=False))
 
         if isinstance(self.activity, FindTwoSticks):
-            stick_mean = self.ret
-            self.ret = None
-            dist = stick_mean[2] + self.overshoot
+            # TODO
+            dist = 0.2
             return self.do(Forward(self, self.driver, dist))
 
         self.end()
@@ -88,11 +87,10 @@ class MainActivity(Activity):
 
 class FindTwoSticks(Activity):
 
-    def __init__(self, parent, driver, center=True, speed=np.pi/12, center_limit=0.02, window=False):
+    def __init__(self, parent, driver, speed=np.pi/12, center_limit=20, window=False):
         Activity.__init__(self, parent, driver)
-        self.center = center
         self.speed = speed
-        self.center_limit = center_limit
+        self.center_limit = center_limit # in pixels
         self.window = window
 
         if window:
@@ -105,7 +103,7 @@ class FindTwoSticks(Activity):
 
         hsv = self.turtle.get_hsv_image()
         bin_img = img_threshold(hsv, self.driver.color)
-        sticks = self.driver.turtle.get_segments(self.driver.color, bin_img=bin_img, get_coors=False)
+        sticks = self.driver.turtle.get_segments(self.driver.color, bin_img=bin_img)
 
         # Testing window
         if self.window:
@@ -115,10 +113,17 @@ class FindTwoSticks(Activity):
             self.turtle.set_speed(0, self.speed)
             return
 
-        self.turtle.set_speed(0, self.speed)
-        return
+        args = np.argsort(sticks.areas)
+        center = (sticks.centroids[args[0]] + sticks.centroids[args[1]]) / 2
 
-        self.parent.ret = mean
+        diff = center[1] - (np.shape(bin_img)[1] / 2)
+        if abs(diff) > self.center_limit:
+            if diff < 0:
+                self.turtle.set_speed(0, -self.speed)
+            else:
+                self.turtle.set_speed(0, self.speed)
+            return
+
         self.turtle.stop()
         self.end()
 

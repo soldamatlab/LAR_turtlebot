@@ -94,7 +94,7 @@ class Turtle:
         min_area=CONST.MIN_AREA,
         target_ratio=CONST.TARGET_RATIO,
         max_ratio_diff=CONST.MAX_RATIO_DIFF,
-        get_coors=True,
+        get_coors=False,
     ):
         if bin_img is None:
             hsv = self.get_hsv_image()
