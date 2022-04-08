@@ -86,7 +86,10 @@ class MainActivity(Activity):
         if self.busy:
             return self.activity.perform()
 
-        if self.activity is None or isinstance(self.activity, Forward):
+        if self.activity is None:
+            return self.do(FindGate(self, self.driver, window=True))
+
+        if isinstance(self.activity, Forward):
             self.driver.change_color()
             return self.do(FindGate(self, self.driver, window=True))
 
