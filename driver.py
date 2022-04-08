@@ -111,6 +111,9 @@ class FindTwoSticks(Activity):
         if self.window:
             self.w_bin.show(bin_to_rgb(bin_img))
 
+        self.turtle.set_speed(0, np.pi/12)
+        return #TODO
+
         if sticks.count < 2:
             self.turtle.set_speed(0, self.speed)
             return
