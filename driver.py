@@ -119,6 +119,8 @@ class GoThroughGate(Activity):
             else:
                 if self.went_forward == 0:
                     dist /= 2
+                else:
+                    dist += 0.15
                 return self.do(Forward(self, self.driver, dist))
 
         if isinstance(self.activity, Forward):
