@@ -13,7 +13,7 @@ class Driver:
         self.main = MainActivity(self, self)
         self.counter = 0
 
-        self.color = CONST.GREEN
+        self.color = CONST.BLUE
 
     def drive(self):
         if not self.busy:
@@ -138,7 +138,7 @@ class FindTwoSticks(Activity):
 
 class Forward(Activity):
 
-    def __init__(self, parent, driver, dist, speed=0.5):
+    def __init__(self, parent, driver, dist, speed=0.2):
         Activity.__init__(self, parent, driver)
         self.dist = dist
         self.speed = speed
