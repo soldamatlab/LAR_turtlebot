@@ -125,6 +125,9 @@ class FindGate(Activity):
         bin_img = img_threshold(hsv, self.driver.color)
         sticks = self.driver.turtle.get_segments(self.driver.color, bin_img=bin_img)
 
+        print("\nAREAS")
+        print(sticks.areas())
+
         # Testing window
         if self.window:
             self.w_bin.show(bin_to_rgb(bin_img))

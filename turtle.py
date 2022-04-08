@@ -2,6 +2,7 @@ import numpy as np
 from robolab_turtlebot import Turtlebot
 import CONST
 from camera import *
+from buttons import bumper_cb
 
 INFO = True
 
@@ -18,7 +19,7 @@ class Turtle:
         self.button_0 = lambda: None
         self.button_1 = lambda: None
         self.button_2 = lambda: None
-        self.bot.register_bumper_event_cb(self.bumper_cb)
+        self.bot.register_bumper_event_cb(bumper_cb) #TODO
         self.bumper_left = lambda: None
         self.bumper_center = lambda: None
         self.bumper_right = lambda: None
@@ -51,6 +52,7 @@ class Turtle:
         elif button == 2:
             self.button_2 = cb
 
+    # TODO bumpery nefungujou
     def bumper_cb(self, msg):
         if msg.state == 1:
             if msg.bumper == 0:
@@ -59,8 +61,6 @@ class Turtle:
                 self.bumper_center()
             elif msg.bumper == 2:
                 self.bumper_right()
-            else:
-                print("UIIIIII") #TODO
 
     def register_bumper_cb(self, bumper, cb):
         if bumper == "ALL":
