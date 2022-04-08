@@ -85,7 +85,7 @@ class MainActivity(Activity):
         if isinstance(self.activity, FindGate):
             return self.do(MeasureGateDist(self, self.driver))
 
-        if isinstance(self.activity, FindGate):
+        if isinstance(self.activity, MeasureGateDist):
             dist = self.pop_ret()
             return self.do(Forward(self, self.driver, dist))
 
@@ -146,6 +146,7 @@ class MeasureGateDist(Activity):
 
         sticks = self.driver.turtle.get_segments(self.driver.color)
         if sticks.count < 2:
+            if INFO: print("NEVIDIM GATE")
             return self.perform()
 
         pc = self.turtle.get_point_cloud()
