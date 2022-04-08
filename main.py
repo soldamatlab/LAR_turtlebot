@@ -53,13 +53,15 @@ if __name__ == '__main__':
 
     # MAIN LOOP
     while not turtle.bot.is_shutting_down():
-        # rate.sleep() #TODO
+        # # rate.sleep() #TODO
+        #
+        # driver.drive()
+        #
+        # # Testing window
+        # img_rgb = turtle.get_rgb_image()
+        # img_hsv = rgb_to_hsv(img_rgb)
+        # img_bin = img_threshold(img_hsv, driver.color)
+        # # w_rgb.show(img_rgb)
+        # w_bin.show(bin_to_rgb(img_bin))
 
-        driver.drive()
-
-        # Testing window
-        img_rgb = turtle.get_rgb_image()
-        img_hsv = rgb_to_hsv(img_rgb)
-        img_bin = img_threshold(img_hsv, driver.color)
-        # w_rgb.show(img_rgb)
-        w_bin.show(bin_to_rgb(img_bin))
+        turtle.bot.cmd_velocity(linear=0, angular=np.pi/12)
