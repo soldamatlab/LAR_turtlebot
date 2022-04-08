@@ -109,6 +109,7 @@ class FindTwoSticks(Activity):
             self.w_bin.show(bin_to_rgb(bin_img))
 
         if sticks.count < 2:
+            if INFO: print("searching for sticks")
             self.turtle.set_speed(0, self.dir * self.speed)
             return
 
@@ -118,9 +119,11 @@ class FindTwoSticks(Activity):
         diff = center[1] - (np.shape(bin_img)[1] / 2)
         if abs(diff) > self.center_limit:
             if diff < 0:
+                if INFO: print("center to left")
                 self.dir = 1
                 self.turtle.set_speed(0, self.speed)
             else:
+                if INFO: print("center to right")
                 self.dir = -1
                 self.turtle.set_speed(0, -self.speed)
             return
