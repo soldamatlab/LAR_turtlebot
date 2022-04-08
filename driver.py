@@ -21,7 +21,8 @@ class Driver:
         if INFO: print()
 
         self.counter += 1
-        self.main.perform()
+        self.turtle.set_speed(0, np.pi/12)
+        # self.main.perform()
         self.turtle.keep_speed()
 
 
