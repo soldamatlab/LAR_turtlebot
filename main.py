@@ -16,12 +16,12 @@ def button_0():
     dance()
 
 def button_1():
-    # if driver.color == CONST.RED:
-    #     driver.color = CONST.GREEN
-    # elif driver.color == CONST.GREEN:
-    #     driver.color = CONST.BLUE
-    # elif driver.color == CONST.BLUE:
-    #     driver.color = CONST.RED
+    if driver.color == CONST.RED:
+        driver.color = CONST.GREEN
+    elif driver.color == CONST.GREEN:
+        driver.color = CONST.BLUE
+    elif driver.color == CONST.BLUE:
+        driver.color = CONST.RED
     return None
 
 def button_2():
@@ -60,6 +60,6 @@ if __name__ == '__main__':
         # Testing window
         img_rgb = turtle.get_rgb_image()
         img_hsv = rgb_to_hsv(img_rgb)
-        img_bin = img_threshold(img_hsv, CONST.GREEN)
+        img_bin = img_threshold(img_hsv, driver.color)
         # w_rgb.show(img_rgb)
         w_bin.show(bin_to_rgb(img_bin))
