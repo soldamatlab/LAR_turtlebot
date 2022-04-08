@@ -26,6 +26,7 @@ class Turtle:
         self.bot.cmd_velocity(linear=self.linear, angular=self.angular)
 
     def stop(self):
+        print("STOP") #TODO
         self.set_speed(0., 0.)
 
     def button_cb(self, msg):
