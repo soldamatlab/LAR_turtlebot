@@ -59,6 +59,8 @@ class Turtle:
                 self.bumper_center()
             elif msg.bumper == 2:
                 self.bumper_right()
+            else:
+                print("UIIIIII") #TODO
 
     def register_bumper_cb(self, bumper, cb):
         if bumper == "ALL":

@@ -13,7 +13,7 @@ class Driver:
         self.main = MainActivity(self, self)
         self.counter = 0
 
-        self.color = CONST.BLUE
+        self.color = CONST.GREEN
 
     def drive(self):
         if not self.busy:
@@ -24,6 +24,15 @@ class Driver:
         self.counter += 1
         self.main.perform()
         self.turtle.keep_speed()
+
+    def change_color(self):
+        if self.color == CONST.GREEN or self.color == CONST.RED:
+            self.color = CONST.BLUE
+        elif self.color == CONST.BLUE:
+            self.color = CONST.RED
+        else:
+            print("ERROR: undefined color")
+            quit()
 
 
 # Abstract Activity
@@ -78,6 +87,7 @@ class MainActivity(Activity):
             return self.activity.perform()
 
         if self.activity is None or isinstance(self.activity, Forward):
+            self.driver.change_color()
             return self.do(FindGate(self, self.driver, window=True))
 
         if isinstance(self.activity, FindGate):
@@ -98,7 +108,7 @@ class FindGate(Activity):
     def __init__(self, parent, driver, speed=np.pi/8, center_limit=12, window=False):
         Activity.__init__(self, parent, driver)
         self.speed = speed
-        self.center_limit = center_limit # in pixels
+        self.center_limit = center_limit  # in pixels
         self.window = window
         self.dir = 1
 
