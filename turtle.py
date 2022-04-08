@@ -19,7 +19,7 @@ class Turtle:
         self.button_0 = lambda: None
         self.button_1 = lambda: None
         self.button_2 = lambda: None
-        self.bot.register_bumper_event_cb(bumper_cb) #TODO
+        self.bot.register_bumper_event_cb(self.bumper_cb)
         self.bumper_left = lambda: None
         self.bumper_center = lambda: None
         self.bumper_right = lambda: None
@@ -54,13 +54,12 @@ class Turtle:
 
     # TODO bumpery nefungujou
     def bumper_cb(self, msg):
-        if msg.state == 1:
-            if msg.bumper == 0:
-                self.bumper_left()
-            elif msg.bumper == 1:
-                self.bumper_center()
-            elif msg.bumper == 2:
-                self.bumper_right()
+        if msg.bumper == 0:
+            self.bumper_left()
+        elif msg.bumper == 1:
+            self.bumper_center()
+        elif msg.bumper == 2:
+            self.bumper_right()
 
     def register_bumper_cb(self, bumper, cb):
         if bumper == "ALL":

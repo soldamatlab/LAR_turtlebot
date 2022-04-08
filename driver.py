@@ -18,19 +18,11 @@ class Driver:
     def drive(self):
         if not self.busy:
             return None  #TODO
-
         if INFO: print()
 
         self.counter += 1
         self.main.perform()
         self.turtle.keep_speed()
-
-        # hsv = self.turtle.get_hsv_image()
-        # bin_img = img_threshold(hsv, self.color)
-        # sticks = self.turtle.get_segments(self.color, bin_img=bin_img)
-        #
-        # print("\nAREAS")
-        # print(sticks.areas())
 
     def change_color(self):
         if self.color == CONST.GREEN or self.color == CONST.RED:
@@ -94,29 +86,52 @@ class MainActivity(Activity):
             return self.activity.perform()
 
         if self.activity is None:
-            return self.do(FindGate(self, self.driver, window=True))
+            return self.do(GoThroughGate(self, self.driver, self.driver.color, window=True))
 
-        if isinstance(self.activity, Forward):
+        if isinstance(self.activity, GoThroughGate):
             self.driver.change_color()
-            return self.do(FindGate(self, self.driver, window=True))
+            return self.do(GoThroughGate(self, self.driver, self.driver.color, window=True))
+
+
+class GoThroughGate(Activity):
+
+    def __init__(self, parent, driver, color, window=False):
+        Activity.__init__(self, parent, driver)
+        self.color = color
+        self.went_forward = 0
+        self.window = window
+
+    def perform(self):
+        Activity.perform_init(self)
+        if self.busy:
+            return self.activity.perform()
+
+        if self.activity is None:
+            return self.do(FindGate(self, self.driver, self.color, window=self.window))
 
         if isinstance(self.activity, FindGate):
-            return self.do(MeasureGateDist(self, self.driver))
+            return self.do(MeasureGateDist(self, self.driver, self.color))
 
         if isinstance(self.activity, MeasureGateDist):
             dist = self.pop_ret()
             if dist is None:
-                return self.do(FindGate(self, self.driver, window=True))
+                return self.do(FindGate(self, self.driver, self.color, window=self.window))
             else:
-                return self.do(Forward(self, self.driver, dist + 0.15))
+                return self.do(Forward(self, self.driver, dist))
 
-        self.end()
+        if isinstance(self.activity, Forward):
+            if self.went_forward == 0:
+                self.went_forward += 1
+                return self.do(FindGate(self, self.driver, self.color, window=True))
+            else:
+                self.end()
 
 
 class FindGate(Activity):
 
-    def __init__(self, parent, driver, speed=np.pi/8, center_limit=12, window=False):
+    def __init__(self, parent, driver, color, speed=np.pi/8, center_limit=12, window=False):
         Activity.__init__(self, parent, driver)
+        self.color = color
         self.speed = speed
         self.center_limit = center_limit  # in pixels
         self.window = window
@@ -129,11 +144,8 @@ class FindGate(Activity):
         Activity.perform_init(self)
 
         hsv = self.turtle.get_hsv_image()
-        bin_img = img_threshold(hsv, self.driver.color)
-        sticks = self.driver.turtle.get_segments(self.driver.color, bin_img=bin_img, min_area=2500)
-
-        print("\nAREAS")
-        print(sticks.areas())
+        bin_img = img_threshold(hsv, self.color)
+        sticks = self.driver.turtle.get_segments(self.color, bin_img=bin_img, min_area=2500)
 
         # Testing window
         if self.window:
@@ -163,8 +175,9 @@ class FindGate(Activity):
 
 class MeasureGateDist(Activity):
 
-    def __init__(self, parent, driver, attempts=12):
+    def __init__(self, parent, driver, color, attempts=12):
         Activity.__init__(self, parent, driver)
+        self.color = color
         self.attempts = attempts
 
     def perform(self):
@@ -175,7 +188,7 @@ class MeasureGateDist(Activity):
             self.parent.ret = None
             self.end()
 
-        sticks = self.driver.turtle.get_segments(self.driver.color)
+        sticks = self.driver.turtle.get_segments(self.color)
         if sticks.count < 2:
             self.attempts -= 1
             return self.perform()

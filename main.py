@@ -31,6 +31,7 @@ def button_2():
     turtle.stop()
 
 def bumper():
+    print("BUMPER QUIT")
     quit()
 
 
