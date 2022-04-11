@@ -304,9 +304,11 @@ class Forward(Activity):
         self.dist = dist
         self.speed = speed
         self.step = self.speed * (CONST.SLEEP / 1000)
+        self.start_odo = None
 
     def start(self):
-        self.turtle.reset_odometry()
+        # self.turtle.reset_odometry()
+        self.start_odo = self.turtle.get_odometry()[0]
         self.turtle.set_speed(self.speed, 0)
 
         print("------------------------------------------------ FORWARD: " + str(self.dist))
@@ -314,9 +316,9 @@ class Forward(Activity):
     def perform(self):
         Activity.perform_init(self)
 
-        odometry = self.turtle.get_odometry()
+        odometry = self.turtle.get_odometry()[0] - self.start_odo  # TODO rem start_odo
         print("------------------------ ODOMETRY: " + str(odometry[0]))
-        if self.dist - odometry[0] < self.step / 2:
+        if self.dist - odometry < self.step / 2:
             print("------------------------ STOP")
             self.turtle.stop()
             self.end()
