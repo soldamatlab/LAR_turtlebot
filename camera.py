@@ -17,12 +17,12 @@ class Window:
 class Segments:
 
     def __init__(self, count, label_mat, label_dict, params, centroids):
-        self.count = count # number of segments
-        self.label_mat = label_mat # labels of pixels
-        self.label_dict = label_dict # label_dict[i] is the label of the i-th segment used in label_mat
-        self.params = params # params of each segment: params[i] = [leftest, highest, width, height, area]
-        self.centroids = centroids # centroid of each segment: [down, right]
-        self.coors = None # median coors of each segment, x->right, y->down, z->forward
+        self.count = count  # number of segments
+        self.label_mat = label_mat  # labels of pixels
+        self.label_dict = label_dict  # label_dict[i] is the label of the i-th segment used in label_mat
+        self.params = params  # params of each segment: params[i] = [leftest, highest, width, height, area]
+        self.centroids = centroids  # centroid of each segment: [down, right]
+        self.coors = None  # median coors of each segment, x->right, y->down, z->forward
 
     def leftest(self, i):
         return self.params[i][0]

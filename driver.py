@@ -86,6 +86,7 @@ class MainActivity(Activity):
     def __init__(self, parent, driver, window=False):
         Activity.__init__(self, parent, driver)
         self.window = window
+        self.determined_first_color = False
 
     def perform(self):
         Activity.perform_init(self)
@@ -93,11 +94,15 @@ class MainActivity(Activity):
             return self.activity.perform()
 
         if self.activity is None:
-            return self.do(DetermineFirstColor(self, self.driver, window=self.window))
+            return self.do(GoThroughGate(self, self.driver, CONST.GREEN, window=self.window))
 
         if isinstance(self.activity, DetermineFirstColor):
+            self.determined_first_color = True
             first_color, area = self.pop_ret()  # TODO check area
             self.driver.color = first_color
+
+        if not self.determined_first_color:
+            return self.do(DetermineFirstColor(self, self.driver, window=self.window))
 
         if isinstance(self.activity, GoThroughGate):
             self.driver.change_color()
@@ -163,12 +168,14 @@ class DetermineFirstColor(Activity):
             self.red_window.show(bin_to_rgb(red_bin))
         blue_segments = self.turtle.get_segments(CONST.BLUE, bin_img=blue_bin)
         red_segments = self.turtle.get_segments(CONST.RED, bin_img=red_bin)
-        blue_max = np.amax(blue_segments.areas())
-        red_max = np.amax(red_segments.areas())
-        if blue_max > self.blue_largest_area:
-            self.blue_largest_area = blue_max
-        if red_max > self.red_largest_area:
-            self.red_largest_area = red_max
+        if blue_segments.count > 0:
+            blue_max = np.amax(blue_segments.areas())
+            if blue_max > self.blue_largest_area:
+                self.blue_largest_area = blue_max
+        if red_segments.count > 0:
+            red_max = np.amax(red_segments.areas())
+            if red_max > self.red_largest_area:
+                self.red_largest_area = red_max
 
 
 # Find a gate of the given color, measure its distance and go through it.
