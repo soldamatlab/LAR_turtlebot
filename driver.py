@@ -11,7 +11,7 @@ class Driver:
     def __init__(self, turtle):
         self.turtle = turtle
         self.busy = True
-        self.main = MainActivity(self, self)
+        self.main = TestActivity(self, self)
         self.counter = 0
 
         self.color = CONST.GREEN
@@ -94,35 +94,17 @@ class Activity:
 #             return self.do(GoThroughGate(self, self.driver, self.driver.color, window=False))
 
 
-class MainActivity(Activity):
+class TestActivity(Activity):
 
     def __init__(self, parent, driver):
         Activity.__init__(self, parent, driver)
-
-        self.counter = 0
 
     def perform(self):
         Activity.perform_init(self)
         if self.busy:
             return self.activity.perform()
 
-        if isinstance(self.activity, Forward):
-            return self.do(Idle(self, self.driver, 3))
-
-        if self.activity is None or isinstance(self.activity, Idle):
-            if self.counter == 0:
-                self.counter += 1
-                return self.do(Forward(self, self.driver, 2))
-
-            # if self.counter == 1:
-            #     self.counter += 1
-            #     return self.do(Forward(self, self.driver, 2))
-            #
-            # if self.counter == 1:
-            #     self.counter += 1
-            #     return self.do(Forward(self, self.driver, 3))
-
-        self.end()
+        # TODO
 
 
 class GoThroughGate(Activity):

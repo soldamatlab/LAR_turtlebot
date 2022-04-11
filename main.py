@@ -13,7 +13,9 @@ turtle = None
 
 
 def button_0():
-    dance()
+    segments = turtle.get_segments(driver.color, min_area=2500)
+    segments.get_coors()
+    print(segments.coors)
 
 def button_1():
     if driver.color == CONST.RED:
