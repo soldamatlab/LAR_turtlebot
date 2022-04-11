@@ -4,6 +4,9 @@ from camera import *
 import time
 
 INFO = True
+FORWARD_SPEED = 0.2
+TURN_SPEED = np.pi/8
+ANGLE_MARGIN = np.pi / 12
 
 
 class Driver:
@@ -89,9 +92,9 @@ class MainActivity(Activity):
         self.determined_first_color = False
 
     def start(self):
-        self.activity = GoThroughGate(self, self.driver, CONST.GREEN, window=self.window)  # TODO rem
-        self.determined_first_color = True  # TODO rem
-        self.driver.color = CONST.RED  # TODO rem
+        # self.activity = GoThroughGate(self, self.driver, CONST.GREEN, window=self.window)  # TODO rem
+        # self.determined_first_color = True  # TODO rem
+        # self.driver.color = CONST.RED  # TODO rem
 
     def perform(self):
         Activity.perform_init(self)
@@ -137,7 +140,10 @@ class TestActivity(Activity):
 # returns (color, area)
 class DetermineFirstColor(Activity):
 
-    def __init__(self, parent, driver, speed=np.pi/8, window=False, margin=np.pi/12):
+    def __init__(self, parent, driver, speed=TURN_SPEED, window=False,
+                 angle_margin=ANGLE_MARGIN,
+                 direction=1,
+                 ):
         Activity.__init__(self, parent, driver)
         self.speed = speed
         self.window = window
@@ -145,26 +151,23 @@ class DetermineFirstColor(Activity):
         self.red_window = None
         self.blue_largest_area = 0
         self.red_largest_area = 0
-        self.half_turn = False
-        self.margin = margin
+        self.direction = direction  # left: +1, right: -1
+        self.turn_counter = TurnCounter(direction, self.turtle, angle_margin=angle_margin)
 
     def start(self):
         if self.window:
             self.blue_window = Window("BLUE")
             self.red_window = Window("RED")
 
-        self.turtle.reset_odometry()
-        self.turtle.set_speed(0, self.speed)
+        self.turn_counter.start()
+        self.turtle.set_speed(0, self.direction * self.speed)
 
     def perform(self):
         Activity.perform_init(self)
 
         # Termination condition
-        angle = self.turtle.get_odometry()[2]
-        if self.half_turn and angle > + self.margin:
+        if self.turn_counter.get_turns() > 0:
             return self.done()
-        if angle < - self.margin:
-            self.half_turn = True
 
         # Measurements
         hsv_img = self.turtle.get_hsv_image()
@@ -226,7 +229,7 @@ class GoThroughGate(Activity):
 # Find gate of given color by turning and center itself on it.
 class FindGate(Activity):
 
-    def __init__(self, parent, driver, color, speed=np.pi/8, window=False,
+    def __init__(self, parent, driver, color, speed=TURN_SPEED, window=False,
                  height_diff_factor=1.05,
                  center_limit_min=2,
                  center_limit_step=2,
@@ -298,7 +301,9 @@ class FindGate(Activity):
 # return dist ... otherwise
 class MeasureGateDist(Activity):
 
-    def __init__(self, parent, driver, color, attempts=12):
+    def __init__(self, parent, driver, color,
+                 attempts=12,
+                 ):
         Activity.__init__(self, parent, driver)
         self.color = color
         self.attempts = attempts
@@ -328,17 +333,15 @@ class MeasureGateDist(Activity):
 # Go forward a set distance.
 class Forward(Activity):
 
-    def __init__(self, parent, driver, dist, speed=0.2, wait_for_odo=0.4):
+    def __init__(self, parent, driver, dist, speed=FORWARD_SPEED):
         Activity.__init__(self, parent, driver)
         self.dist = dist
         self.speed = speed
         self.step = self.speed * (CONST.SLEEP / 1000)
-        self.wait_for_odo = wait_for_odo
 
     def start(self):
         self.turtle.stop()
         self.turtle.reset_odometry()
-        time.sleep(self.wait_for_odo)  # wait for odometry reset
         self.turtle.set_speed(self.speed, 0)
 
     def perform(self):
@@ -395,7 +398,7 @@ class Idle(Activity):
 
 # class Turn(Activity):
 #
-#     def __init__(self, parent, driver, degree, speed=np.pi/12):
+#     def __init__(self, parent, driver, degree, speed=TURN_SPEED):
 #         Activity.__init__(self, parent, driver)
 #         self.speed = speed
 #         self.turn_for = degree / speed
@@ -413,3 +416,43 @@ class Idle(Activity):
 #         if 1000 * (self.turn_for - (time.perf_counter() - self.start_time)) < CONST.SLEEP / 2:
 #             self.turtle.stop()
 #             self.end()
+
+# Counts turns made by the robot from "start".
+# Only works correctly when not turning back more than the given [angle_margin].
+# Does not subtract turns.
+class TurnCounter:
+
+    def __init__(self, direction, turtle, angle_margin=ANGLE_MARGIN):
+        self.direction = direction  # left: +1, right: -1
+        self.turtle = turtle
+        self.angle_margin = angle_margin
+        self.turns = 0
+        self.half_turns = 0
+        self.half_turn = False
+
+    # WILL RESET ODOMETRY
+    def start(self):
+        self.turtle.reset_odometry()
+
+    def update(self):
+        angle = self.turtle.get_odometry()[2]
+        if self.direction < 0:
+            angle *= -1
+
+        if self.half_turn:
+            if angle > self.angle_margin:
+                self.half_turn = False
+                self.half_turns += 1
+                self.turns += 1
+        else:
+            if (angle < 0) and (angle > - np.pi + self.angle_margin):
+                self.half_turn = True
+                self.half_turns += 1
+
+    def get_turns(self):
+        self.update()
+        return self.turns
+
+    def get_half_turns(self):
+        self.update()
+        return self.half_turns

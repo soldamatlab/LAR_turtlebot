@@ -3,8 +3,10 @@ from robolab_turtlebot import Turtlebot
 import CONST
 from camera import *
 from buttons import bumper_cb
+import time
 
 INFO = False
+WAIT_FOR_ODO = 0.4  # seconds
 
 
 class Turtle:
@@ -118,6 +120,7 @@ class Turtle:
 
     def reset_odometry(self):
         self.bot.reset_odometry()
+        time.sleep(WAIT_FOR_ODO)
 
     # x->forward, y->sideways, z->angle
     # z ... <-pi,+pi>, left: positive, right: negative, forward: zero, backwards: +-pi
