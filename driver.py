@@ -200,7 +200,7 @@ class MeasureGateDist(Activity):
             self.end()
 
         sticks = self.driver.turtle.get_segments(self.color)
-        if sticks.count < 2:
+        if sticks.count < 1:  # TODO 2
             self.attempts -= 1
             return self.perform()
 
@@ -208,7 +208,7 @@ class MeasureGateDist(Activity):
         sticks.calculate_coors(pc)
 
         args = np.argsort(sticks.areas())
-        center = (sticks.coors[args[0]] + sticks.coors[args[1]]) / 2
+        center = sticks.coors[args[0]]  # TODO (sticks.coors[args[0]] + sticks.coors[args[1]]) / 2
         self.parent.ret = center[2]
         self.end()
 
