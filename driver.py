@@ -227,6 +227,7 @@ class GoThroughGate(Activity):
 class FindGate(Activity):
 
     def __init__(self, parent, driver, color, speed=np.pi/8, window=False,
+                 height_diff_factor=1.2,
                  center_limit_min=2,
                  center_limit_step=2,
                  center_limit_max=24,
@@ -234,6 +235,7 @@ class FindGate(Activity):
         Activity.__init__(self, parent, driver)
         self.color = color
         self.speed = speed
+        self.height_diff_factor = height_diff_factor
         self.center_limit_min = center_limit_min  # in pixels
         self.center_limit_step = center_limit_step  # in pixels
         self.center_limit_max = center_limit_max  # in pixels
@@ -262,9 +264,17 @@ class FindGate(Activity):
             self.turtle.set_speed(0, self.dir * self.speed)
             return
 
-        args = np.argsort(sticks.areas())
-        center = (sticks.centroids[args[0]] + sticks.centroids[args[1]]) / 2
+        args = np.argsort(sticks.heights())
+        A_height = sticks.height(args[0])
+        B_height = sticks.height(args[1])
+        A_coors = sticks.centroids[args[0]]
+        B_coors = sticks.centroids[args[1]]
 
+        if (A_height / B_height) > self.height_diff_factor:
+            self.turtle.set_speed(0, self.dir * self.speed)
+            return
+
+        center = (A_coors + B_coors) / 2
         diff = center[0] - (np.shape(bin_img)[1] / 2)
 
         if diff < 0:
