@@ -367,7 +367,7 @@ class GotoCoors(Activity):
         x = target[0]
         z = target[1]
         self.dist = np.sqrt(x ** 2 + z ** 2)
-        self.alpha = np.arccos(z / self.dist)
+        self.alpha = - np.arccos(z / self.dist)
 
     def perform(self):
         Activity.perform_init(self)
