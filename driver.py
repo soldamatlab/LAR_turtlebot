@@ -393,7 +393,7 @@ class Turn(Activity):
         self.degree = degree
         self.direction = 1 if degree > 0 else -1
         self.speed = speed
-        self.step = CONST.SLEEP * speed
+        self.step = (CONST.SLEEP / 1000) * speed
 
     def start(self):
         self.turtle.stop()  # safety
