@@ -132,7 +132,7 @@ class GoThroughGate(Activity):
         if isinstance(self.activity, MeasureGateDist):
             dist = self.pop_ret()
             return self.do(Forward(self, self.driver, dist))
-        
+
         self.end()
 
 
@@ -161,12 +161,12 @@ class FindGate(Activity):
         if self.window:
             self.w_bin.show(bin_to_rgb(bin_img))
 
-        if sticks.count < 2:
+        if sticks.count < 1:  # TODO 2
             self.turtle.set_speed(0, self.dir * self.speed)
             return
 
         args = np.argsort(sticks.areas())
-        center = (sticks.centroids[args[0]] + sticks.centroids[args[1]]) / 2
+        center = sticks.centroids[args[0]]  # TODO (sticks.centroids[args[0]] + sticks.centroids[args[1]]) / 2
 
         diff = center[0] - (np.shape(bin_img)[1] / 2)
 
