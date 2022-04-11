@@ -86,7 +86,11 @@ class MainActivity(Activity):
     def __init__(self, parent, driver, window=False):
         Activity.__init__(self, parent, driver)
         self.window = window
-        self.determined_first_color = True # TODO False
+        self.determined_first_color = False
+
+    def start(self):
+        self.activity = GoThroughGate(self, self.driver, CONST.GREEN, window=self.window)  # TODO rem
+        self.determined_first_color = True  # TODO rem
         self.driver.color = CONST.RED  # TODO rem
 
     def perform(self):
@@ -321,7 +325,7 @@ class Forward(Activity):
         Activity.perform_init(self)
 
         odometry = self.turtle.get_odometry()[0] - self.start_odo  # TODO rem start_odo
-        print("------------------------ ODOMETRY: " + str(odometry[0]))
+        print("------------------------ ODOMETRY: " + str(odometry))
         if self.dist - odometry < self.step / 2:
             print("------------------------ STOP")
             self.turtle.stop()
