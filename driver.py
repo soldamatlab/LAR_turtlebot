@@ -3,7 +3,7 @@ import numpy as np
 from camera import *
 import time
 
-INFO = True
+INFO = False
 
 
 class Driver:
@@ -98,13 +98,16 @@ class TestActivity(Activity):
 
     def __init__(self, parent, driver):
         Activity.__init__(self, parent, driver)
+        self.window = Window("test")
 
     def perform(self):
         Activity.perform_init(self)
         if self.busy:
             return self.activity.perform()
 
-        # TODO
+        hsv_img = self.turtle.get_hsv_image()
+        bin_img = img_threshold(hsv_img, self.driver.color)
+        self.window.show(bin_to_rgb(bin_img))
 
 
 class GoThroughGate(Activity):
