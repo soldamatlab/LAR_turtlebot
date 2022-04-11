@@ -226,8 +226,10 @@ class GoThroughGate(Activity):
 
         if isinstance(self.activity, MeasureGateCoordinates):
             A, B = self.pop_ret()
+            A = np.array([A[0], A[2]])
+            B = np.array([B[0], B[2]])
             C = (A + B) / 2
-            self.gate_center = C
+            self.gate_center = [C]
             target = self.calculate_target(A, B, C)
             return self.do(GotoCoors(self, self.driver, target))
 
@@ -241,7 +243,7 @@ class GoThroughGate(Activity):
     # B has higher z-coordinate than A
     def calculate_target(self, A, B, C):
         D = B - A
-        N = np.array([D[1], -D[0]])
+        N = [D[1], -D[0]]
         N /= math.sqrt(N[0]**2 + N[1]**2)
         T = C + self.turn_offset * N
         return T
