@@ -26,10 +26,10 @@ class Driver:
         self.turtle.keep_speed()
 
     def change_color(self):
-        if self.color == CONST.GREEN or self.color == CONST.RED:
-            self.color = CONST.BLUE
-        elif self.color == CONST.BLUE:
+        if self.color == CONST.GREEN or self.color == CONST.BLUE:
             self.color = CONST.RED
+        elif self.color == CONST.RED:
+            self.color = CONST.BLUE
         else:
             print("ERROR: undefined color")
             quit()
