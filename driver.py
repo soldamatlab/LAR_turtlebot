@@ -327,6 +327,8 @@ class Forward(Activity):
         if self.first:  # TODO :)
             self.first = False
             return
+        else:
+            self.turtle.set_speed(self.speed, 0)
 
         odometry = self.turtle.get_odometry()[0]
         print("------------------------ ODOMETRY: " + str(odometry))
