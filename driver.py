@@ -216,7 +216,6 @@ class GoThroughGate(Activity):
         self.window = window
         self.turn_offset = turn_offset
         self.overshoot = overshoot
-        self.gate_center = None
         self.step = 0
 
     def perform(self):
@@ -234,26 +233,23 @@ class GoThroughGate(Activity):
             A, B = self.pop_ret()
             A = np.array([A[0], A[2]])
             B = np.array([B[0], B[2]])
-            C = (A + B) / 2
-            self.gate_center = C
-            target = self.calculate_midturn_point(A, B, C)
+            target = self.calculate_midturn_point(A, B)
             self.step = 1
             return self.do(GotoCoors(self, self.driver, target))
 
-        if isinstance(self.activity, GotoCoors) and self.step == 1:
-            target = self.gate_center
-            self.gate_center = None
+        if self.step == 1:
             self.step = 2
-            return self.do(GotoCoors(self, self.driver, target))
+            return self.do(FindGate(self, self.driver, self.color, window=self.window))
 
-        if isinstance(self.activity, GotoCoors) and self.step == 2:
+        if self.step == 2:
             self.step = 3
             return self.do(Forward(self, self.driver, self.overshoot))
 
         self.end()
 
     # B has higher x-coordinate than A
-    def calculate_midturn_point(self, A, B, C):
+    def calculate_midturn_point(self, A, B):
+        C = (A + B) / 2
         D = B - A
         N = np.array([D[1], -D[0]])
         N /= math.sqrt(N[0]**2 + N[1]**2)
@@ -408,7 +404,7 @@ class Turn(Activity):
         self.step = (CONST.SLEEP / 1000) * speed
 
     def start(self):
-        print("------------------------------------------------ TURN: " + str(self.degree))
+        print("------------------------------------------------ TURN: " + str(self.degree))  # TODO rem
         self.turtle.stop()  # safety
         self.turtle.reset_odometry()
         self.turtle.set_speed(0, self.direction * self.speed)
