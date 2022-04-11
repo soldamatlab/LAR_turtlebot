@@ -218,7 +218,7 @@ class GoThroughGate(Activity):
 # Find gate of given color by turning and center itself on it.
 class FindGate(Activity):
 
-    def __init__(self, parent, driver, color, speed=np.pi/8, center_limit=12, window=False):
+    def __init__(self, parent, driver, color, speed=np.pi/8, center_limit=16, window=False):
         Activity.__init__(self, parent, driver)
         self.color = color
         self.speed = speed
@@ -226,7 +226,6 @@ class FindGate(Activity):
         self.window = window
         self.w_bin = None
         self.dir = 1
-
 
     def start(self):
         if self.window:
