@@ -408,6 +408,7 @@ class Turn(Activity):
         self.step = (CONST.SLEEP / 1000) * speed
 
     def start(self):
+        print("------------------------------------------------ TURN: " + str(self.degree))
         self.turtle.stop()  # safety
         self.turtle.reset_odometry()
         self.turtle.set_speed(0, self.direction * self.speed)
