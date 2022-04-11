@@ -4,7 +4,7 @@ import CONST
 from camera import *
 from buttons import bumper_cb
 
-INFO = True
+INFO = False
 
 
 class Turtle:
