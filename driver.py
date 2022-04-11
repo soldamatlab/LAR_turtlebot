@@ -14,12 +14,17 @@ class Driver:
         self.main = MainActivity(self, self)
         self.counter = 0
 
+        self.window = Window("driver")
         self.color = CONST.GREEN
 
     def drive(self):
         if not self.busy:
             return None  #TODO
         if INFO: print()
+
+        hsv_img = self.turtle.get_hsv_image()
+        bin_img = img_threshold(hsv_img, self.color)
+        self.window.show(bin_to_rgb(bin_img))
 
         self.counter += 1
         self.main.perform()
