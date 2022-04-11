@@ -11,20 +11,20 @@ class Driver:
     def __init__(self, turtle):
         self.turtle = turtle
         self.busy = True
-        self.main = MainActivity(self, self)
+        self.main = MainActivity(self, self, window=True)
         self.counter = 0
 
-        self.window = Window("driver")
-        self.color = CONST.GREEN
+        # self.window = Window("driver")
+        # self.color = CONST.GREEN
 
     def drive(self):
         if not self.busy:
             return None  #TODO
         if INFO: print()
 
-        hsv_img = self.turtle.get_hsv_image()
-        bin_img = img_threshold(hsv_img, self.color)
-        self.window.show(bin_to_rgb(bin_img))
+        # hsv_img = self.turtle.get_hsv_image()
+        # bin_img = img_threshold(hsv_img, self.color)
+        # self.window.show(bin_to_rgb(bin_img))
 
         self.counter += 1
         self.main.perform()
@@ -83,8 +83,9 @@ class Activity:
 
 class MainActivity(Activity):
 
-    def __init__(self, parent, driver):
+    def __init__(self, parent, driver, window=False):
         Activity.__init__(self, parent, driver)
+        self.window = window
 
     def perform(self):
         Activity.perform_init(self)
@@ -92,7 +93,7 @@ class MainActivity(Activity):
             return self.activity.perform()
 
         if self.activity is None:
-            return self.do(DetermineFirstColor(self, self.driver, window=False))
+            return self.do(DetermineFirstColor(self, self.driver, window=self.window))
 
         if isinstance(self.activity, DetermineFirstColor):
             first_color, area = self.pop_ret()  # TODO check area
@@ -101,7 +102,7 @@ class MainActivity(Activity):
         if isinstance(self.activity, GoThroughGate):
             self.driver.change_color()
 
-        return self.do(GoThroughGate(self, self.driver, self.driver.color, window=False))
+        return self.do(GoThroughGate(self, self.driver, self.driver.color, window=self.window))
 
 
 class TestActivity(Activity):
@@ -127,11 +128,15 @@ class DetermineFirstColor(Activity):
     def __init__(self, parent, driver, window=False):
         Activity.__init__(self, parent, driver)
         self.window = window
-
+        self.blue_window = None
+        self.red_window = None
         self.blue_largest_area = 0
         self.red_largest_area = 0
 
     def start(self):
+        if self.window:
+            self.blue_window = Window("BLUE")
+            self.red_window = Window("RED")
         self.turtle.reset_odometry()
 
     def perform(self):
@@ -151,8 +156,13 @@ class DetermineFirstColor(Activity):
 
         # Measurements
         hsv_img = self.turtle.get_hsv_image()
-        blue_segments = self.turtle.get_segments(CONST.BLUE, hsv_img=hsv_img)
-        red_segments = self.turtle.get_segments(CONST.RED, hsv_img=hsv_img)
+        blue_bin = img_threshold(hsv_img, CONST.BLUE)
+        red_bin = img_threshold(hsv_img, CONST.RED)
+        if self.window:
+            self.blue_window.show(bin_to_rgb(blue_bin))
+            self.red_window.show(bin_to_rgb(red_bin))
+        blue_segments = self.turtle.get_segments(CONST.BLUE, bin_img=blue_bin)
+        red_segments = self.turtle.get_segments(CONST.RED, bin_img=red_bin)
         blue_max = np.amax(blue_segments.areas())
         red_max = np.amax(red_segments.areas())
         if blue_max > self.blue_largest_area:
@@ -196,9 +206,12 @@ class FindGate(Activity):
         self.speed = speed
         self.center_limit = center_limit  # in pixels
         self.window = window
+        self.w_bin = None
         self.dir = 1
 
-        if window:
+
+    def start(self):
+        if self.window:
             self.w_bin = Window("FindTwoSticks")
 
     def perform(self):
