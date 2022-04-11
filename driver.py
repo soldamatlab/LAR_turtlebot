@@ -3,7 +3,7 @@ import numpy as np
 from camera import *
 import time
 
-INFO = False
+INFO = True
 
 
 class Driver:
@@ -13,7 +13,7 @@ class Driver:
         self.busy = True
         self.main = MainActivity(self, self)
         self.counter = 0
-        
+
         self.color = CONST.GREEN
 
     def drive(self):
