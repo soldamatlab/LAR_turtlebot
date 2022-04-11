@@ -13,7 +13,7 @@ turtle = None
 
 
 def button_0():
-    segments = turtle.get_segments(driver.color, min_area=2500)
+    segments = turtle.get_segments(driver.color, min_area=1500)
     pc = turtle.get_point_cloud()
     segments.calculate_coors(pc)
     print(segments.coors)
