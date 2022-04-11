@@ -153,6 +153,7 @@ class DetermineFirstColor(Activity):
 
         # Termination condition
         angle = self.turtle.get_odometry()[2]
+        print(angle)  # TODO rem
         if abs(angle) > 2 * np.pi:
             if self.blue_largest_area >= self.red_largest_area:
                 color = CONST.BLUE
