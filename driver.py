@@ -1,7 +1,10 @@
+import math
+
 import CONST
 import numpy as np
 from camera import *
 import time
+import math
 
 INFO = True
 FORWARD_SPEED = 0.2
@@ -93,8 +96,8 @@ class MainActivity(Activity):
 
     def start(self):
         self.activity = GoThroughGate(self, self.driver, CONST.GREEN, window=self.window)  # TODO rem
-    #     self.determined_first_color = True  # TODO rem
-    #     self.driver.color = CONST.RED  # TODO rem
+        self.determined_first_color = True  # TODO rem
+        self.driver.color = CONST.RED  # TODO rem
 
     def perform(self):
         Activity.perform_init(self)
@@ -142,7 +145,7 @@ class DetermineFirstColor(Activity):
 
     def __init__(self, parent, driver, speed=TURN_SPEED, window=False,
                  angle_margin=ANGLE_MARGIN,
-                 direction=-1,
+                 direction=1,
                  ):
         Activity.__init__(self, parent, driver)
         self.speed = speed
@@ -203,9 +206,10 @@ class DetermineFirstColor(Activity):
 # Find a gate of the given color, measure its distance and go through it.
 class GoThroughGate(Activity):
 
-    def __init__(self, parent, driver, color, window=False):
+    def __init__(self, parent, driver, color, turn_offset=CONST.ROBOT_WIDTH+0.15, window=False):
         Activity.__init__(self, parent, driver)
         self.color = color
+        self.turn_offset = turn_offset
         self.window = window
 
     def perform(self):
@@ -213,17 +217,27 @@ class GoThroughGate(Activity):
         if self.busy:
             return self.activity.perform()
 
-        if (self.activity is None) or (isinstance(self.activity, MeasureGateDist) and self.ret is None):
+        if (self.activity is None) or (isinstance(self.activity, MeasureGateCoordinates) and self.ret is None):
             return self.do(FindGate(self, self.driver, self.color, window=self.window))
 
         if isinstance(self.activity, FindGate):
-            return self.do(MeasureGateDist(self, self.driver, self.color))
+            return self.do(MeasureGateCoordinates(self, self.driver, self.color))
 
-        if isinstance(self.activity, MeasureGateDist):
-            dist = self.pop_ret() + (CONST.ROBOT_WIDTH / 2)
-            return self.do(Forward(self, self.driver, dist))
+        if isinstance(self.activity, MeasureGateCoordinates):
+            A, B = self.pop_ret()
+            target = self.calculate_target(A, B)
+            return self.do(GotoCoors(self, self.driver, target))
 
         self.end()
+
+    # B has higher z-coordinate than A
+    def calculate_target(self, A, B):
+        C = (A + B) / 2
+        D = B - A
+        N = [D[1], -D[0]]
+        N /= math.sqrt(N[0]**2 + N[1]**2)
+        T = C + self.turn_offset * N
+        return T
 
 
 # Find gate of given color by turning and center itself on it.
@@ -298,8 +312,8 @@ class FindGate(Activity):
 
 # Measure a distance of the closest gate of the given color. (without turning)
 # return None ... if all attempts fail
-# return dist ... otherwise
-class MeasureGateDist(Activity):
+# return (A, B) ... coordinates, B has higher z-coordinate than A
+class MeasureGateCoordinates(Activity):
 
     def __init__(self, parent, driver, color,
                  attempts=12,
@@ -325,9 +339,60 @@ class MeasureGateDist(Activity):
         sticks.calculate_coors(pc)
 
         args = np.argsort(sticks.areas())
-        center = (sticks.coors[args[0]] + sticks.coors[args[1]]) / 2
-        self.parent.ret = center[2]
+        A = sticks.coors[args[0]]
+        B = sticks.coors[args[1]]
+        if A[2] > B[2]:
+            tmp = A
+            A = B
+            B = tmp
+        self.parent.ret = (A, B)
         self.end()
+
+
+class GotoCoors(Activity):
+
+    def __init__(self, parent, driver, target):
+        Activity.__init__(self, parent, driver)
+
+        x = target[0]
+        z = target[2]
+        self.dist = np.sqrt(x ** 2 + z ** 2)
+        self.alpha = np.arccos(z / self.dist)
+
+    def perform(self):
+        Activity.perform_init(self)
+        if self.busy:
+            return self.activity.perform()
+
+        if self.activity is None:
+            return self.do(Turn(self, self.driver, self.alpha))
+
+        if isinstance(self.activity, Turn):
+            return self.do(Forward(self, self.driver, self.dist))
+
+        self.end()
+
+
+class Turn(Activity):
+
+    def __init__(self, parent, driver, degree, speed=TURN_SPEED):
+        Activity.__init__(self, parent, driver)
+        self.speed = speed
+        self.turn_for = degree / speed
+        self.start_time = None
+
+    def start(self):
+        self.start_time = time.perf_counter()
+        self.turtle.set_speed(0, self.speed)
+
+    def perform(self):
+        Activity.perform_init(self)
+        if self.busy:
+            return self.activity.perform()
+
+        if 1000 * (self.turn_for - (time.perf_counter() - self.start_time)) < CONST.SLEEP / 2:
+            self.turtle.stop()
+            self.end()
 
 
 # Go forward a set distance.
@@ -371,51 +436,6 @@ class Idle(Activity):
             return
         self.end()
 
-
-# class Goto(Activity):
-#
-#     def __init__(self, parent, driver, target):
-#         Activity.__init__(self, parent, driver)
-#
-#         x = target[0]
-#         z = target[2]
-#         self.dist = np.sqrt(x ** 2 + z ** 2)
-#         self.alpha = np.arccos(z / self.dist)
-#
-#     def perform(self):
-#         Activity.perform_init(self)
-#         if self.busy:
-#             return self.activity.perform()
-#
-#         if self.activity is None:
-#             return self.do(Turn(self, self.driver, self.alpha))
-#
-#         # if isinstance(self.activity, Turn): TODO
-#         #     return self.do(Forward(self, self.driver, self.dist))
-#
-#         self.end()
-
-
-# class Turn(Activity):
-#
-#     def __init__(self, parent, driver, degree, speed=TURN_SPEED):
-#         Activity.__init__(self, parent, driver)
-#         self.speed = speed
-#         self.turn_for = degree / speed
-#         self.start_time = None
-#
-#     def start(self):
-#         self.start_time = time.perf_counter()
-#         self.turtle.set_speed(0, self.speed)
-#
-#     def perform(self):
-#         Activity.perform_init(self)
-#         if self.busy:
-#             return self.activity.perform()
-#
-#         if 1000 * (self.turn_for - (time.perf_counter() - self.start_time)) < CONST.SLEEP / 2:
-#             self.turtle.stop()
-#             self.end()
 
 # Counts turns made by the robot from "start".
 # Only works correctly when not turning back more than the given [angle_margin].
