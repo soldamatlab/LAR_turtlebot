@@ -11,9 +11,9 @@ class Driver:
     def __init__(self, turtle):
         self.turtle = turtle
         self.busy = True
-        self.main = TestActivity(self, self)
+        self.main = MainActivity(self, self)
         self.counter = 0
-
+        
         self.color = CONST.GREEN
 
     def drive(self):
