@@ -28,12 +28,15 @@ class Turtle:
         self.linear = linear
         self.angular = angular  # positive: left, negative: right
 
+    # DON'T SPAM
     def keep_speed(self):
         if INFO: print("TURTLE_SPEED: " + str(self.linear) + " " + str(self.angular))
         self.bot.cmd_velocity(linear=self.linear, angular=self.angular)
 
+    # DON'T SPAM
     def stop(self):
         self.set_speed(0., 0.)
+        self.keep_speed()
 
     def button_cb(self, msg):
         if msg.state == 1:

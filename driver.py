@@ -308,32 +308,24 @@ class MeasureGateDist(Activity):
 # Go forward a set distance.
 class Forward(Activity):
 
-    def __init__(self, parent, driver, dist, speed=0.2):
+    def __init__(self, parent, driver, dist, speed=0.2, wait_for_odo=0.5):
         Activity.__init__(self, parent, driver)
         self.dist = dist
         self.speed = speed
         self.step = self.speed * (CONST.SLEEP / 1000)
-        self.first = True
+        self.wait_for_odo = wait_for_odo
 
     def start(self):
-        self.turtle.stop()  # TODO remove matova picovina
+        self.turtle.stop()
         self.turtle.reset_odometry()
-        # self.turtle.set_speed(self.speed, 0)
-
-        print("------------------------------------------------ FORWARD: " + str(self.dist))
+        time.sleep(self.wait_for_odo)
+        self.turtle.set_speed(self.speed, 0)
 
     def perform(self):
         Activity.perform_init(self)
-        if self.first:  # TODO :)
-            self.first = False
-            return
-        else:
-            self.turtle.set_speed(self.speed, 0)
 
         odometry = self.turtle.get_odometry()[0]
-        print("------------------------ ODOMETRY: " + str(odometry))
         if self.dist - odometry < self.step / 2:
-            print("------------------------ STOP")
             self.turtle.stop()
             self.end()
 
