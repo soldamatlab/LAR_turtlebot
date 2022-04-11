@@ -226,11 +226,18 @@ class GoThroughGate(Activity):
 # Find gate of given color by turning and center itself on it.
 class FindGate(Activity):
 
-    def __init__(self, parent, driver, color, speed=np.pi/8, center_limit=16, window=False):
+    def __init__(self, parent, driver, color, speed=np.pi/8, window=False,
+                 center_limit_min=2,
+                 center_limit_step=2,
+                 center_limit_max=24,
+                 ):
         Activity.__init__(self, parent, driver)
         self.color = color
         self.speed = speed
-        self.center_limit = center_limit  # in pixels
+        self.center_limit_min = center_limit_min  # in pixels
+        self.center_limit_step = center_limit_step  # in pixels
+        self.center_limit_max = center_limit_max  # in pixels
+        self.center_limit = center_limit_min
         self.window = window
         self.w_bin = None
         self.dir = 1
@@ -265,9 +272,12 @@ class FindGate(Activity):
         else:
             new_dir = -1
 
-        if new_dir != self.dir and abs(diff) < self.center_limit:
-            self.turtle.stop()
-            self.end()
+        if new_dir != self.dir:
+            if abs(diff) < self.center_limit:
+                self.turtle.stop()
+                self.end()
+            elif self.center_limit < self.center_limit_max:
+                self.center_limit += self.center_limit_step
 
         self.dir = new_dir
         self.turtle.set_speed(0, self.dir * self.speed)
