@@ -229,17 +229,10 @@ class GoThroughGate(Activity):
             A = np.array([A[0], A[2]])
             B = np.array([B[0], B[2]])
             C = (A + B) / 2
-            return self.do(GotoCoors(self, self.driver, C))
+            self.gate_center = C
+            target = self.calculate_midturn_point(A, B, C)
+            return self.do(GotoCoors(self, self.driver, target))
 
-        # if isinstance(self.activity, MeasureGateCoordinates):
-        #     A, B = self.pop_ret()
-        #     A = np.array([A[0], A[2]])
-        #     B = np.array([B[0], B[2]])
-        #     C = (A + B) / 2
-        #     self.gate_center = C
-        #     target = self.calculate_midturn_point(A, B, C)
-        #     return self.do(GotoCoors(self, self.driver, target))
-        #
         # if isinstance(self.activity, GotoCoors) and self.gate_center is not None:
         #     target = self.gate_center
         #     self.gate_center = None
