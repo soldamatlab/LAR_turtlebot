@@ -117,5 +117,6 @@ class Turtle:
         self.bot.reset_odometry()
 
     # x->forward, y->sideways, z->angle
+    # z ... <-pi,+pi>, left: positive, right: negative, forward: zero, backwards: +-pi
     def get_odometry(self):
         return self.bot.get_odometry()

@@ -132,7 +132,7 @@ class TestActivity(Activity):
 # returns (color, area)
 class DetermineFirstColor(Activity):
 
-    def __init__(self, parent, driver, speed=np.pi/8, window=False):
+    def __init__(self, parent, driver, speed=np.pi/8, window=False, margin=np.pi/12):
         Activity.__init__(self, parent, driver)
         self.speed = speed
         self.window = window
@@ -140,6 +140,8 @@ class DetermineFirstColor(Activity):
         self.red_window = None
         self.blue_largest_area = 0
         self.red_largest_area = 0
+        self.half_turn = False
+        self.margin = margin
 
     def start(self):
         if self.window:
@@ -154,18 +156,10 @@ class DetermineFirstColor(Activity):
 
         # Termination condition
         angle = self.turtle.get_odometry()[2]
-        print(angle)  # TODO rem
-        if abs(angle) > 2 * np.pi:
-            if self.blue_largest_area >= self.red_largest_area:
-                color = CONST.BLUE
-                area = self.blue_largest_area
-            else:
-                color = CONST.RED
-                area = self.red_largest_area
-
-            self.parent.ret = (color, area)
-            self.turtle.stop()
-            self.end()
+        if self.half_turn and angle > + self.margin:
+            return self.done()
+        if angle < - self.margin:
+            self.half_turn = True
 
         # Measurements
         hsv_img = self.turtle.get_hsv_image()
@@ -184,6 +178,18 @@ class DetermineFirstColor(Activity):
             red_max = np.amax(red_segments.areas())
             if red_max > self.red_largest_area:
                 self.red_largest_area = red_max
+
+    def done(self):
+        if self.blue_largest_area >= self.red_largest_area:
+            color = CONST.BLUE
+            area = self.blue_largest_area
+        else:
+            color = CONST.RED
+            area = self.red_largest_area
+
+        self.parent.ret = (color, area)
+        self.turtle.stop()
+        self.end()
 
 
 # Find a gate of the given color, measure its distance and go through it.
