@@ -17,7 +17,7 @@ class Driver:
     def __init__(self, turtle):
         self.turtle = turtle
         self.busy = True
-        self.main = TestActivity(self, self)
+        self.main = MainActivity(self, self, window=True)
         self.counter = 0
 
         # self.window = Window("driver")
@@ -207,12 +207,17 @@ class DetermineFirstColor(Activity):
 # Find a gate of the given color, measure its distance and go through it.
 class GoThroughGate(Activity):
 
-    def __init__(self, parent, driver, color, turn_offset=CONST.ROBOT_WIDTH+0.15, window=False):
+    def __init__(self, parent, driver, color, window=False,
+                 turn_offset=CONST.ROBOT_WIDTH+0.15,
+                 overshoot=CONST.ROBOT_WIDTH/2,
+                 ):
         Activity.__init__(self, parent, driver)
         self.color = color
-        self.turn_offset = turn_offset
         self.window = window
+        self.turn_offset = turn_offset
+        self.overshoot = overshoot
         self.gate_center = None
+        self.step = 0
 
     def perform(self):
         Activity.perform_init(self)
@@ -232,12 +237,18 @@ class GoThroughGate(Activity):
             C = (A + B) / 2
             self.gate_center = C
             target = self.calculate_midturn_point(A, B, C)
+            self.step = 1
             return self.do(GotoCoors(self, self.driver, target))
 
-        if isinstance(self.activity, GotoCoors) and self.gate_center is not None:
+        if isinstance(self.activity, GotoCoors) and self.step == 1:
             target = self.gate_center
             self.gate_center = None
+            self.step = 2
             return self.do(GotoCoors(self, self.driver, target))
+
+        if isinstance(self.activity, GotoCoors) and self.step == 2:
+            self.step = 3
+            return self.do(Forward(self, self.driver, self.overshoot))
 
         self.end()
 
