@@ -76,22 +76,22 @@ class Activity:
         return ret
 
 
-# class MainActivity(Activity):
-#
-#     def __init__(self, parent, driver):
-#         Activity.__init__(self, parent, driver)
-#
-#     def perform(self):
-#         Activity.perform_init(self)
-#         if self.busy:
-#             return self.activity.perform()
-#
-#         if self.activity is None:
-#             return self.do(GoThroughGate(self, self.driver, self.driver.color, window=False))
-#
-#         if isinstance(self.activity, GoThroughGate):
-#             self.driver.change_color()
-#             return self.do(GoThroughGate(self, self.driver, self.driver.color, window=False))
+class MainActivity(Activity):
+
+    def __init__(self, parent, driver):
+        Activity.__init__(self, parent, driver)
+
+    def perform(self):
+        Activity.perform_init(self)
+        if self.busy:
+            return self.activity.perform()
+
+        if self.activity is None:
+            return self.do(GoThroughGate(self, self.driver, self.driver.color, window=False))
+
+        if isinstance(self.activity, GoThroughGate):
+            self.driver.change_color()
+            return self.do(GoThroughGate(self, self.driver, self.driver.color, window=False))
 
 
 class TestActivity(Activity):
@@ -110,12 +110,12 @@ class TestActivity(Activity):
         self.window.show(bin_to_rgb(bin_img))
 
 
+# Find a gate of the given color, measure its distance and go through it.
 class GoThroughGate(Activity):
 
     def __init__(self, parent, driver, color, window=False):
         Activity.__init__(self, parent, driver)
         self.color = color
-        self.went_forward = 0
         self.window = window
 
     def perform(self):
@@ -123,7 +123,7 @@ class GoThroughGate(Activity):
         if self.busy:
             return self.activity.perform()
 
-        if self.activity is None:
+        if (self.activity is None) or (isinstance(self.activity, MeasureGateDist) and self.ret is None):
             return self.do(FindGate(self, self.driver, self.color, window=self.window))
 
         if isinstance(self.activity, FindGate):
@@ -131,24 +131,12 @@ class GoThroughGate(Activity):
 
         if isinstance(self.activity, MeasureGateDist):
             dist = self.pop_ret()
-            if dist is None:
-                return self.do(FindGate(self, self.driver, self.color, window=self.window))
-            else:
-                if self.went_forward == 0:
-                    print("--------------------------------------------------- FIRST")
-                    return self.do(Forward(self, self.driver, dist / 3))
-                else:
-                    print("--------------------------------------------------- SECOND")
-                    return self.do(Forward(self, self.driver, dist + 0.15))
-
-        if isinstance(self.activity, Forward):
-            if self.went_forward == 0:
-                self.went_forward += 1
-                return self.do(FindGate(self, self.driver, self.color, window=self.window))
-            else:
-                self.end()
+            return self.do(Forward(self, self.driver, dist))
+        
+        self.end()
 
 
+# Find gate of given color by turning and center itself on it.
 class FindGate(Activity):
 
     def __init__(self, parent, driver, color, speed=np.pi/8, center_limit=12, window=False):
@@ -195,6 +183,7 @@ class FindGate(Activity):
         self.turtle.set_speed(0, self.dir * self.speed)
 
 
+# Measure a distance of the closest gate of the given color. (without turning)
 class MeasureGateDist(Activity):
 
     def __init__(self, parent, driver, color, attempts=12):
@@ -224,6 +213,7 @@ class MeasureGateDist(Activity):
         self.end()
 
 
+# Go forward a set distance.
 class Forward(Activity):
 
     def __init__(self, parent, driver, dist, speed=0.2):
@@ -244,6 +234,7 @@ class Forward(Activity):
             self.end()
 
 
+# Stand idle for a given amount of time.
 class Idle(Activity):
 
     def __init__(self, parent, driver, idle_time):
