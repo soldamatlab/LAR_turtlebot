@@ -217,7 +217,7 @@ class GoThroughGate(Activity):
             return self.do(MeasureGateDist(self, self.driver, self.color))
 
         if isinstance(self.activity, MeasureGateDist):
-            dist = self.pop_ret()
+            dist = self.pop_ret() + (CONST.ROBOT_WIDTH / 2)
             return self.do(Forward(self, self.driver, dist))
 
         self.end()

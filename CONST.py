@@ -1,4 +1,6 @@
 
+ROBOT_WIDTH = 0.3
+
 RATE = 10
 SLEEP = 1000 / RATE
 
