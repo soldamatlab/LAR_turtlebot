@@ -9,24 +9,24 @@ GREEN = 0
 BLUE = 1
 RED = 2
 
-G_HUE = 65  # 45 - 75
+G_HUE = 65
 G_HUE_DIFF = 25
 G_SATUR_MIN = 60
 G_VAL_MIN = 60
 
 B_HUE = 100
 B_HUE_DIFF = 25
-B_SATUR_MIN = 80 #60
-B_VAL_MIN = 60
+B_SATUR_MIN = 200
+B_VAL_MIN = 100
 
 R_HUE = 0
-R_HUE_DIFF = 25
+R_HUE_DIFF = 10
 R_SATUR_MIN = 150
-R_VAL_MIN = 60
+R_VAL_MIN = 110
 
 # POLE SHAPE
 MIN_AREA = 1000
-TARGET_RATIO = 5.35 # ~6 when truly in center, ~3.5 when on the far side
+TARGET_RATIO = 5.35  # ~6 when truly in center, ~3.5 when on the far side
 MAX_RATIO_DIFF = 1.85
 
 # CAM
