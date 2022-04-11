@@ -308,6 +308,8 @@ class Forward(Activity):
         self.turtle.reset_odometry()
         self.turtle.set_speed(self.speed, 0)
 
+        print("------------------------------------------------ FORWARD: " + str(self.dist))
+
     def perform(self):
         Activity.perform_init(self)
 
