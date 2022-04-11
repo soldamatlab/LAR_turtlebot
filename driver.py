@@ -303,6 +303,7 @@ class Forward(Activity):
         Activity.__init__(self, parent, driver)
         self.dist = dist
         self.speed = speed
+        self.step = self.speed * (CONST.SLEEP / 1000)
 
     def start(self):
         self.turtle.reset_odometry()
@@ -314,7 +315,9 @@ class Forward(Activity):
         Activity.perform_init(self)
 
         odometry = self.turtle.get_odometry()
-        if self.dist - odometry[0] < self.speed * (CONST.SLEEP / 1000) / 2:
+        print("------------------------ ODOMETRY: " + str(odometry[0]))
+        if self.dist - odometry[0] < self.step / 2:
+            print("------------------------ STOP")
             self.turtle.stop()
             self.end()
 
