@@ -126,12 +126,14 @@ class TestActivity(Activity):
         self.window.show(bin_to_rgb(bin_img))
 
 
+# TODO turn to sides only, not 360 ?
 # Turn 360 degrees, measure red and blue stick areas, return which was the larges.
 # returns (color, area)
 class DetermineFirstColor(Activity):
 
-    def __init__(self, parent, driver, window=False):
+    def __init__(self, parent, driver, speed=np.pi/8, window=False):
         Activity.__init__(self, parent, driver)
+        self.speed = speed
         self.window = window
         self.blue_window = None
         self.red_window = None
@@ -142,7 +144,9 @@ class DetermineFirstColor(Activity):
         if self.window:
             self.blue_window = Window("BLUE")
             self.red_window = Window("RED")
+
         self.turtle.reset_odometry()
+        self.turtle.set_speed(0, self.speed)
 
     def perform(self):
         Activity.perform_init(self)
@@ -156,7 +160,9 @@ class DetermineFirstColor(Activity):
             else:
                 color = CONST.RED
                 area = self.red_largest_area
+
             self.parent.ret = (color, area)
+            self.turtle.stop()
             self.end()
 
         # Measurements
