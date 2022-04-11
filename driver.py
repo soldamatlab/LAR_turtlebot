@@ -360,11 +360,12 @@ class MeasureGateCoordinates(Activity):
 
 class GotoCoors(Activity):
 
+    # target = [x, z]
     def __init__(self, parent, driver, target):
         Activity.__init__(self, parent, driver)
 
         x = target[0]
-        z = target[2]
+        z = target[1]
         self.dist = np.sqrt(x ** 2 + z ** 2)
         self.alpha = np.arccos(z / self.dist)
 
