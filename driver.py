@@ -114,13 +114,13 @@ class MainActivity(Activity):
                 self.counter += 1
                 return self.do(Forward(self, self.driver, 1))
 
-            if self.counter == 1:
-                self.counter += 1
-                return self.do(Forward(self, self.driver, 2))
-
-            if self.counter == 1:
-                self.counter += 1
-                return self.do(Forward(self, self.driver, 3))
+            # if self.counter == 1:
+            #     self.counter += 1
+            #     return self.do(Forward(self, self.driver, 2))
+            #
+            # if self.counter == 1:
+            #     self.counter += 1
+            #     return self.do(Forward(self, self.driver, 3))
 
         self.end()
 
