@@ -112,7 +112,7 @@ class MainActivity(Activity):
         if self.activity is None or isinstance(self.activity, Idle):
             if self.counter == 0:
                 self.counter += 1
-                return self.do(Forward(self, self.driver, 1))
+                return self.do(Forward(self, self.driver, 2))
 
             # if self.counter == 1:
             #     self.counter += 1
