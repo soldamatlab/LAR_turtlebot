@@ -270,6 +270,8 @@ class Idle(Activity):
         self.start_time = time.perf_counter()
 
     def perform(self):
+        Activity.perform_init(self)
+
         if time.perf_counter() - self.start_time < self.idle_time:
             return
         self.end()
