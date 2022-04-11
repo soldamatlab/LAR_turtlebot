@@ -211,6 +211,7 @@ class GoThroughGate(Activity):
         self.color = color
         self.turn_offset = turn_offset
         self.window = window
+        self.gate_center = None
 
     def perform(self):
         Activity.perform_init(self)
@@ -225,14 +226,20 @@ class GoThroughGate(Activity):
 
         if isinstance(self.activity, MeasureGateCoordinates):
             A, B = self.pop_ret()
-            target = self.calculate_target(A, B)
+            C = (A + B) / 2
+            self.gate_center = C
+            target = self.calculate_target(A, B, C)
+            return self.do(GotoCoors(self, self.driver, target))
+
+        if isinstance(self.activity, GotoCoors) and self.gate_center is not None:
+            target = self.gate_center
+            self.gate_center = None
             return self.do(GotoCoors(self, self.driver, target))
 
         self.end()
 
     # B has higher z-coordinate than A
-    def calculate_target(self, A, B):
-        C = (A + B) / 2
+    def calculate_target(self, A, B, C):
         D = B - A
         N = [D[1], -D[0]]
         N /= math.sqrt(N[0]**2 + N[1]**2)
