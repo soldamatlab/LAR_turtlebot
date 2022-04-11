@@ -236,6 +236,7 @@ class FindGate(Activity):
         self.dir = 1
 
     def start(self):
+        self.turtle.stop()  # safety
         if self.window:
             self.w_bin = Window("FindTwoSticks")
 
@@ -312,19 +313,22 @@ class Forward(Activity):
         self.dist = dist
         self.speed = speed
         self.step = self.speed * (CONST.SLEEP / 1000)
-        self.start_odo = None
+        self.first = True
 
     def start(self):
-        # self.turtle.reset_odometry()
-        self.start_odo = self.turtle.get_odometry()[0]
-        self.turtle.set_speed(self.speed, 0)
+        self.turtle.stop()  # TODO remove matova picovina
+        self.turtle.reset_odometry()
+        # self.turtle.set_speed(self.speed, 0)
 
         print("------------------------------------------------ FORWARD: " + str(self.dist))
 
     def perform(self):
         Activity.perform_init(self)
+        if self.first:  # TODO :)
+            self.first = False
+            return
 
-        odometry = self.turtle.get_odometry()[0] - self.start_odo  # TODO rem start_odo
+        odometry = self.turtle.get_odometry()[0]
         print("------------------------ ODOMETRY: " + str(odometry))
         if self.dist - odometry < self.step / 2:
             print("------------------------ STOP")
