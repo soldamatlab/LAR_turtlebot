@@ -87,6 +87,7 @@ class MainActivity(Activity):
         Activity.__init__(self, parent, driver)
         self.window = window
         self.determined_first_color = False
+        self.activity = GoThroughGate(self, self.driver, CONST.GREEN, window=self.window)  # TODO rem
 
     def perform(self):
         Activity.perform_init(self)
