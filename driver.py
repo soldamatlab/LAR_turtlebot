@@ -108,8 +108,8 @@ class MainActivity(Activity):
         if not self.determined_first_color:
             return self.do(DetermineFirstColor(self, self.driver, window=self.window))
 
-        if isinstance(self.activity, GoThroughGate):
-            self.driver.change_color()
+        # if isinstance(self.activity, GoThroughGate):
+        #     self.driver.change_color()  TODO uncomment
         return self.do(GoThroughGate(self, self.driver, self.driver.color, window=self.window))
 
 
@@ -251,12 +251,12 @@ class FindGate(Activity):
         if self.window:
             self.w_bin.show(bin_to_rgb(bin_img))
 
-        if sticks.count < 1:  # TODO 2
+        if sticks.count < 2:
             self.turtle.set_speed(0, self.dir * self.speed)
             return
 
         args = np.argsort(sticks.areas())
-        center = sticks.centroids[args[0]]  # TODO (sticks.centroids[args[0]] + sticks.centroids[args[1]]) / 2
+        center = (sticks.centroids[args[0]] + sticks.centroids[args[1]]) / 2
 
         diff = center[0] - (np.shape(bin_img)[1] / 2)
 
@@ -292,7 +292,7 @@ class MeasureGateDist(Activity):
             self.end()
 
         sticks = self.driver.turtle.get_segments(self.color)
-        if sticks.count < 1:  # TODO 2
+        if sticks.count < 2:
             self.attempts -= 1
             return self.perform()
 
@@ -300,7 +300,7 @@ class MeasureGateDist(Activity):
         sticks.calculate_coors(pc)
 
         args = np.argsort(sticks.areas())
-        center = sticks.coors[args[0]]  # TODO (sticks.coors[args[0]] + sticks.coors[args[1]]) / 2
+        center = (sticks.coors[args[0]] + sticks.coors[args[1]]) / 2
         self.parent.ret = center[2]
         self.end()
 
