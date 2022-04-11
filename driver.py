@@ -227,7 +227,7 @@ class GoThroughGate(Activity):
 class FindGate(Activity):
 
     def __init__(self, parent, driver, color, speed=np.pi/8, window=False,
-                 height_diff_factor=1.2,
+                 height_diff_factor=1.05,
                  center_limit_min=2,
                  center_limit_step=2,
                  center_limit_max=24,
