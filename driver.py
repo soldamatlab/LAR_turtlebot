@@ -142,7 +142,7 @@ class DetermineFirstColor(Activity):
 
     def __init__(self, parent, driver, speed=TURN_SPEED, window=False,
                  angle_margin=ANGLE_MARGIN,
-                 direction=1,
+                 direction=-1,
                  ):
         Activity.__init__(self, parent, driver)
         self.speed = speed
