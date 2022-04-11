@@ -17,7 +17,7 @@ class Driver:
     def __init__(self, turtle):
         self.turtle = turtle
         self.busy = True
-        self.main = MainActivity(self, self, window=True)
+        self.main = TestActivity(self, self)
         self.counter = 0
 
         # self.window = Window("driver")
@@ -25,7 +25,7 @@ class Driver:
 
     def drive(self):
         if not self.busy:
-            return None  #TODO
+            return  #TODO
         if INFO: print()
 
         # hsv_img = self.turtle.get_hsv_image()
@@ -133,9 +133,10 @@ class TestActivity(Activity):
         if self.busy:
             return self.activity.perform()
 
-        hsv_img = self.turtle.get_hsv_image()
-        bin_img = img_threshold(hsv_img, self.driver.color)
-        self.window.show(bin_to_rgb(bin_img))
+        if self.activity is None:
+            return self.do(Turn(self, self.driver, np.pi/2))
+
+        self.end()
 
 
 # TODO turn to sides only, not 360 ?
@@ -233,14 +234,14 @@ class GoThroughGate(Activity):
             target = self.calculate_midturn_point(A, B, C)
             return self.do(GotoCoors(self, self.driver, target))
 
-        # if isinstance(self.activity, GotoCoors) and self.gate_center is not None:
-        #     target = self.gate_center
-        #     self.gate_center = None
-        #     return self.do(GotoCoors(self, self.driver, target))
+        if isinstance(self.activity, GotoCoors) and self.gate_center is not None:
+            target = self.gate_center
+            self.gate_center = None
+            return self.do(GotoCoors(self, self.driver, target))
 
         self.end()
 
-    # B has higher z-coordinate than A
+    # B has higher x-coordinate than A
     def calculate_midturn_point(self, A, B, C):
         D = B - A
         N = np.array([D[1], -D[0]])
@@ -321,7 +322,7 @@ class FindGate(Activity):
 
 # Measure a distance of the closest gate of the given color. (without turning)
 # return None ... if all attempts fail
-# return (A, B) ... coordinates, B has higher z-coordinate than A
+# return (A, B) ... coordinates, A is left stick, B is right stick
 class MeasureGateCoordinates(Activity):
 
     def __init__(self, parent, driver, color,
@@ -350,7 +351,7 @@ class MeasureGateCoordinates(Activity):
         args = np.argsort(sticks.areas())
         A = sticks.coors[args[0]]
         B = sticks.coors[args[1]]
-        if A[2] > B[2]:
+        if A[0] > B[0]:
             tmp = A
             A = B
             B = tmp
