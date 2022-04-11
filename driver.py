@@ -1,6 +1,7 @@
 import CONST
 import numpy as np
 from camera import *
+import time
 
 INFO = True
 
@@ -75,22 +76,53 @@ class Activity:
         return ret
 
 
+# class MainActivity(Activity):
+#
+#     def __init__(self, parent, driver):
+#         Activity.__init__(self, parent, driver)
+#
+#     def perform(self):
+#         Activity.perform_init(self)
+#         if self.busy:
+#             return self.activity.perform()
+#
+#         if self.activity is None:
+#             return self.do(GoThroughGate(self, self.driver, self.driver.color, window=False))
+#
+#         if isinstance(self.activity, GoThroughGate):
+#             self.driver.change_color()
+#             return self.do(GoThroughGate(self, self.driver, self.driver.color, window=False))
+
+
 class MainActivity(Activity):
 
     def __init__(self, parent, driver):
         Activity.__init__(self, parent, driver)
+
+        self.counter = 0
 
     def perform(self):
         Activity.perform_init(self)
         if self.busy:
             return self.activity.perform()
 
-        if self.activity is None:
-            return self.do(GoThroughGate(self, self.driver, self.driver.color, window=False))
+        if isinstance(self.activity, Forward):
+            return self.do(Idle(self, self.driver, 3))
 
-        if isinstance(self.activity, GoThroughGate):
-            self.driver.change_color()
-            return self.do(GoThroughGate(self, self.driver, self.driver.color, window=False))
+        if self.activity is None or isinstance(self.activity, Idle):
+            if self.counter == 0:
+                self.counter += 1
+                return self.do(Forward(self, self.driver, 1))
+
+            if self.counter == 1:
+                self.counter += 1
+                return self.do(Forward(self, self.driver, 2))
+
+            if self.counter == 1:
+                self.counter += 1
+                return self.do(Forward(self, self.driver, 3))
+
+        self.end()
 
 
 class GoThroughGate(Activity):
@@ -227,6 +259,22 @@ class Forward(Activity):
             self.end()
 
 
+class Idle(Activity):
+
+    def __init__(self, parent, driver, idle_time):
+        Activity.__init__(self, parent, driver)
+        self.idle_time = idle_time  # in seconds
+        self.start_time = None
+
+    def start(self):
+        self.start_time = time.perf_counter()
+
+    def perform(self):
+        if time.perf_counter() - self.start_time < self.idle_time:
+            return
+        self.end()
+
+
 # class Goto(Activity):
 #
 #     def __init__(self, parent, driver, target):
@@ -257,9 +305,10 @@ class Forward(Activity):
 #         Activity.__init__(self, parent, driver)
 #         self.speed = speed
 #         self.turn_for = degree / speed
-#         self.start_time = time.perf_counter()
+#         self.start_time = None
 #
 #     def start(self):
+#         self.start_time = time.perf_counter()
 #         self.turtle.set_speed(0, self.speed)
 #
 #     def perform(self):
