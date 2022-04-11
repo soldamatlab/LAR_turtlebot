@@ -21,10 +21,10 @@ B_HUE_DIFF = 25
 B_SATUR_MIN = 230 # tight to eliminate green, if softened -> make hue tighter
 B_VAL_MIN = 80 # 90 and 100 work but chip off dark bits of stick
 
-R_HUE = 0
-R_HUE_DIFF = 10 # 25 accepts light wood color
+R_HUE = 2
+R_HUE_DIFF = 8 # 25 accepts light wood color
 R_SATUR_MIN = 150 # always observed over 160
-R_VAL_MIN = 90 # 110 and 120 work but chip off dark bits of stick
+R_VAL_MIN = 70 # 110 and 120 work but chip off dark bits of stick
 
 # POLE SHAPE
 MIN_AREA = 1000

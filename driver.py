@@ -383,26 +383,32 @@ class GotoCoors(Activity):
         self.end()
 
 
+# Turn a set amount of degrees.
+# ONLY WORKS FOR <-pi;+pi> TURNS. (no larger)
 class Turn(Activity):
 
+    # degree ... in radians, left: positive, right: negative
     def __init__(self, parent, driver, degree, speed=TURN_SPEED):
         Activity.__init__(self, parent, driver)
+        self.degree = degree
+        self.direction = 1 if degree > 0 else -1
         self.speed = speed
-        self.turn_for = degree / speed
-        self.start_time = None
+        self.step = CONST.SLEEP * speed
 
     def start(self):
-        self.start_time = time.perf_counter()
-        self.turtle.set_speed(0, self.speed)
+        self.turtle.stop()  # safety
+        self.turtle.reset_odometry()
+        self.turtle.set_speed(0, self.direction * self.speed)
 
     def perform(self):
         Activity.perform_init(self)
-        if self.busy:
-            return self.activity.perform()
 
-        if 1000 * (self.turn_for - (time.perf_counter() - self.start_time)) < CONST.SLEEP / 2:
-            self.turtle.stop()
-            self.end()
+        angle = self.turtle.get_odometry()[2]
+        if abs(self.degree - angle) > self.step / 2:
+            return
+
+        self.turtle.stop()
+        self.end()
 
 
 # Go forward a set distance.
