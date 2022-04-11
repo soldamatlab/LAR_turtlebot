@@ -243,7 +243,7 @@ class GoThroughGate(Activity):
     # B has higher z-coordinate than A
     def calculate_target(self, A, B, C):
         D = B - A
-        N = [D[1], -D[0]]
+        N = np.array([D[1], -D[0]])
         N /= math.sqrt(N[0]**2 + N[1]**2)
         T = C + self.turn_offset * N
         return T
