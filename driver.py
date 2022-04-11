@@ -229,7 +229,7 @@ class GoThroughGate(Activity):
             A = np.array([A[0], A[2]])
             B = np.array([B[0], B[2]])
             C = (A + B) / 2
-            self.gate_center = [C]
+            self.gate_center = C
             target = self.calculate_target(A, B, C)
             return self.do(GotoCoors(self, self.driver, target))
 
