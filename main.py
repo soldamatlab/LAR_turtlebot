@@ -14,7 +14,8 @@ turtle = None
 
 def button_0():
     segments = turtle.get_segments(driver.color, min_area=2500)
-    segments.get_coors()
+    pc = turtle.get_point_cloud()
+    segments.calculate_coors(pc)
     print(segments.coors)
 
 def button_1():
@@ -51,7 +52,7 @@ if __name__ == '__main__':
     driver = Driver(turtle)
 
     # w_rgb = Window("RGB")
-    w_bin = Window("BIN")
+    # w_bin = Window("BIN")
 
     # INIT ACTIONS
     # rate.sleep()
