@@ -10,6 +10,7 @@ from driver import Driver
 import CONST
 
 turtle = None
+driver = None
 
 
 def button_0():

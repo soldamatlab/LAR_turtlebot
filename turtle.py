@@ -90,6 +90,7 @@ class Turtle:
         return self.bot.get_depth_K()
 
     def get_segments(self, color,
+        hsv_img=None,
         bin_img=None,
         pc=None,
         min_area=CONST.MIN_AREA,
@@ -98,8 +99,9 @@ class Turtle:
         get_coors=False,
     ):
         if bin_img is None:
-            hsv = self.get_hsv_image()
-            bin_img = img_threshold(hsv, color)
+            if hsv_img is None:
+                hsv_img = self.get_hsv_image()
+            bin_img = img_threshold(hsv_img, color)
         segments = segment(bin_img, min_area=min_area)
         segments = hw_ratio_filter(segments, target=target_ratio, max_diff=max_ratio_diff)
         if get_coors:

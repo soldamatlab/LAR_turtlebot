@@ -31,12 +31,12 @@ class Driver:
         self.turtle.keep_speed()
 
     def change_color(self):
-        if self.color == CONST.GREEN or self.color == CONST.BLUE:
+        if self.color == CONST.BLUE:
             self.color = CONST.RED
         elif self.color == CONST.RED:
             self.color = CONST.BLUE
         else:
-            print("ERROR: undefined color")
+            print("ERROR: current color neither blue nor red")
             quit()
 
 
@@ -92,11 +92,16 @@ class MainActivity(Activity):
             return self.activity.perform()
 
         if self.activity is None:
-            return self.do(GoThroughGate(self, self.driver, self.driver.color, window=False))
+            return self.do(DetermineFirstColor(self, self.driver, window=False))
+
+        if isinstance(self.activity, DetermineFirstColor):
+            first_color, area = self.pop_ret()  # TODO check area
+            self.driver.color = first_color
 
         if isinstance(self.activity, GoThroughGate):
             self.driver.change_color()
-            return self.do(GoThroughGate(self, self.driver, self.driver.color, window=False))
+
+        return self.do(GoThroughGate(self, self.driver, self.driver.color, window=False))
 
 
 class TestActivity(Activity):
@@ -113,6 +118,47 @@ class TestActivity(Activity):
         hsv_img = self.turtle.get_hsv_image()
         bin_img = img_threshold(hsv_img, self.driver.color)
         self.window.show(bin_to_rgb(bin_img))
+
+
+# Turn 360 degrees, measure red and blue stick areas, return which was the larges.
+# returns (color, area)
+class DetermineFirstColor(Activity):
+
+    def __init__(self, parent, driver, window=False):
+        Activity.__init__(self, parent, driver)
+        self.window = window
+
+        self.blue_largest_area = 0
+        self.red_largest_area = 0
+
+    def start(self):
+        self.turtle.reset_odometry()
+
+    def perform(self):
+        Activity.perform_init(self)
+
+        # Termination condition
+        angle = self.turtle.get_odometry()[2]
+        if abs(angle) > 2 * np.pi:
+            if self.blue_largest_area >= self.red_largest_area:
+                color = CONST.BLUE
+                area = self.blue_largest_area
+            else:
+                color = CONST.RED
+                area = self.red_largest_area
+            self.parent.ret = (color, area)
+            self.end()
+
+        # Measurements
+        hsv_img = self.turtle.get_hsv_image()
+        blue_segments = self.turtle.get_segments(CONST.BLUE, hsv_img=hsv_img)
+        red_segments = self.turtle.get_segments(CONST.RED, hsv_img=hsv_img)
+        blue_max = np.amax(blue_segments.areas())
+        red_max = np.amax(red_segments.areas())
+        if blue_max > self.blue_largest_area:
+            self.blue_largest_area = blue_max
+        if red_max > self.red_largest_area:
+            self.red_largest_area = red_max
 
 
 # Find a gate of the given color, measure its distance and go through it.
@@ -189,6 +235,8 @@ class FindGate(Activity):
 
 
 # Measure a distance of the closest gate of the given color. (without turning)
+# return None ... if all attempts fail
+# return dist ... otherwise
 class MeasureGateDist(Activity):
 
     def __init__(self, parent, driver, color, attempts=12):
