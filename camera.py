@@ -150,7 +150,7 @@ def segment(bin, min_area=1000, info=False):
     return Segments(count, label_mat, label_dict, params, centroids)
 
 
-def hw_ratio_filter(segments, target=CONST.TARGET_RATIO, max_diff=CONST.MAX_RATIO_DIFF, info=False):
+def hw_ratio_filter(segments, target=CONST.TARGET_RATIO, max_diff=CONST.MAX_RATIO_DIFF, info=True):  # info=False
     if info: print("hw_ratio_filter: received " + str(segments.count) + " segments")
 
     rm_indices = []
