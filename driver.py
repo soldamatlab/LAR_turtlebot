@@ -235,8 +235,6 @@ class GoThroughGate(Activity):
             gate_center = (A + B) / 2
             midturn_point = self.calculate_first_step(A, B, gate_center, self.turn_offset)
             self.second_step = self.calculate_second_step(midturn_point, gate_center)
-            print("------------------------ DEBUG")
-            print(self.second_step)
 
             self.step = 1
             return self.do(GotoCoors(self, self.driver, midturn_point))
@@ -270,7 +268,7 @@ class GoThroughGate(Activity):
     def rotate_vector(vec, alpha):
         s, c = np.sin(alpha), np.cos(alpha)
         R = np.array([[c, -s], [s, c]])
-        return R * vec
+        return np.matmul(R, vec)
 
 
 
@@ -421,7 +419,6 @@ class Turn(Activity):
         self.step = (CONST.SLEEP / 1000) * speed
 
     def start(self):
-        print("------------------------------------------------ TURN: " + str(self.degree))  # TODO rem
         self.turtle.stop()  # safety
         self.turtle.reset_odometry()
         self.turtle.set_speed(0, self.direction * self.speed)
