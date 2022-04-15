@@ -112,7 +112,7 @@ class MainActivity(Activity):
             first_color, area = self.pop_ret()  # TODO check area
             self.driver.color = first_color
         if not self.determined_first_color:
-            return self.do(DetermineFirstColor(self, self.driver, window=self.window))
+            return self.do(DetermineFirstColor(self, self.driver, window=False))
 
         if isinstance(self.activity, GoThroughGate):
             self.driver.change_color() # TODO uncomment
