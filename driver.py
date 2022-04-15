@@ -170,7 +170,7 @@ class DetermineFirstColor(Activity):
 
         # Termination condition
         if self.turn_counter.get_turns() > 0:
-            print("------------------------ DEBUG: 360 DONE")  # TODO rem
+            print("------------------------ DEBUG: DONE")  # TODO rem
             return self.done()
 
         # Measurements
@@ -500,6 +500,7 @@ class TurnCounter:
         angle = self.turtle.get_odometry()[2]
         if self.direction < 0:
             angle *= -1
+        print("------------------------ DEBUG: angle: " + str(angle))  # TODO rem
 
         if self.half_turn:
             if angle > self.angle_margin:
