@@ -17,7 +17,7 @@ class Driver:
     def __init__(self, turtle):
         self.turtle = turtle
         self.busy = True
-        self.main = MainActivity(self, self, window=True)
+        self.main = TestActivity(self, self)  # MainActivity(self, self, window=True)
         self.counter = 0
 
         # self.window = Window("driver")
@@ -133,10 +133,9 @@ class TestActivity(Activity):
         if self.busy:
             return self.activity.perform()
 
-        if self.activity is None:
-            return self.do(Turn(self, self.driver, np.pi/2))
-
-        self.end()
+        hsv_img = self.turtle.get_hsv_image()
+        bin_img = img_threshold(hsv_img, CONST.RED)
+        self.window.show(bin_to_rgb(bin_img))
 
 
 # TODO turn to sides only, not 360 ?
