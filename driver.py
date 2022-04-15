@@ -374,6 +374,10 @@ class MeasureGateCoordinates(Activity):
         pc = self.turtle.get_point_cloud()
         sticks.calculate_coors(pc)
 
+        # TODO rem
+        print("------------------------ DEBUG")
+        print(sticks.areas())
+
         args = np.argsort(sticks.areas())
         A = sticks.coors[args[0]]
         B = sticks.coors[args[1]]
