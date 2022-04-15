@@ -153,7 +153,7 @@ class DetermineFirstColor(Activity):
                  ):
         Activity.__init__(self, parent, driver)
         self.speed = speed
-        self.fov = abs(fov)
+        self.fov = None if fov is None else abs(fov)
         self.window = window
         self.blue_window = None
         self.red_window = None
@@ -314,7 +314,7 @@ class FindGate(Activity):
         Activity.__init__(self, parent, driver)
         self.color = color
         self.speed = speed
-        self.fov = abs(fov)
+        self.fov = None if fov is None else abs(fov)
         self.height_diff_factor = height_diff_factor
         self.center_limit_min = center_limit_min  # in pixels
         self.center_limit_step = center_limit_step  # in pixels
