@@ -27,7 +27,8 @@ R_SATUR_MIN = 150 # always observed over 160
 R_VAL_MIN = 70 # 110 and 120 work but chip off dark bits of stick
 
 # POLE SHAPE
-MIN_AREA = 1000
+# TODO mata kouknout
+MIN_AREA = 200  # 1000
 TARGET_RATIO = 4.75  # 5.35  # ~6 when truly in center, ~3.5 when on the far side
 MAX_RATIO_DIFF = 1.85
 
