@@ -29,7 +29,7 @@ R_VAL_MIN = 70 # 110 and 120 work but chip off dark bits of stick
 # POLE SHAPE
 MIN_AREA = 200  # 1000
 TARGET_RATIO = 5.35  # ~6 when truly in center, ~3.5 when on the far side
-MAX_RATIO_DIFF = 5  # 1.85
+MAX_RATIO_DIFF = 1.85
 
 # CAM
 DEPTH_CAM_LAMBDA = 429.363066725704
