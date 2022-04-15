@@ -117,7 +117,6 @@ class MainActivity(Activity):
 
         # if isinstance(self.activity, GoThroughGate):  TODO uncomment
         #     self.driver.change_color()
-        print("------------------------ DEBUG: COLOR: " + str(self.driver.color))  # TODO rem
         return self.do(GoThroughGate(self, self.driver, self.driver.color, window=self.window))
 
 
@@ -378,6 +377,7 @@ class MeasureGateCoordinates(Activity):
         # TODO rem
         print("------------------------ DEBUG")
         print(sticks.areas())
+        print(sticks.coors())
 
         args = np.argsort(sticks.areas())
         A = sticks.coors[args[0]]
