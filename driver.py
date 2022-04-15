@@ -266,6 +266,8 @@ class GoThroughGate(Activity):
         alpha = np.arccos(M[1] / norm)
         if M[0] > 0:
             alpha *= -1
+        print("------------------------ DEBUG: calc second step")  # TODO rem
+        print(alpha)
         second_step = GoThroughGate.rotate_vector(C - M, alpha)
         return second_step
 
@@ -424,6 +426,8 @@ class Turn(Activity):
         self.direction = 1 if degree > 0 else -1
         self.speed = speed
         self.step = (CONST.SLEEP / 1000) * speed
+        print("------------------------ DEBUG: Turn")  # TODO rem
+        print(degree)
 
     def start(self):
         self.turtle.stop()  # safety
