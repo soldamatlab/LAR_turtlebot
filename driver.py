@@ -186,20 +186,15 @@ class DetermineFirstColor(Activity):
         else:
             angle = self.turtle.get_odometry()[2]
             angle *= self.init_dir
-            print("------------------------ DEBUG")  # TODO rem
-            print("angle: " + str(angle) + " fov: " + str(self.fov))
             if self.turn == 1:
-                print("IF 1")
                 if angle > self.fov:
                     self.change_dir()
                     self.turn = 2
             elif self.turn == 2:
-                print("IF 2")
                 if angle < - self.fov:
                     self.change_dir()
                     self.turn = 3
             elif self.turn == 3:
-                print("IF 3")
                 if angle > 0:
                     return self.done()
             else:
@@ -342,14 +337,6 @@ class FindGate(Activity):
     def perform(self):
         Activity.perform_init(self)
 
-        # Keep in FOV
-        if self.fov is not None:
-            angle = self.turtle.get_odometry()[2]
-            if abs(angle) > self.fov:
-                self.dir = -1 if angle > 0 else 1
-                self.turtle.set_speed(0, self.dir * self.speed)
-                return
-
         # Process image
         hsv = self.turtle.get_hsv_image()
         bin_img = img_threshold(hsv, self.color)
@@ -373,9 +360,9 @@ class FindGate(Activity):
         # Check same height
         if (A_height / B_height) > self.height_diff_factor:
             self.turtle.set_speed(0, self.dir * self.speed)
-            return
+            return self.continue_search()
 
-        # Check if centered
+        # Center on sticks
         center = (A_coors + B_coors) / 2
         diff = center[0] - (np.shape(bin_img)[1] / 2)
         if diff < 0:
@@ -391,6 +378,14 @@ class FindGate(Activity):
                 self.center_limit += self.center_limit_step
         self.dir = new_dir
         self.turtle.set_speed(0, self.dir * self.speed)
+
+    def continue_search(self):
+        # Keep in FOV
+        if self.fov is not None:
+            angle = self.turtle.get_odometry()[2]
+            if abs(angle) > self.fov:
+                self.dir = -1 if angle > 0 else 1
+                self.turtle.set_speed(0, self.dir * self.speed)
 
 
 # Measure a distance of the closest gate of the given color. (without turning)
