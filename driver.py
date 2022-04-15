@@ -12,7 +12,7 @@ TURN_SPEED = np.pi/8
 ANGLE_MARGIN = np.pi / 12
 TURN_OFFSET = CONST.ROBOT_WIDTH/2 + 0.3  # 0.3
 OVERSHOOT = CONST.ROBOT_WIDTH/2 + 0.05
-FOV = np.pi / 6
+FOV = 50 * 2*np.pi / 360
 
 
 class Driver:
