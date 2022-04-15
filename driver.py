@@ -124,7 +124,7 @@ class MainActivity(Activity):
         if isinstance(self.activity, GoThroughGate):  # TODO uncomment
             self.driver.change_color()
             angle = self.pop_ret()
-            self.next_turn = -1 if angle < 0 else 1
+            self.next_turn = -1 if angle > 0 else 1
         return self.do(GoThroughGate(self, self.driver, self.driver.color, fov=FOV, init_dir=self.next_turn, window=self.window))
 
 
