@@ -17,7 +17,7 @@ class Driver:
     def __init__(self, turtle):
         self.turtle = turtle
         self.busy = True
-        self.main = MainActivity(self, self, window=True)
+        self.main = MainActivity(self, self, window=False)
         self.counter = 0
 
         # self.window = Window("driver")
@@ -261,8 +261,8 @@ class GoThroughGate(Activity):
         alpha = np.arccos(np.linalg.norm(midturn_point) / np.linalg.norm(gate_center))
         if midturn_point[0] > 0:
             alpha *= -1
-        print("------------------------ DEBUG")
-        print(alpha)
+        print("------------------------ DEBUG")  # TODO rem
+        print(360 * alpha / (2 * np.pi))
         second_step = GoThroughGate.rotate_vector(gate_center - midturn_point, alpha)
         return second_step
 
