@@ -273,7 +273,6 @@ class GoThroughGate(Activity):
         return np.matmul(R, vec)
 
 
-
 # Find gate of given color by turning and center itself on it.
 class FindGate(Activity):
 
@@ -391,7 +390,10 @@ class GotoCoors(Activity):
         x = target[0]
         z = target[1]
         self.dist = np.sqrt(x ** 2 + z ** 2)
-        self.alpha = - np.arccos(z / self.dist)
+        alpha = np.arccos(z / self.dist)
+        if x > 0:
+            alpha *= -1
+        self.alpha = alpha
         self.overshoot = overshoot
 
     def perform(self):
