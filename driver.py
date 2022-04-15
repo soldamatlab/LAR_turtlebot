@@ -186,13 +186,18 @@ class DetermineFirstColor(Activity):
         else:
             angle = self.turtle.get_odometry()[2]
             angle *= self.init_dir
+            print("------------------------ DEBUG")  # TODO rem
+            print("angle: " + str(angle) + " fov: " + str(self.fov))
             if self.turn == 1:
+                print("IF 1")
                 if angle > self.fov:
                     self.change_dir()
             elif self.turn == 2:
+                print("IF 2")
                 if angle < - self.fov:
                     self.change_dir()
             elif self.turn == 3:
+                print("IF 3")
                 if angle > 0:
                     return self.done()
             else:
@@ -217,10 +222,12 @@ class DetermineFirstColor(Activity):
                 self.red_largest_area = red_max
 
     def change_dir(self):
+        print("CHANGE_DIR")
         self.dir *= -1
         self.turtle.set_speed(0, self.dir * self.speed)
 
     def done(self):
+        print("DONE")
         if self.blue_largest_area >= self.red_largest_area:
             color = CONST.BLUE
             area = self.blue_largest_area
