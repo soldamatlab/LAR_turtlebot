@@ -142,39 +142,61 @@ class TestActivity(Activity):
         self.window.show(bin_to_rgb(bin_img))
 
 
-# TODO turn to sides only, not 360 ?
-# Turn 360 degrees, measure red and blue stick areas, return which was the larges.
+# Turn withing the given FOV (do 360 instead if FOV is None),
+# measure red and blue stick areas, return which was the larges.
 # returns (color, area)
 class DetermineFirstColor(Activity):
 
-    def __init__(self, parent, driver, speed=TURN_SPEED, window=False,
+    def __init__(self, parent, driver, speed=TURN_SPEED, fov=None, window=False,
                  angle_margin=ANGLE_MARGIN,
                  direction=1,
                  ):
         Activity.__init__(self, parent, driver)
         self.speed = speed
+        self.fov = abs(fov)
         self.window = window
         self.blue_window = None
         self.red_window = None
         self.blue_largest_area = 0
         self.red_largest_area = 0
-        self.direction = direction  # left: +1, right: -1
-        self.turn_counter = TurnCounter(direction, self.turtle, angle_margin=angle_margin)
+        self.init_dir = 1 if direction > 0 else -1  # FINAL, left: +1, right: -1
+        self.dir = self.init_dir
+        self.turn_counter = TurnCounter(direction, self.turtle, angle_margin=angle_margin) if self.fov is None else None
+        self.turn = None if self.fov is None else 1
 
     def start(self):
         if self.window:
             self.blue_window = Window("BLUE")
             self.red_window = Window("RED")
 
-        self.turn_counter.start()
-        self.turtle.set_speed(0, self.direction * self.speed)
+        self.turtle.stop()  # safety
+        if self.fov is None:
+            self.turn_counter.start()
+        else:
+            self.turtle.reset_odometry()
+        self.turtle.set_speed(0, self.dir * self.speed)
 
     def perform(self):
         Activity.perform_init(self)
 
         # Termination condition
-        if self.turn_counter.get_turns() > 0:
-            return self.done()
+        if self.fov is None:
+            if self.turn_counter.get_turns() > 0:
+                return self.done()
+        else:
+            angle = self.turtle.get_odometry()[2]
+            angle *= self.init_dir
+            if self.turn == 1:
+                if angle > self.fov:
+                    self.change_dir()
+            elif self.turn == 2:
+                if angle < - self.fov:
+                    self.change_dir()
+            elif self.turn == 3:
+                if angle > 0:
+                    return self.done()
+            else:
+                raise Exception("turn counter invalid")
 
         # Measurements
         hsv_img = self.turtle.get_hsv_image()
@@ -193,6 +215,10 @@ class DetermineFirstColor(Activity):
             red_max = np.amax(red_segments.areas())
             if red_max > self.red_largest_area:
                 self.red_largest_area = red_max
+
+    def change_dir(self):
+        self.dir *= -1
+        self.turtle.set_speed(0, self.dir * self.speed)
 
     def done(self):
         if self.blue_largest_area >= self.red_largest_area:
@@ -288,7 +314,7 @@ class FindGate(Activity):
         Activity.__init__(self, parent, driver)
         self.color = color
         self.speed = speed
-        self.fov = fov
+        self.fov = abs(fov)
         self.height_diff_factor = height_diff_factor
         self.center_limit_min = center_limit_min  # in pixels
         self.center_limit_step = center_limit_step  # in pixels
@@ -313,9 +339,6 @@ class FindGate(Activity):
             if abs(angle) > self.fov:
                 self.dir = -1 if angle > 0 else 1
                 self.turtle.set_speed(0, self.dir * self.speed)
-                # TODO rem
-                print("angle: " + str(angle))
-                print("dir: " + str(dir))
                 return
 
         # Process image
