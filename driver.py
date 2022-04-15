@@ -17,7 +17,7 @@ class Driver:
     def __init__(self, turtle):
         self.turtle = turtle
         self.busy = True
-        self.main = MainActivity(self, self, window=False)
+        self.main = MainActivity(self, self, window=True)
         self.counter = 0
 
         # self.window = Window("driver")
