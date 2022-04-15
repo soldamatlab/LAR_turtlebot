@@ -311,8 +311,10 @@ class FindGate(Activity):
         if self.fov is not None:
             angle = self.turtle.get_odometry()[2]
             if abs(angle) > self.fov:
-                self.dir = - np.sign(angle)
+                self.dir = -1 if angle > 0 else 1
                 self.turtle.set_speed(0, self.dir * self.speed)
+                print("angle " + str(angle))
+                print("dir " + str(dir))
                 return
 
         # Process image
