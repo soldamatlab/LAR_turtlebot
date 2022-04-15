@@ -377,7 +377,7 @@ class MeasureGateCoordinates(Activity):
         # TODO rem
         print("------------------------ DEBUG")
         print(sticks.areas())
-        print(sticks.coors())
+        print(sticks.coors)
 
         args = np.argsort(sticks.areas())
         A = sticks.coors[args[0]]
