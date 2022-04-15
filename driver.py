@@ -348,7 +348,7 @@ class FindGate(Activity):
 
         if sticks.count < 2:
             self.turtle.set_speed(0, self.dir * self.speed)
-            return
+            return self.continue_search()
 
         # Pick A,B
         args = np.argsort(sticks.heights())
