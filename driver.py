@@ -216,6 +216,7 @@ class GoThroughGate(Activity):
         self.turn_offset = turn_offset
         self.overshoot = overshoot
         self.step = 0
+        self.second_step = None
 
     def perform(self):
         Activity.perform_init(self)
@@ -230,30 +231,45 @@ class GoThroughGate(Activity):
 
         if isinstance(self.activity, MeasureGateCoordinates):
             A, B = self.pop_ret()
-            A = np.array([A[0], A[2]])
-            B = np.array([B[0], B[2]])
-            target = self.calculate_midturn_point(A, B)
+            A, B = np.array([A[0], A[2]]), np.array([B[0], B[2]])
+            gate_center = (A + B) / 2
+            midturn_point = self.calculate_first_step(A, B, gate_center, self.turn_offset)
+            self.second_step = self.calculate_second_step(midturn_point, gate_center)
+
             self.step = 1
-            return self.do(GotoCoors(self, self.driver, target))
+            return self.do(GotoCoors(self, self.driver, midturn_point))
 
         if self.step == 1:
             self.step = 2
-            return self.do(FindGate(self, self.driver, self.color, window=self.window))
-
-        if self.step == 2:
-            self.step = 3
-            return self.do(Forward(self, self.driver, self.overshoot))
+            return self.do(GotoCoors(self, self.driver, self.second_step, overshoot=self.overshoot))
 
         self.end()
 
+    # Calculate the first step of the turn. (Vector from start of the turn to the mid-turn point.)
     # B has higher x-coordinate than A
-    def calculate_midturn_point(self, A, B):
-        C = (A + B) / 2
+    @staticmethod
+    def calculate_first_step(A, B, gate_center, turn_offset):
         D = B - A
         N = np.array([D[1], -D[0]])
         N /= math.sqrt(N[0]**2 + N[1]**2)
-        T = C + self.turn_offset * N
-        return T
+        first_step = gate_center + turn_offset * N
+        return first_step
+
+    # Calculate the second step of the turn. (Vector from the mid-turn point to the end of the turn.)
+    @staticmethod
+    def calculate_second_step(midturn_point, gate_center):
+        alpha = np.arccos(np.linalg.norm(midturn_point) / np.linalg.norm(gate_center))
+        if midturn_point[0] > 0:
+            alpha *= -1
+        second_step = GoThroughGate.rotate_vector(gate_center - midturn_point, alpha)
+        return second_step
+
+    @staticmethod
+    def rotate_vector(vec, alpha):
+        s, c = np.sin(alpha), np.cos(alpha)
+        R = np.array([[c, -s], [s, c]])
+        return R * vec
+
 
 
 # Find gate of given color by turning and center itself on it.
@@ -368,13 +384,13 @@ class MeasureGateCoordinates(Activity):
 class GotoCoors(Activity):
 
     # target = [x, z]
-    def __init__(self, parent, driver, target):
+    def __init__(self, parent, driver, target, overshoot=0):
         Activity.__init__(self, parent, driver)
-
         x = target[0]
         z = target[1]
         self.dist = np.sqrt(x ** 2 + z ** 2)
         self.alpha = - np.arccos(z / self.dist)
+        self.overshoot = overshoot
 
     def perform(self):
         Activity.perform_init(self)
@@ -385,7 +401,7 @@ class GotoCoors(Activity):
             return self.do(Turn(self, self.driver, self.alpha))
 
         if isinstance(self.activity, Turn):
-            return self.do(Forward(self, self.driver, self.dist))
+            return self.do(Forward(self, self.driver, self.dist + self.overshoot))
 
         self.end()
 
