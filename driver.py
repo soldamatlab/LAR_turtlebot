@@ -28,7 +28,7 @@ class Driver:
 
     def drive(self):
         if not self.busy:
-            return  #TODO
+            return
         if INFO: print()
 
         # hsv_img = self.turtle.get_hsv_image()
