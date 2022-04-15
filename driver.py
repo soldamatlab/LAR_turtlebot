@@ -386,6 +386,10 @@ class MeasureGateCoordinates(Activity):
             tmp = A
             A = B
             B = tmp
+
+        # TODO rem
+        print("A: " + str(A) + " B: " + str(B))
+
         self.parent.ret = (A, B)
         self.end()
 
