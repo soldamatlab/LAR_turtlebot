@@ -115,7 +115,7 @@ class MainActivity(Activity):
             return self.do(DetermineFirstColor(self, self.driver, window=False))
 
         if isinstance(self.activity, GoThroughGate):
-            self.driver.change_color() # TODO uncomment
+            self.driver.change_color()  # TODO uncomment
         return self.do(GoThroughGate(self, self.driver, self.driver.color, window=self.window))
 
 
@@ -170,6 +170,7 @@ class DetermineFirstColor(Activity):
 
         # Termination condition
         if self.turn_counter.get_turns() > 0:
+            print("------------------------ DEBUG: 360 DONE")  # TODO rem
             return self.done()
 
         # Measurements
