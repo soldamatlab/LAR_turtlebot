@@ -10,7 +10,7 @@ INFO = False
 FORWARD_SPEED = 0.2
 TURN_SPEED = np.pi/8
 ANGLE_MARGIN = np.pi / 12
-TURN_OFFSET = CONST.ROBOT_WIDTH/2 + 0.5  # 0.3
+TURN_OFFSET = CONST.ROBOT_WIDTH/2 + 0.3  # 0.3
 OVERSHOOT = CONST.ROBOT_WIDTH/2 + 0.05
 FOV = np.pi / 6
 
@@ -20,7 +20,7 @@ class Driver:
     def __init__(self, turtle):
         self.turtle = turtle
         self.busy = True
-        self.main = MainActivity(self, self, window=True)
+        self.main = MainActivity(self, self, window=False)
         self.counter = 0
         self.color = CONST.GREEN
 
@@ -313,8 +313,9 @@ class FindGate(Activity):
             if abs(angle) > self.fov:
                 self.dir = -1 if angle > 0 else 1
                 self.turtle.set_speed(0, self.dir * self.speed)
-                print("angle " + str(angle))
-                print("dir " + str(dir))
+                # TODO rem
+                print("angle: " + str(angle))
+                print("dir: " + str(dir))
                 return
 
         # Process image
