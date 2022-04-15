@@ -10,6 +10,9 @@ INFO = False
 FORWARD_SPEED = 0.2
 TURN_SPEED = np.pi/8
 ANGLE_MARGIN = np.pi / 12
+TURN_OFFSET = CONST.ROBOT_WIDTH/2 + 0.5  # 0.3
+OVERSHOOT = CONST.ROBOT_WIDTH/2 + 0.05
+FOV = np.pi / 6
 
 
 class Driver:
@@ -94,11 +97,11 @@ class MainActivity(Activity):
         self.window = window
         self.determined_first_color = False
 
-    # TODO rem
-    def start(self):
-        self.determined_first_color = True
-        self.activity = GoThroughGate(self, self.driver, self.driver.color, window=self.window)
-        self.driver.color = CONST.BLUE
+    # # TODO rem
+    # def start(self):
+    #     self.determined_first_color = True
+    #     self.activity = GoThroughGate(self, self.driver, self.driver.color, window=self.window)
+    #     self.driver.color = CONST.BLUE
 
     def perform(self):
         Activity.perform_init(self)
@@ -115,9 +118,9 @@ class MainActivity(Activity):
         if not self.determined_first_color:
             return self.do(DetermineFirstColor(self, self.driver, window=False))
 
-        # if isinstance(self.activity, GoThroughGate):  TODO uncomment
-        #     self.driver.change_color()
-        return self.do(GoThroughGate(self, self.driver, self.driver.color, window=self.window))
+        if isinstance(self.activity, GoThroughGate):  # TODO uncomment
+            self.driver.change_color()
+        return self.do(GoThroughGate(self, self.driver, self.driver.color, fov=FOV, window=self.window))
 
 
 class TestActivity(Activity):
@@ -207,12 +210,13 @@ class DetermineFirstColor(Activity):
 # Find a gate of the given color, measure its distance and go through it.
 class GoThroughGate(Activity):
 
-    def __init__(self, parent, driver, color, window=False,
-                 turn_offset=CONST.ROBOT_WIDTH+0.15,
-                 overshoot=CONST.ROBOT_WIDTH/2,
+    def __init__(self, parent, driver, color, fov=None, window=False,
+                 turn_offset=TURN_OFFSET,
+                 overshoot=OVERSHOOT,
                  ):
         Activity.__init__(self, parent, driver)
         self.color = color
+        self.fov = fov
         self.window = window
         self.turn_offset = turn_offset
         self.overshoot = overshoot
@@ -225,7 +229,7 @@ class GoThroughGate(Activity):
             return self.activity.perform()
 
         if (self.activity is None) or (isinstance(self.activity, MeasureGateCoordinates) and self.ret is None):
-            return self.do(FindGate(self, self.driver, self.color, window=self.window))
+            return self.do(FindGate(self, self.driver, self.color, fov=self.fov, window=self.window))
 
         if isinstance(self.activity, FindGate):
             return self.do(MeasureGateCoordinates(self, self.driver, self.color))
@@ -236,10 +240,6 @@ class GoThroughGate(Activity):
             gate_center = (A + B) / 2
             midturn_point = self.calculate_first_step(A, B, gate_center, self.turn_offset)
             self.second_step = self.calculate_second_step(midturn_point, gate_center)
-            # print("------------------------ DEUBG")  # TODO rem
-            # print("A: " + str(A) + " B: " + str(B))
-            # print("first_step: " + str(midturn_point))
-            # print("second_step: " + str(self.second_step))
             self.step = 1
             return self.do(GotoCoors(self, self.driver, midturn_point))
 
@@ -279,7 +279,7 @@ class GoThroughGate(Activity):
 # Find gate of given color by turning and center itself on it.
 class FindGate(Activity):
 
-    def __init__(self, parent, driver, color, speed=TURN_SPEED, window=False,
+    def __init__(self, parent, driver, color, fov=None, speed=TURN_SPEED, window=False,
                  height_diff_factor=1.05,
                  center_limit_min=2,
                  center_limit_step=2,
@@ -288,6 +288,7 @@ class FindGate(Activity):
         Activity.__init__(self, parent, driver)
         self.color = color
         self.speed = speed
+        self.fov = fov
         self.height_diff_factor = height_diff_factor
         self.center_limit_min = center_limit_min  # in pixels
         self.center_limit_step = center_limit_step  # in pixels
@@ -299,12 +300,21 @@ class FindGate(Activity):
 
     def start(self):
         self.turtle.stop()  # safety
+        self.turtle.reset_odometry()
         if self.window:
             self.w_bin = Window("FindTwoSticks")
 
     def perform(self):
         Activity.perform_init(self)
 
+        # Keep in FOV
+        angle = self.turtle.get_odometry()[2]
+        if abs(angle) > self.fov:
+            self.dir *= -1
+            self.turtle.set_speed(0, self.dir * self.speed)
+            return
+
+        # Process image
         hsv = self.turtle.get_hsv_image()
         bin_img = img_threshold(hsv, self.color)
         sticks = self.driver.turtle.get_segments(self.color, bin_img=bin_img, min_area=2500)
@@ -317,31 +327,32 @@ class FindGate(Activity):
             self.turtle.set_speed(0, self.dir * self.speed)
             return
 
+        # Pick A,B
         args = np.argsort(sticks.heights())
         A_height = sticks.height(args[0])
         B_height = sticks.height(args[1])
         A_coors = sticks.centroids[args[0]]
         B_coors = sticks.centroids[args[1]]
 
+        # Check same height
         if (A_height / B_height) > self.height_diff_factor:
             self.turtle.set_speed(0, self.dir * self.speed)
             return
 
+        # Check if centered
         center = (A_coors + B_coors) / 2
         diff = center[0] - (np.shape(bin_img)[1] / 2)
-
         if diff < 0:
             new_dir = 1
         else:
             new_dir = -1
-
         if new_dir != self.dir:
             if abs(diff) < self.center_limit:
                 self.turtle.stop()
                 self.end()
+                return
             elif self.center_limit < self.center_limit_max:
                 self.center_limit += self.center_limit_step
-
         self.dir = new_dir
         self.turtle.set_speed(0, self.dir * self.speed)
 
@@ -374,11 +385,6 @@ class MeasureGateCoordinates(Activity):
         pc = self.turtle.get_point_cloud()
         sticks.calculate_coors(pc)
 
-        # TODO rem
-        print("------------------------ DEBUG")
-        print(sticks.areas())
-        print(sticks.coors)
-
         args = np.argsort(sticks.areas())
         A = sticks.coors[args[-1]]
         B = sticks.coors[args[-2]]
@@ -386,9 +392,6 @@ class MeasureGateCoordinates(Activity):
             tmp = A
             A = B
             B = tmp
-
-        # TODO rem
-        print("A: " + str(A) + " B: " + str(B))
 
         self.parent.ret = (A, B)
         self.end()
