@@ -432,7 +432,7 @@ class MeasureGateCoordinates(Activity):
             self.attempts -= 1
             return self.perform()
 
-        pc = self.turtle.get_point_cloud(convert_to_bot=False)  # TODO True
+        pc = self.turtle.get_point_cloud()
         sticks.calculate_coors(pc)
 
         args = np.argsort(sticks.areas())
