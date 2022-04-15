@@ -26,16 +26,16 @@ class Driver:
         self.counter = 0
         self.color = CONST.GREEN
 
-        # self.window = Window("driver")
+        self.window = Window("driver")
 
     def drive(self):
         if not self.busy:
             return
         if INFO: print()
 
-        # hsv_img = self.turtle.get_hsv_image()
-        # bin_img = img_threshold(hsv_img, self.color)
-        # self.window.show(bin_to_rgb(bin_img))
+        hsv_img = self.turtle.get_hsv_image()
+        bin_img = img_threshold(hsv_img, self.color)
+        self.window.show(bin_to_rgb(bin_img))
 
         self.counter += 1
         self.main.perform()
