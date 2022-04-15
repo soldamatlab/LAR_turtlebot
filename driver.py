@@ -94,9 +94,11 @@ class MainActivity(Activity):
         self.window = window
         self.determined_first_color = False
 
-        # TODO remove below
-        self.driver.color = CONST.BLUE
+    # TODO rem
+    def start(self):
+        self.determined_first_color = True
         self.activity = GoThroughGate(self, self.driver, self.driver.color, window=self.window)
+        self.driver.color = CONST.BLUE
 
     def perform(self):
         Activity.perform_init(self)
