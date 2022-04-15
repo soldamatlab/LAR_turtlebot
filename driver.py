@@ -115,8 +115,8 @@ class MainActivity(Activity):
         if not self.determined_first_color:
             return self.do(DetermineFirstColor(self, self.driver, window=False))
 
-        if isinstance(self.activity, GoThroughGate):
-            self.driver.change_color()
+        # if isinstance(self.activity, GoThroughGate):  TODO uncomment
+        #     self.driver.change_color()
         return self.do(GoThroughGate(self, self.driver, self.driver.color, window=self.window))
 
 
