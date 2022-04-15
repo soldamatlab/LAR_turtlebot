@@ -380,9 +380,8 @@ class MeasureGateCoordinates(Activity):
         print(sticks.coors)
 
         args = np.argsort(sticks.areas())
-        print("ARGS: " + str(args))
-        A = sticks.coors[args[0]]
-        B = sticks.coors[args[1]]
+        A = sticks.coors[args[-1]]
+        B = sticks.coors[args[-2]]
         if A[0] > B[0]:
             tmp = A
             A = B
