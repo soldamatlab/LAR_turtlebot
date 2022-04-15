@@ -192,10 +192,12 @@ class DetermineFirstColor(Activity):
                 print("IF 1")
                 if angle > self.fov:
                     self.change_dir()
+                    self.turn = 2
             elif self.turn == 2:
                 print("IF 2")
                 if angle < - self.fov:
                     self.change_dir()
+                    self.turn = 3
             elif self.turn == 3:
                 print("IF 3")
                 if angle > 0:
