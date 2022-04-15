@@ -10,8 +10,8 @@ INFO = False
 FORWARD_SPEED = 0.2
 TURN_SPEED = np.pi/8
 ANGLE_MARGIN = np.pi / 12
-TURN_OFFSET = CONST.ROBOT_WIDTH/2 + 0.3  # 0.3
-OVERSHOOT = CONST.ROBOT_WIDTH/2 + 0.05
+TURN_OFFSET = CONST.ROBOT_WIDTH/2 + 0.05
+OVERSHOOT = CONST.ROBOT_WIDTH/2
 FOV = 50 * 2*np.pi / 360
 
 
@@ -219,12 +219,10 @@ class DetermineFirstColor(Activity):
                 self.red_largest_area = red_max
 
     def change_dir(self):
-        print("CHANGE_DIR")
         self.dir *= -1
         self.turtle.set_speed(0, self.dir * self.speed)
 
     def done(self):
-        print("DONE")
         if self.blue_largest_area >= self.red_largest_area:
             color = CONST.BLUE
             area = self.blue_largest_area
