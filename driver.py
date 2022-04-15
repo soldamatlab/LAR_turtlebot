@@ -6,7 +6,7 @@ from camera import *
 import time
 import math
 
-INFO = True
+INFO = False
 FORWARD_SPEED = 0.2
 TURN_SPEED = np.pi/8
 ANGLE_MARGIN = np.pi / 12
