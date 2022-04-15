@@ -94,11 +94,6 @@ class MainActivity(Activity):
         self.window = window
         self.determined_first_color = False
 
-    # def start(self):
-    #     self.activity = GoThroughGate(self, self.driver, CONST.GREEN, window=self.window)  # TODO rem
-    #     self.determined_first_color = True  # TODO rem
-    #     self.driver.color = CONST.RED  # TODO rem
-
     def perform(self):
         Activity.perform_init(self)
         if self.busy:
@@ -115,7 +110,7 @@ class MainActivity(Activity):
             return self.do(DetermineFirstColor(self, self.driver, window=False))
 
         if isinstance(self.activity, GoThroughGate):
-            self.driver.change_color()  # TODO uncomment
+            self.driver.change_color()
         return self.do(GoThroughGate(self, self.driver, self.driver.color, window=self.window))
 
 
@@ -170,7 +165,6 @@ class DetermineFirstColor(Activity):
 
         # Termination condition
         if self.turn_counter.get_turns() > 0:
-            print("------------------------ DEBUG: DONE")  # TODO rem
             return self.done()
 
         # Measurements
@@ -236,6 +230,9 @@ class GoThroughGate(Activity):
             gate_center = (A + B) / 2
             midturn_point = self.calculate_first_step(A, B, gate_center, self.turn_offset)
             self.second_step = self.calculate_second_step(midturn_point, gate_center)
+            print("------------------------ DEUBG")  # TODO rem
+            print("first_step: " + str(midturn_point))
+            print("second_step: " + str(self.second_step))
             self.step = 1
             return self.do(GotoCoors(self, self.driver, midturn_point))
 
@@ -500,7 +497,6 @@ class TurnCounter:
         angle = self.turtle.get_odometry()[2]
         if self.direction < 0:
             angle *= -1
-        print("------------------------ DEBUG: angle: " + str(angle))  # TODO rem
 
         if self.half_turn:
             if angle > self.angle_margin:
