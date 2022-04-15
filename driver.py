@@ -236,10 +236,10 @@ class GoThroughGate(Activity):
             gate_center = (A + B) / 2
             midturn_point = self.calculate_first_step(A, B, gate_center, self.turn_offset)
             self.second_step = self.calculate_second_step(midturn_point, gate_center)
-            print("------------------------ DEUBG")  # TODO rem
-            print("A: " + str(A) + " B: " + str(B))
-            print("first_step: " + str(midturn_point))
-            print("second_step: " + str(self.second_step))
+            # print("------------------------ DEUBG")  # TODO rem
+            # print("A: " + str(A) + " B: " + str(B))
+            # print("first_step: " + str(midturn_point))
+            # print("second_step: " + str(self.second_step))
             self.step = 1
             return self.do(GotoCoors(self, self.driver, midturn_point))
 
