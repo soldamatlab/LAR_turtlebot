@@ -259,7 +259,7 @@ class GoThroughGate(Activity):
     @staticmethod
     def calculate_second_step(midturn_point, gate_center):
         alpha = np.arccos(np.linalg.norm(midturn_point) / np.linalg.norm(gate_center))
-        if midturn_point[0] > 0:
+        if midturn_point[0] < 0:
             alpha *= -1
         print("------------------------ DEBUG")  # TODO rem
         print(360 * alpha / (2 * np.pi))
