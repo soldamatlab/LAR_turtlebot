@@ -94,10 +94,10 @@ class MainActivity(Activity):
         self.window = window
         self.determined_first_color = False
 
-    def start(self):
-        self.activity = GoThroughGate(self, self.driver, CONST.GREEN, window=self.window)  # TODO rem
-        self.determined_first_color = True  # TODO rem
-        self.driver.color = CONST.RED  # TODO rem
+    # def start(self):
+    #     self.activity = GoThroughGate(self, self.driver, CONST.GREEN, window=self.window)  # TODO rem
+    #     self.determined_first_color = True  # TODO rem
+    #     self.driver.color = CONST.RED  # TODO rem
 
     def perform(self):
         Activity.perform_init(self)
@@ -114,8 +114,8 @@ class MainActivity(Activity):
         if not self.determined_first_color:
             return self.do(DetermineFirstColor(self, self.driver, window=self.window))
 
-        # if isinstance(self.activity, GoThroughGate):
-        #     self.driver.change_color()  TODO uncomment
+        if isinstance(self.activity, GoThroughGate):
+            self.driver.change_color() # TODO uncomment
         return self.do(GoThroughGate(self, self.driver, self.driver.color, window=self.window))
 
 
@@ -257,17 +257,10 @@ class GoThroughGate(Activity):
     # Calculate the second step of the turn. (Vector from the mid-turn point to the end of the turn.)
     @staticmethod
     def calculate_second_step(M, C):
-        # alpha = np.arccos(np.linalg.norm(midturn_point) / np.linalg.norm(gate_center))
-        # if midturn_point[0] < 0:
-        #     alpha *= -1
-        # second_step = GoThroughGate.rotate_vector(gate_center - midturn_point, alpha)
-        # return second_step
         norm = math.sqrt(M[0] ** 2 + M[1] ** 2)
         alpha = np.arccos(M[1] / norm)
         if M[0] < 0:
             alpha *= -1
-        print("------------------------ DEBUG: calc second step")  # TODO rem
-        print(alpha)
         second_step = GoThroughGate.rotate_vector(C - M, alpha)
         return second_step
 
@@ -399,8 +392,6 @@ class GotoCoors(Activity):
         if x > 0:
             alpha *= -1
         self.alpha = alpha
-        print("------------------------ DEBUG: GOTO")  # TODO rem
-        print(alpha)
         self.overshoot = overshoot
 
     def perform(self):
