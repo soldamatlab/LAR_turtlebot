@@ -117,6 +117,7 @@ class MainActivity(Activity):
 
         # if isinstance(self.activity, GoThroughGate):  TODO uncomment
         #     self.driver.change_color()
+        print("------------------------ DEBUG: COLOR: " + str(self.driver.color))  # TODO rem
         return self.do(GoThroughGate(self, self.driver, self.driver.color, window=self.window))
 
 
