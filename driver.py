@@ -19,9 +19,9 @@ class Driver:
         self.busy = True
         self.main = MainActivity(self, self, window=True)
         self.counter = 0
+        self.color = CONST.GREEN
 
         # self.window = Window("driver")
-        # self.color = CONST.GREEN
 
     def drive(self):
         if not self.busy:
