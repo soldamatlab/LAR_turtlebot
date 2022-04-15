@@ -14,6 +14,7 @@ TURN_OFFSET = CONST.ROBOT_WIDTH/2 + 0.05
 OVERSHOOT = CONST.ROBOT_WIDTH/2
 FOV = (30 + 20) * 2*np.pi / 360
 FOV_GREEN = (60 + 20) * 2*np.pi / 360
+HEIGHT_DIFF_FACTOR = 1.05
 
 
 class Driver:
@@ -324,7 +325,7 @@ class GoThroughGate(Activity):
 class FindGate(Activity):
 
     def __init__(self, parent, driver, color, fov=None, init_dir=1, speed=TURN_SPEED, window=False,
-                 height_diff_factor=1.05,
+                 height_diff_factor=HEIGHT_DIFF_FACTOR,
                  center_limit_min=2,
                  center_limit_step=2,
                  center_limit_max=24,
@@ -354,7 +355,7 @@ class FindGate(Activity):
         # Process image
         hsv = self.turtle.get_hsv_image()
         bin_img = img_threshold(hsv, self.color)
-        sticks = self.driver.turtle.get_segments(self.color, bin_img=bin_img, min_area=2500)
+        sticks = self.driver.turtle.get_segments(self.color, bin_img=bin_img)
 
         # Testing window
         if self.window:
