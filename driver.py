@@ -235,7 +235,6 @@ class GoThroughGate(Activity):
             gate_center = (A + B) / 2
             midturn_point = self.calculate_first_step(A, B, gate_center, self.turn_offset)
             self.second_step = self.calculate_second_step(midturn_point, gate_center)
-
             self.step = 1
             return self.do(GotoCoors(self, self.driver, midturn_point))
 
@@ -248,22 +247,26 @@ class GoThroughGate(Activity):
     # Calculate the first step of the turn. (Vector from start of the turn to the mid-turn point.)
     # B has higher x-coordinate than A
     @staticmethod
-    def calculate_first_step(A, B, gate_center, turn_offset):
+    def calculate_first_step(A, B, C, turn_offset):
         D = B - A
         N = np.array([D[1], -D[0]])
         N /= math.sqrt(N[0]**2 + N[1]**2)
-        first_step = gate_center + turn_offset * N
+        first_step = C + turn_offset * N
         return first_step
 
     # Calculate the second step of the turn. (Vector from the mid-turn point to the end of the turn.)
     @staticmethod
-    def calculate_second_step(midturn_point, gate_center):
-        alpha = np.arccos(np.linalg.norm(midturn_point) / np.linalg.norm(gate_center))
-        if midturn_point[0] < 0:
+    def calculate_second_step(M, C):
+        # alpha = np.arccos(np.linalg.norm(midturn_point) / np.linalg.norm(gate_center))
+        # if midturn_point[0] < 0:
+        #     alpha *= -1
+        # second_step = GoThroughGate.rotate_vector(gate_center - midturn_point, alpha)
+        # return second_step
+        norm = math.sqrt(M[0] ** 2 + M[1] ** 2)
+        alpha = np.arccos(M[1] / norm)
+        if M[0] > 0:
             alpha *= -1
-        print("------------------------ DEBUG")  # TODO rem
-        print(360 * alpha / (2 * np.pi))
-        second_step = GoThroughGate.rotate_vector(gate_center - midturn_point, alpha)
+        second_step = GoThroughGate.rotate_vector(C - M, alpha)
         return second_step
 
     @staticmethod
