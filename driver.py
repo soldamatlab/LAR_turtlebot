@@ -308,11 +308,12 @@ class FindGate(Activity):
         Activity.perform_init(self)
 
         # Keep in FOV
-        angle = self.turtle.get_odometry()[2]
-        if abs(angle) > self.fov:
-            self.dir *= -1
-            self.turtle.set_speed(0, self.dir * self.speed)
-            return
+        if self.fov is not None:
+            angle = self.turtle.get_odometry()[2]
+            if abs(angle) > self.fov:
+                self.dir *= -1
+                self.turtle.set_speed(0, self.dir * self.speed)
+                return
 
         # Process image
         hsv = self.turtle.get_hsv_image()
