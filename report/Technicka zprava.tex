@@ -226,11 +226,29 @@ Modrá & 100 & 25 & 230 & 80 \\
 
 \subsection{Poznámky k implementaci}
 
-	Turtlebot object
+\subsubsection{Členění kódu}
+
+	Kód je strukturován do několika hlavních souborů, které jsou v této sekci stručně popsány.
 	
-	struktury 
+	Soubor \emph{main.py} obsahuje hlavní smyčku programu, ve které se pravidelně volá metoda \emph{Driver.drive()}, pomocí které je řidiči umožněno ovládat robota. (Třída \emph{Driver} je diskutována níže.) Dále je zde implementována inicializace hardwaru i softwaru.
 	
-	...
+	Soubor \emph{turtle.py} obsahuje třídu \emph{Turtle}, ve které jsou implementovány wrappery na funkce robota. Pomocí těchto funkcí může řidič jednoduše získávat data ze senzorů robota a robota ovládat.
+	
+	Soubor \emph{driver.py} obsahuje veškerou logiku ovládání robota. Je zde třída \emph{Driver}, která ovládá robota pomocí tzv. \emph{aktivit}. Aktivity - třídy rozšiřující abstraktní třídu \emph{Activity} - popisují jednotlivé akce, které robot vykonává, a mohou se skládat z dalších aktivit. (Příkladem takové aktivity může být třeba aktivita ''jet na souřadnice'', která se skládá z dalších pod-aktivit ''otočit se'' a ''jet dopředu''.) Díky tomuto objektovému přístupu je kód přehlednější, modulární a k aktivitám můžeme přistupovat jako k funkcím se vstupními a výstupními hodnotami, přestože jsou to často komplexní akce, jejichž vykonání trvá mnoho cyklů hlavního programu.
+	
+	V souboru \emph{camera.py} jsou implementovány statické funkce pro zpracování obrazu a dat ze senzorů.
+	
+	Soubor \emph{CONST.py} obsahuje konstanty úlohy, vlastností robota, naměřené a empiricky zjištěné konstanty pro segmentaci obrazu i konstanty hlavního programu. (Konstanty týkající se logiky ovládání robota jsou v souboru \emph{driver.py}.)
+	
+\subsubsection{Spuštění programu}
+
+	Pro spuštění programu stačí spustit soubor \emph{main.py}. (Například přikazem \emph{python3 main.py}.)
+
+\subsubsection{Dodatečné poznámky}
+
+	Během implementace a testování jsme narazili na nečekané chování robota v případě, že je příliš často volána metoda \emph{Turtlebot.cmd\_velocity(linear, angular)}. Robot se při častém volání této metody choval nekonzistentně a pohyboval se často neplynule.
+
+	Proto je v našem kódu nastavování rychlosti robota rozděleno do dvou metod; \emph{Turtle.keep\_speed()}, která interně volá nativní metodu robota \emph{Turtlebot.cmd\_velocity(linear, angular)} beze změny rychlosti, a \emph{Turtle.set\_speed(linear, angular)}, která přenastaví hodnoty rychlosti robota uvnitř třídy \emph{Turtle} bez volání nativní metody \emph{Turtle.set\_speed(linear, angular)}. Využití těchto dvou metod je na programátorovi řidiče, doporučujeme ale volat metodu \emph{Turtle.keep\_speed()} pouze jednou v každém volání \emph{Driver.drive()} a ve zbylé logice řidiče a aktivit používat pouze metodu \emph{Turtle.set\_speed(linear, angular)}.
 
 \section{Výsledky}
 	
