@@ -57,7 +57,6 @@ class Turtle:
         elif button == 2:
             self.button_2 = cb
 
-    # TODO bumpery nefungujou
     def bumper_cb(self, msg):
         if msg.bumper == 0:
             self.bumper_left()

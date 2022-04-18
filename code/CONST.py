@@ -13,23 +13,24 @@ RED = 2
 
 G_HUE = 65  # 45 - 85
 G_HUE_DIFF = 25
-G_SATUR_MIN = 80 # 30 -> 80  to reduce noise (dark parts of the floor)
-G_VAL_MIN = 60 # 80 chips off dark bits of stick
+G_SATUR_MIN = 80  # 30 -> 80  to reduce noise (dark parts of the floor)
+G_VAL_MIN = 40#60  # 80 chips off dark bits of stick
 
 B_HUE = 100
 B_HUE_DIFF = 25
-B_SATUR_MIN = 230 # tight to eliminate green, if softened -> make hue tighter
-B_VAL_MIN = 80 # 90 and 100 work but chip off dark bits of stick
+B_SATUR_MIN = 150#230  # tight to eliminate green, if softened -> make hue tighter
+B_VAL_MIN = 40#80  # 90 and 100 work but chip off dark bits of stick
 
 R_HUE = 2
-R_HUE_DIFF = 8 # 25 accepts light wood color
-R_SATUR_MIN = 150 # always observed over 160
-R_VAL_MIN = 70 # 110 and 120 work but chip off dark bits of stick
+R_HUE_DIFF = 8  # 25 accepts light wood color
+R_SATUR_MIN = 150  # always observed over 160
+R_VAL_MIN = 40#70  # 110 and 120 work but chip off dark bits of stick
 
 # POLE SHAPE
-MIN_AREA = 1000
-TARGET_RATIO = 5.35  # ~6 when truly in center, ~3.5 when on the far side
-MAX_RATIO_DIFF = 1.85
+# TODO mata kouknout
+MIN_AREA = 2500
+TARGET_RATIO = 5.1  # 5.35  # ~6 when truly in center, ~3.5 when on the far side
+MAX_RATIO_DIFF = 3  # 1.85
 
 # CAM
 DEPTH_CAM_LAMBDA = 429.363066725704
