@@ -313,7 +313,7 @@ class GoThroughGate(Activity):
         if self.busy:
             return self.activity.perform()
 
-        if isinstance(self.activity, MeasureGateCoordinates):
+        if self.step == 0:
             A, B = np.array([self.A[0], self.A[2]]), np.array([self.B[0], self.B[2]])
             gate_center = (A + B) / 2
             midturn_point = self.calculate_first_step(A, B, gate_center, self.turn_offset)
