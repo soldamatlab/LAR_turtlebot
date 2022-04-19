@@ -483,7 +483,7 @@ class FindGate(Activity):
             if abs(angle) > self.fov:
                 self.dir = -1 if angle > 0 else 1
                 self.turtle.set_speed(0, self.dir * self.speed)
-            if (self.max_attempts > 0) and (self.last_angle is not None) and (self.last_angle * angle) <= 0:
+            if (self.max_attempts > 0) and (self.last_angle is not None) and (self.last_angle * angle) < 0:
                 self.half_turns += 1
                 if self.half_turns / 2 >= self.max_attempts:
                     self.parent.ret = None
