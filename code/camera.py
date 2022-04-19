@@ -128,7 +128,7 @@ def bin_to_rgb(bin):
 
 def segment(bin, min_area=1000, info=False):
     out = cv2.connectedComponentsWithStats(bin.astype(np.uint8))
-    if info: print("segment: received " + str(out[0]) + " segments")
+    if info: print("segment: received " + str(out[0] - 1) + " segments")  # subtract background segment
 
     count = 0
     label_mat = out[1]
@@ -136,7 +136,7 @@ def segment(bin, min_area=1000, info=False):
     params = []
     centroids = []
 
-    for i in range(1, out[0]):  # skip first
+    for i in range(1, out[0]):  # skip first (the background segment)
         area = out[2][i][4]
         if info: print("area " + str(area))
         if area > min_area:
