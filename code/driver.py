@@ -278,14 +278,14 @@ class PassStartGate(Activity):
             return self.activity.perform()
 
         if (self.activity is None)\
-                or (isinstance(self.activity, Forward))\
+                or (isinstance(self.activity, MoveStraight))\
                 or (isinstance(self.activity, MeasureGateCoordinates) and self.ret is None):
             return self.do(FindGate(self, self.driver, self.color, attempts=self.find_attempts, fov=self.fov, init_dir=self.init_dir, window=self.window))
 
         if isinstance(self.activity, FindGate):
             side = self.pop_ret()
             if side is None:
-                return self.do(Forward(self, self.driver, self.backward_dist, speed=-FORWARD_SPEED))
+                return self.do(MoveStraight(self, self.driver, self.backward_dist, speed=-FORWARD_SPEED))
             else:
                 self.side = -1 if side < 0 else 1
                 return self.do(MeasureGateCoordinates(self, self.driver, self.color))
@@ -561,7 +561,7 @@ class GotoCoors(Activity):
             return self.do(Turn(self, self.driver, self.alpha))
 
         if isinstance(self.activity, Turn):
-            return self.do(Forward(self, self.driver, self.dist + self.overshoot))
+            return self.do(MoveStraight(self, self.driver, self.dist + self.overshoot))
 
         return self.end()
 
@@ -595,11 +595,11 @@ class Turn(Activity):
 
 
 # Go forward a set distance.
-class Forward(Activity):
+class MoveStraight(Activity):
 
     def __init__(self, parent, driver, dist, speed=FORWARD_SPEED):
         Activity.__init__(self, parent, driver)
-        self.dist = dist
+        self.dist = abs(dist)
         self.speed = speed
         self.step = self.speed * (CONST.SLEEP / 1000)
 
@@ -612,7 +612,7 @@ class Forward(Activity):
         Activity.perform_init(self)
 
         odometry = self.turtle.get_odometry()[0]
-        if self.dist - odometry < self.step / 2:
+        if self.dist - abs(odometry) < self.step / 2:
             self.turtle.stop()
             return self.end()
 
