@@ -11,24 +11,26 @@ import CONST
 
 turtle = None
 driver = None
+running = False
 
 
 def button_0():
-    turtle.stop()
+    global running
+    running = not running
 
 def button_1():
-    segments = turtle.get_segments(driver.color, min_area=200)
-    pc = turtle.get_point_cloud()
-    segments.calculate_coors(pc)
-    segments.print_all()
-    print(segments.coors)
-
-def button_2():
     K = turtle.get_depth_K()
     print(K)
+    print(np.linalg.inv(K))
+
+def button_2():
+    turtle.get_segments(CONST.GREEN, info=True)
 
 def bumper():
-    print("BUMPER")
+    global running
+    running = False
+    turtle.stop()
+    print("BUMPER-STOP")
 
 
 if __name__ == '__main__':
@@ -54,4 +56,5 @@ if __name__ == '__main__':
     # MAIN LOOP
     while not turtle.bot.is_shutting_down():
         rate.sleep()
-        driver.drive()
+        if running:
+            driver.drive()

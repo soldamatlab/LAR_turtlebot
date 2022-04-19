@@ -87,7 +87,7 @@ class Turtle:
     def get_point_cloud(self, convert_to_bot=True):
         pc = np.array(self.bot.get_point_cloud())
         if convert_to_bot:
-            pc = pc_cam_to_bot(pc, self.get_depth_K())
+            pc = pc_cam_to_bot(pc)
         return pc
 
     def get_depth_K(self):
@@ -101,13 +101,14 @@ class Turtle:
         target_ratio=CONST.TARGET_RATIO,
         max_ratio_diff=CONST.MAX_RATIO_DIFF,
         get_coors=False,
+        info=False,
     ):
         if bin_img is None:
             if hsv_img is None:
                 hsv_img = self.get_hsv_image()
             bin_img = img_threshold(hsv_img, color)
-        segments = segment(bin_img, min_area=min_area)
-        segments = hw_ratio_filter(segments, target=target_ratio, max_diff=max_ratio_diff)
+        segments = segment(bin_img, min_area=min_area, info=info)
+        segments = hw_ratio_filter(segments, target=target_ratio, max_diff=max_ratio_diff, info=info)
         if get_coors:
             if pc is None:
                 pc = self.get_point_cloud(convert_to_bot=True)
