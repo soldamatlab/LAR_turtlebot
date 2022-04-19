@@ -144,12 +144,15 @@ class TestActivity(Activity):
             return self.activity.perform()
 
         if self.activity is None:
+            return self.do(FindGate(self, self.driver, CONST.GREEN))
+
+        if isinstance(self.activity, FindGate):
             return self.do(MeasureGateCoordinates(self, self.driver, CONST.GREEN))
 
         if isinstance(self.activity, MeasureGateCoordinates):
             coors = self.pop_ret()
             print(coors)
-            self.end()
+            return self.end()
 
 
 # Turn withing the given FOV (do 360 instead if FOV is None),
@@ -247,7 +250,7 @@ class DetermineFirstColor(Activity):
             angle = self.red_angle
         self.parent.ret = (color, area, angle)
         self.turtle.stop()
-        self.end()
+        return self.end()
 
 
 # Find a gate of the given color, measure its distance and go through it.
@@ -295,7 +298,7 @@ class GoThroughGate(Activity):
             return self.do(GotoCoors(self, self.driver, self.second_step, overshoot=self.overshoot))
 
         self.parent.ret = self.side
-        self.end()
+        return self.end()
 
     # Calculate the first step of the turn. (Vector from start of the turn to the mid-turn point.)
     # B has higher x-coordinate than A
@@ -408,7 +411,7 @@ class FindGate(Activity):
         self.turtle.stop()
         angle = self.turtle.get_odometry()[2]
         self.parent.ret = angle
-        self.end()
+        return self.end()
 
 
 # Measure a distance of the closest gate of the given color. (without turning)
@@ -426,10 +429,10 @@ class MeasureGateCoordinates(Activity):
     def perform(self):
         Activity.perform_init(self)
 
-        if self.attempts == 0:
+        if self.attempts <= 0:
             if INFO: print("\n MeasureGateDist FAILED")
             self.parent.ret = None
-            self.end()
+            return self.end()
 
         sticks = self.driver.turtle.get_segments(self.color)
         if sticks.count < 2:
@@ -448,7 +451,7 @@ class MeasureGateCoordinates(Activity):
             B = tmp
 
         self.parent.ret = (A, B)
-        self.end()
+        return self.end()
 
 
 class GotoCoors(Activity):
@@ -476,7 +479,7 @@ class GotoCoors(Activity):
         if isinstance(self.activity, Turn):
             return self.do(Forward(self, self.driver, self.dist + self.overshoot))
 
-        self.end()
+        return self.end()
 
 
 # Turn a set amount of degrees.
@@ -504,7 +507,7 @@ class Turn(Activity):
             return
 
         self.turtle.stop()
-        self.end()
+        return self.end()
 
 
 # Go forward a set distance.
@@ -527,7 +530,7 @@ class Forward(Activity):
         odometry = self.turtle.get_odometry()[0]
         if self.dist - odometry < self.step / 2:
             self.turtle.stop()
-            self.end()
+            return self.end()
 
 
 # Stand idle for a given amount of time.
@@ -546,7 +549,7 @@ class Idle(Activity):
 
         if time.perf_counter() - self.start_time < self.idle_time:
             return
-        self.end()
+        return self.end()
 
 
 # Counts turns made by the robot from "start".
