@@ -19,11 +19,8 @@ def button_0():
     running = not running
 
 def button_1():
-    segments = turtle.get_segments(driver.color, min_area=200)
-    pc = turtle.get_point_cloud()
-    segments.calculate_coors(pc)
-    segments.print_all()
-    print(segments.coors)
+    K = turtle.get_depth_K()
+    print(K)
 
 def button_2():
     turtle.get_segments(CONST.GREEN, info=True)
