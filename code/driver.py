@@ -112,7 +112,7 @@ class MainActivity(Activity):
             return self.activity.perform()
 
         if self.activity is None:
-            return self.do(GoThroughGate(self, self.driver, CONST.GREEN, fov=FOV_GREEN, window=self.window))
+            return self.do(PassNormalGate(self, self.driver, CONST.GREEN, fov=FOV_GREEN, window=self.window))
 
         if isinstance(self.activity, DetermineFirstColor):
             self.determined_first_color = True
@@ -122,11 +122,11 @@ class MainActivity(Activity):
         if not self.determined_first_color:
             return self.do(DetermineFirstColor(self, self.driver, fov=FOV, window=False))
 
-        if isinstance(self.activity, GoThroughGate):  # TODO uncomment
+        if isinstance(self.activity, PassNormalGate):  # TODO uncomment
             self.driver.change_color()
             angle = self.pop_ret()
             self.next_turn = -1 if angle > 0 else 1
-        return self.do(GoThroughGate(self, self.driver, self.driver.color, fov=FOV, init_dir=self.next_turn, window=self.window))
+        return self.do(PassNormalGate(self, self.driver, self.driver.color, fov=FOV, init_dir=self.next_turn, window=self.window))
 
 
 class TestActivity(Activity):
@@ -255,7 +255,7 @@ class DetermineFirstColor(Activity):
 
 # Find a gate of the given color, measure its distance and go through it.
 # Returns the side to which the bot turned initially to go through the gate. (left: +1, right: -1)
-class GoThroughGate(Activity):
+class PassNormalGate(Activity):
 
     def __init__(self, parent, driver, color, fov=None, init_dir=1, window=False,
                  turn_offset=TURN_OFFSET,
@@ -286,7 +286,35 @@ class GoThroughGate(Activity):
 
         if isinstance(self.activity, MeasureGateCoordinates):
             A, B = self.pop_ret()
-            A, B = np.array([A[0], A[2]]), np.array([B[0], B[2]])
+            return self.do(GoThroughGate(self, self.driver, A, B, turn_offset=self.turn_offset, overshoot=self.overshoot))
+
+        if isinstance(self.activity, GoThroughGate):
+            self.parent.ret = self.pop_ret()
+            return self.end()
+
+
+class GoThroughGate(Activity):
+
+    def __init__(self, parent, driver, stick_A, stick_B,
+                 turn_offset=TURN_OFFSET,
+                 overshoot=OVERSHOOT,
+    ):
+        Activity.__init__(self, parent, driver)
+        self.A = stick_A
+        self.B = stick_B
+        self.side = None
+        self.turn_offset = turn_offset
+        self.overshoot = overshoot
+        self.step = 0
+        self.second_step = None
+
+    def perform(self):
+        Activity.perform_init(self)
+        if self.busy:
+            return self.activity.perform()
+
+        if isinstance(self.activity, MeasureGateCoordinates):
+            A, B = np.array([self.A[0], self.A[2]]), np.array([self.B[0], self.B[2]])
             gate_center = (A + B) / 2
             midturn_point = self.calculate_first_step(A, B, gate_center, self.turn_offset)
             self.second_step = self.calculate_second_step(midturn_point, gate_center)
@@ -306,7 +334,7 @@ class GoThroughGate(Activity):
     def calculate_first_step(A, B, C, turn_offset):
         D = B - A
         N = np.array([D[1], -D[0]])
-        N /= math.sqrt(N[0]**2 + N[1]**2)
+        N /= math.sqrt(N[0] ** 2 + N[1] ** 2)
         first_step = C + turn_offset * N
         return first_step
 
@@ -328,7 +356,7 @@ class GoThroughGate(Activity):
 
 
 # Find gate of given color by turning and center itself on it.
-# Return the angle at which the gate has been found.
+# Return the angle at which the gate has been found or None if run out of attempts.
 class FindGate(Activity):
 
     def __init__(self, parent, driver, color, fov=None, init_dir=1, speed=TURN_SPEED, window=False,
@@ -336,6 +364,7 @@ class FindGate(Activity):
                  center_limit_min=2,
                  center_limit_step=2,
                  center_limit_max=24,
+                 attempts=0,  # 1 attempt means left,center,right,center within the fov; set to 0 for unlimited attempts
                  ):
         Activity.__init__(self, parent, driver)
         self.color = color
@@ -349,6 +378,9 @@ class FindGate(Activity):
         self.window = window
         self.w_bin = None
         self.dir = -1 if init_dir < 0 else 1
+        self.max_attempts = attempts
+        self.half_turns = 0
+        self.last_angle = None
 
     def start(self):
         self.turtle.stop()  # safety
@@ -370,7 +402,9 @@ class FindGate(Activity):
 
         if sticks.count < 2:
             self.turtle.set_speed(0, self.dir * self.speed)
-            return self.continue_search()
+            if self.continue_search() == 0:
+                self.parent.ret = None
+                return self.end()
 
         # Pick A,B
         args = np.argsort(sticks.heights())
@@ -382,7 +416,9 @@ class FindGate(Activity):
         # Check same height
         if (A_height / B_height) > self.height_diff_factor:
             self.turtle.set_speed(0, self.dir * self.speed)
-            return self.continue_search()
+            if self.continue_search() == 0:
+                self.parent.ret = None
+                return self.end()
 
         # Center on sticks
         center = (A_coors + B_coors) / 2
@@ -406,6 +442,12 @@ class FindGate(Activity):
             if abs(angle) > self.fov:
                 self.dir = -1 if angle > 0 else 1
                 self.turtle.set_speed(0, self.dir * self.speed)
+            if (self.last_angle is not None) and (self.last_angle * angle) <= 0:
+                self.half_turns += 1
+                if self.half_turns / 2 >= self.max_attempts:
+                    return 0
+            self.last_angle = angle
+        return 1
 
     def done(self):
         self.turtle.stop()
