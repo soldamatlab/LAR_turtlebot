@@ -270,7 +270,6 @@ class PassNormalGate(Activity):
         self.overshoot = overshoot
         self.step = 0
         self.second_step = None
-        self.side = None
 
     def perform(self):
         Activity.perform_init(self)
@@ -319,6 +318,7 @@ class GoThroughGate(Activity):
             midturn_point = self.calculate_first_step(A, B, gate_center, self.turn_offset)
             self.second_step = self.calculate_second_step(midturn_point, gate_center)
             self.step = 1
+            self.side = 1 if midturn_point[0] < 0 else -1
             return self.do(GotoCoors(self, self.driver, midturn_point))
 
         if self.step == 1:
