@@ -87,7 +87,7 @@ class Turtle:
     def get_point_cloud(self, convert_to_bot=True):
         pc = np.array(self.bot.get_point_cloud())
         if convert_to_bot:
-            pc = pc_cam_to_bot(pc, self.get_depth_K())
+            pc = pc_cam_to_bot(pc)
         return pc
 
     def get_depth_K(self):
