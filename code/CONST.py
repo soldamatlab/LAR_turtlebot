@@ -35,6 +35,7 @@ MAX_RATIO_DIFF = 3  # 1.85
 
 # CAM
 DEPTH_CAM_LAMBDA = 429.363066725704
+DEPTH_CAM_OFFSET = 1 #0.008
 
 # UTILS
 def get_color_consts(color):
