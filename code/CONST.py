@@ -27,8 +27,6 @@ R_SATUR_MIN = 150  # always observed over 160
 R_VAL_MIN = 40#70  # 110 and 120 work but chip off dark bits of stick
 
 # POLE SHAPE
-# TODO mata kouknout
-# TODO move to driver.py ?
 MIN_AREA = 2500
 TARGET_RATIO = 5.1  # 5.35  # ~6 when truly in center, ~3.5 when on the far side
 MAX_RATIO_DIFF = 3  # 1.85

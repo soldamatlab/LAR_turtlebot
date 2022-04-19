@@ -523,7 +523,7 @@ class MeasureGateCoordinates(Activity):
             self.attempts -= 1
             return self.perform()
 
-        pc = self.turtle.get_point_cloud(convert_to_bot=True)  # TODO
+        pc = self.turtle.get_point_cloud(convert_to_bot=True)
         sticks.calculate_coors(pc)
 
         args = np.argsort(sticks.areas())
@@ -542,7 +542,6 @@ class GotoCoors(Activity):
 
     # target = [x, z]
     def __init__(self, parent, driver, target, overshoot=0):
-        print("------------------------ GOTO: " + str(target))  # TODO rem
         Activity.__init__(self, parent, driver)
         x = target[0]
         z = target[1]
