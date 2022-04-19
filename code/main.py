@@ -21,7 +21,7 @@ def button_0():
 def button_1():
     K = turtle.get_depth_K()
     print(K)
-    print(np.inv(K))
+    print(np.linalg.inv(K))
 
 def button_2():
     turtle.get_segments(CONST.GREEN, info=True)
