@@ -15,6 +15,8 @@ OVERSHOOT = CONST.ROBOT_WIDTH/2
 FOV = (30 + 20) * 2*np.pi / 360
 FOV_GREEN = (60 + 20) * 2*np.pi / 360
 HEIGHT_DIFF_FACTOR = 1.05
+START_GATE_FIND_ATTEMPTS = 1
+START_GATE_BACKWARD_DIST = 0.1
 
 
 class Driver:
@@ -251,6 +253,56 @@ class DetermineFirstColor(Activity):
         self.parent.ret = (color, area, angle)
         self.turtle.stop()
         return self.end()
+
+
+# Same as [PassNormalGate] but [FindGate] is not infinite.
+# If find [FindGate] fails, the bot moves backwards and tries again.
+class PassStartGate(Activity):
+
+    def __init__(self, parent, driver, color=CONST.GREEN, fov=None, init_dir=1, window=False,
+                 turn_offset=TURN_OFFSET,
+                 overshoot=OVERSHOOT,
+                 find_attempts=START_GATE_FIND_ATTEMPTS,
+                 backward_dist=START_GATE_BACKWARD_DIST,
+                 ):
+        Activity.__init__(self, parent, driver)
+        self.color = color
+        self.fov = fov
+        self.init_dir = init_dir
+        self.window = window
+        self.turn_offset = turn_offset
+        self.overshoot = overshoot
+        self.step = 0
+        self.second_step = None
+        self.side = None
+        self.find_attempts = find_attempts
+        self.backward_dist = backward_dist
+
+    def perform(self):
+        Activity.perform_init(self)
+        if self.busy:
+            return self.activity.perform()
+
+        if (self.activity is None)\
+                or (isinstance(self.activity, Forward))\
+                or (isinstance(self.activity, MeasureGateCoordinates) and self.ret is None):
+            return self.do(FindGate(self, self.driver, self.color, attempts=self.find_attempts, fov=self.fov, init_dir=self.init_dir, window=self.window))
+
+        if isinstance(self.activity, FindGate):
+            side = self.pop_ret()
+            if side is None:
+                return self.do(Forward(self, self.driver, self.backward_dist))
+            else:
+                self.side = -1 if side < 0 else 1
+                return self.do(MeasureGateCoordinates(self, self.driver, self.color))
+
+        if isinstance(self.activity, MeasureGateCoordinates):
+            A, B = self.pop_ret()
+            return self.do(GoThroughGate(self, self.driver, A, B, turn_offset=self.turn_offset, overshoot=self.overshoot))
+
+        if isinstance(self.activity, GoThroughGate):
+            self.parent.ret = self.side
+            return self.end()
 
 
 # Find a gate of the given color, measure its distance and go through it.
