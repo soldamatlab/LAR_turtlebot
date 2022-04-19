@@ -14,7 +14,7 @@ driver = None
 
 
 def button_0():
-    turtle.stop()
+    main()
 
 def button_1():
     segments = turtle.get_segments(driver.color, min_area=200)
@@ -50,6 +50,8 @@ if __name__ == '__main__':
     # rate.sleep()
     # turtle.play_sound()
 
+
+def main():
     # MAIN LOOP
     while not turtle.bot.is_shutting_down():
         rate.sleep()
