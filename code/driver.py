@@ -461,6 +461,11 @@ class FindGate(Activity):
             self.turtle.set_speed(0, self.dir * self.speed)
             return self.continue_search()
 
+        print("HEIGHT DIFF")
+        print(A_height)
+        print(B_height)
+        print(A_height / B_height)
+
         # Center on sticks
         center = (A_coors + B_coors) / 2
         diff = center[0] - (np.shape(bin_img)[1] / 2)
