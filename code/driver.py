@@ -6,7 +6,7 @@ from camera import *
 import time
 import math
 
-INFO = False
+INFO = True
 FORWARD_SPEED = 0.2
 TURN_SPEED = np.pi/8
 ANGLE_MARGIN = np.pi / 12
@@ -22,7 +22,7 @@ class Driver:
     def __init__(self, turtle):
         self.turtle = turtle
         self.busy = True
-        self.main = TestActivity(self, self) #MainActivity(self, self, window=False)
+        self.main = MainActivity(self, self, window=False)
         self.counter = 0
         self.color = CONST.GREEN
 
@@ -439,7 +439,7 @@ class MeasureGateCoordinates(Activity):
             self.attempts -= 1
             return self.perform()
 
-        pc = self.turtle.get_point_cloud(convert_to_bot=True)  # TODO
+        pc = self.turtle.get_point_cloud(convert_to_bot=False)  # TODO
         sticks.calculate_coors(pc)
 
         args = np.argsort(sticks.areas())
