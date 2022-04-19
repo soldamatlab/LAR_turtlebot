@@ -34,7 +34,7 @@ TARGET_RATIO = 5.1  # 5.35  # ~6 when truly in center, ~3.5 when on the far side
 MAX_RATIO_DIFF = 3  # 1.85
 
 # CAM
-DEPTH_CAM_LAMBDA = 429.363066725704
+DEPTH_CAM_LAMBDA = 20000 #429.363066725704 TODO !!!
 
 # UTILS
 def get_color_consts(color):
