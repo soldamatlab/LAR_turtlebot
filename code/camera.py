@@ -82,6 +82,30 @@ class Segments:
 
         self.coors = coors
 
+    # # Calculate coors of a segment as a median of a few central pixels.
+    # def calculate_coors(self, pc, index):
+    #     bin = self.get_bin_img(index)
+    #     centroid = self.centroids[index]
+    #     height = self.params[index][1]
+    #     width = self.params[index][2]
+    #     y1 = max(int(centroid[1] - height / 2), 0)
+    #     y2 = min(int(centroid[1] + height / 2), 480-1)
+    #     x1 = max(int(centroid[0] - width / 2), 0)
+    #     x2 = min(int(centroid[0] + width / 2), 640-1)
+    #
+    #     values = []
+    #     for y in range(y1, y2 + 1):
+    #         for x in range(x1, x2 + 1):
+    #             val = pc[y][x]
+    #             if bin[y][x] != 0 and all(not np.isnan(c) for c in val):
+    #                 values.append(val)
+    #
+    #     if len(values) == 0:
+    #         self.coors[index] = None
+    #     else:
+    #         values = np.stack(values, axis=0)
+    #         self.coors[index] = np.median(values, axis=0)
+
     def print(self, index):
         print("left: " + str(self.params[index][0]) + ", top: " + str(self.params[index][1]))
         print("size: " + str(self.params[index][2]) + " x " + str(self.params[index][3]))
