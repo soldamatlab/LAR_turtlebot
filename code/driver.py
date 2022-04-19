@@ -102,19 +102,13 @@ class MainActivity(Activity):
         self.determined_first_color = False
         self.next_turn = None
 
-    # # TODO rem
-    # def start(self):
-    #     self.determined_first_color = True
-    #     self.activity = GoThroughGate(self, self.driver, self.driver.color, window=self.window)
-    #     self.driver.color = CONST.BLUE
-
     def perform(self):
         Activity.perform_init(self)
         if self.busy:
             return self.activity.perform()
 
         if self.activity is None:
-            return self.do(PassNormalGate(self, self.driver, CONST.GREEN, fov=FOV_GREEN, window=self.window))
+            return self.do(PassStartGate(self, self.driver, fov=FOV_GREEN, window=self.window))
 
         if isinstance(self.activity, DetermineFirstColor):
             self.determined_first_color = True
@@ -124,7 +118,7 @@ class MainActivity(Activity):
         if not self.determined_first_color:
             return self.do(DetermineFirstColor(self, self.driver, fov=FOV, window=False))
 
-        if isinstance(self.activity, PassNormalGate):  # TODO uncomment
+        if isinstance(self.activity, PassNormalGate):
             self.driver.change_color()
             angle = self.pop_ret()
             self.next_turn = -1 if angle > 0 else 1
