@@ -11,10 +11,12 @@ import CONST
 
 turtle = None
 driver = None
+running = False
 
 
 def button_0():
-    main()
+    global running
+    running = not running
 
 def button_1():
     segments = turtle.get_segments(driver.color, min_area=200)
@@ -27,7 +29,10 @@ def button_2():
     turtle.get_segments(CONST.GREEN, info=True)
 
 def bumper():
-    print("BUMPER")
+    global running
+    running = False
+    turtle.stop()
+    print("BUMPER-STOP")
 
 
 if __name__ == '__main__':
@@ -50,9 +55,8 @@ if __name__ == '__main__':
     # rate.sleep()
     # turtle.play_sound()
 
-
-def main():
     # MAIN LOOP
     while not turtle.bot.is_shutting_down():
         rate.sleep()
-        driver.drive()
+        if running:
+            driver.drive()
