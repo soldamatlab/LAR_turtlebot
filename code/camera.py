@@ -169,7 +169,8 @@ def hw_ratio_filter(segments, target=CONST.TARGET_RATIO, max_diff=CONST.MAX_RATI
 def pc_cam_to_bot(cam_pc, cam_offset=CONST.DEPTH_CAM_OFFSET):
     og_shape = np.shape(cam_pc)
     cam_pc = np.reshape(cam_pc, (og_shape[0] * og_shape[1], og_shape[2]))
-    bot_pc = cam_pc[:,0] + cam_offset
+    bot_pc = cam_pc
+    bot_pc[:,0] += cam_offset
     bot_pc = np.reshape(bot_pc, og_shape)
     return bot_pc
 
