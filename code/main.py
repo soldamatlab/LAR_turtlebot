@@ -14,26 +14,18 @@ driver = None
 
 
 def button_0():
+    turtle.stop()
+
+def button_1():
     segments = turtle.get_segments(driver.color, min_area=200)
     pc = turtle.get_point_cloud()
     segments.calculate_coors(pc)
     segments.print_all()
     print(segments.coors)
 
-def button_1():
-    if driver.color == CONST.RED:
-        driver.color = CONST.GREEN
-        print("\nCOLOR: GREEN")
-    elif driver.color == CONST.GREEN:
-        driver.color = CONST.BLUE
-        print("\nCOLOR: BLUE")
-    elif driver.color == CONST.BLUE:
-        driver.color = CONST.RED
-        print("\nCOLOR: RED")
-    return None
-
 def button_2():
-    turtle.stop()
+    K = turtle.get_depth_K()
+    print(K)
 
 def bumper():
     print("BUMPER")
