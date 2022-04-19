@@ -270,6 +270,7 @@ class PassNormalGate(Activity):
         self.overshoot = overshoot
         self.step = 0
         self.second_step = None
+        self.side = None
 
     def perform(self):
         Activity.perform_init(self)
@@ -288,10 +289,11 @@ class PassNormalGate(Activity):
             return self.do(GoThroughGate(self, self.driver, A, B, turn_offset=self.turn_offset, overshoot=self.overshoot))
 
         if isinstance(self.activity, GoThroughGate):
-            self.parent.ret = self.pop_ret()
+            self.parent.ret = self.side
             return self.end()
 
 
+# Go through a gate given the coordinates of its two sticks.
 class GoThroughGate(Activity):
 
     def __init__(self, parent, driver, stick_A, stick_B,
@@ -301,7 +303,6 @@ class GoThroughGate(Activity):
         Activity.__init__(self, parent, driver)
         self.A = stick_A
         self.B = stick_B
-        self.side = None
         self.turn_offset = turn_offset
         self.overshoot = overshoot
         self.step = 0
@@ -318,14 +319,12 @@ class GoThroughGate(Activity):
             midturn_point = self.calculate_first_step(A, B, gate_center, self.turn_offset)
             self.second_step = self.calculate_second_step(midturn_point, gate_center)
             self.step = 1
-            self.side = 1 if midturn_point[0] < 0 else -1
             return self.do(GotoCoors(self, self.driver, midturn_point))
 
         if self.step == 1:
             self.step = 2
             return self.do(GotoCoors(self, self.driver, self.second_step, overshoot=self.overshoot))
 
-        self.parent.ret = self.side
         return self.end()
 
     # Calculate the first step of the turn. (Vector from start of the turn to the mid-turn point.)
