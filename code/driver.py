@@ -402,9 +402,7 @@ class FindGate(Activity):
 
         if sticks.count < 2:
             self.turtle.set_speed(0, self.dir * self.speed)
-            if self.continue_search() == 0:
-                self.parent.ret = None
-                return self.end()
+            return self.continue_search()
 
         # Pick A,B
         args = np.argsort(sticks.heights())
@@ -416,9 +414,7 @@ class FindGate(Activity):
         # Check same height
         if (A_height / B_height) > self.height_diff_factor:
             self.turtle.set_speed(0, self.dir * self.speed)
-            if self.continue_search() == 0:
-                self.parent.ret = None
-                return self.end()
+            return self.continue_search()
 
         # Center on sticks
         center = (A_coors + B_coors) / 2
@@ -442,12 +438,13 @@ class FindGate(Activity):
             if abs(angle) > self.fov:
                 self.dir = -1 if angle > 0 else 1
                 self.turtle.set_speed(0, self.dir * self.speed)
-            if (self.last_angle is not None) and (self.last_angle * angle) <= 0:
+            if (self.max_attempts > 0) and (self.last_angle is not None) and (self.last_angle * angle) <= 0:
                 self.half_turns += 1
                 if self.half_turns / 2 >= self.max_attempts:
-                    return 0
+                    self.parent.ret = None
+                    return self.end()
             self.last_angle = angle
-        return 1
+        return
 
     def done(self):
         self.turtle.stop()
