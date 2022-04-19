@@ -6,7 +6,7 @@ from camera import *
 import time
 import math
 
-INFO = True
+INFO = False # TODO
 FORWARD_SPEED = 0.2
 TURN_SPEED = np.pi/8
 ANGLE_MARGIN = np.pi / 12
@@ -451,16 +451,17 @@ class FindGate(Activity):
 
         # Pick A,B
         args = np.argsort(sticks.heights())
-        A_height = sticks.height(args[0])
-        B_height = sticks.height(args[1])
-        A_coors = sticks.centroids[args[0]]
-        B_coors = sticks.centroids[args[1]]
+        A_height = sticks.height(args[-1])
+        B_height = sticks.height(args[-2])
+        A_coors = sticks.centroids[args[-1]]
+        B_coors = sticks.centroids[args[-2]]
 
         # Check same height
         if (A_height / B_height) > self.height_diff_factor:
             self.turtle.set_speed(0, self.dir * self.speed)
             return self.continue_search()
 
+        # TODO rem
         print("HEIGHT DIFF")
         print(A_height)
         print(B_height)
