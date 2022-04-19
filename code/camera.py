@@ -82,7 +82,6 @@ class Segments:
 
         self.coors = coors
 
-
     def print(self, index):
         print("left: " + str(self.params[index][0]) + ", top: " + str(self.params[index][1]))
         print("size: " + str(self.params[index][2]) + " x " + str(self.params[index][3]))
