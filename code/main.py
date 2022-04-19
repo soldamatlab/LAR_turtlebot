@@ -21,6 +21,7 @@ def button_0():
 def button_1():
     K = turtle.get_depth_K()
     print(K)
+    turtle.get_point_cloud(convert_to_bot=True)
 
 def button_2():
     turtle.get_segments(CONST.GREEN, info=True)
