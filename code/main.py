@@ -24,8 +24,7 @@ def button_1():
     print(segments.coors)
 
 def button_2():
-    K = turtle.get_depth_K()
-    print(K)
+    turtle.get_segments(CONST.GREEN, info=True)
 
 def bumper():
     print("BUMPER")
