@@ -22,7 +22,7 @@ class Driver:
     def __init__(self, turtle):
         self.turtle = turtle
         self.busy = True
-        self.main = MainActivity(self, self, window=False)
+        self.main = TestActivity(self, self) #MainActivity(self, self, window=False)
         self.counter = 0
         self.color = CONST.GREEN
 
@@ -143,9 +143,13 @@ class TestActivity(Activity):
         if self.busy:
             return self.activity.perform()
 
-        hsv_img = self.turtle.get_hsv_image()
-        bin_img = img_threshold(hsv_img, CONST.RED)
-        self.window.show(bin_to_rgb(bin_img))
+        if self.activity is None:
+            return self.do(MeasureGateCoordinates(self, self.driver, CONST.GREEN))
+
+        if isinstance(self.activity, MeasureGateCoordinates):
+            coors = self.pop_ret()
+            print(coors)
+            self.end()
 
 
 # Turn withing the given FOV (do 360 instead if FOV is None),
@@ -432,7 +436,7 @@ class MeasureGateCoordinates(Activity):
             self.attempts -= 1
             return self.perform()
 
-        pc = self.turtle.get_point_cloud(convert_to_bot=True)  # TODO rem
+        pc = self.turtle.get_point_cloud()
         sticks.calculate_coors(pc)
 
         args = np.argsort(sticks.areas())
