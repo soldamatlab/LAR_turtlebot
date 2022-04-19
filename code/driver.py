@@ -542,6 +542,7 @@ class GotoCoors(Activity):
 
     # target = [x, z]
     def __init__(self, parent, driver, target, overshoot=0):
+        print("------------------------ GOTO: " + str(target))  # TODO rem
         Activity.__init__(self, parent, driver)
         x = target[0]
         z = target[1]
