@@ -15,7 +15,7 @@ OVERSHOOT = CONST.ROBOT_WIDTH/2
 FOV = (30 + 20) * 2*np.pi / 360
 FOV_GREEN = (60 + 20) * 2*np.pi / 360
 HEIGHT_DIFF_FACTOR = 1.05
-START_GATE_FIND_ATTEMPTS = 1
+START_GATE_FIND_ATTEMPTS = 3
 START_GATE_BACKWARD_DIST = 0.1
 
 
@@ -285,7 +285,7 @@ class PassStartGate(Activity):
         if isinstance(self.activity, FindGate):
             side = self.pop_ret()
             if side is None:
-                return self.do(Forward(self, self.driver, self.backward_dist))
+                return self.do(Forward(self, self.driver, self.backward_dist, speed=-FORWARD_SPEED))
             else:
                 self.side = -1 if side < 0 else 1
                 return self.do(MeasureGateCoordinates(self, self.driver, self.color))
