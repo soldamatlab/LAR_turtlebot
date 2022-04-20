@@ -112,7 +112,7 @@ class ThirdTask(Activity):
         if self.activity is None:
             return self.do(Turn(self, self.driver, -np.pi/2))
 
-        if isinstance(self.activity, GotoCoors):
+        if isinstance(self.activity, Turn):
             return self.do(MeasureGateCoordinates(self, self.driver, CONST.GREEN))
             # return self.do(PassStartGate(self, self.driver, fov=FOV_GREEN))
 
