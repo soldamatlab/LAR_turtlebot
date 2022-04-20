@@ -124,6 +124,7 @@ class ThirdTask(Activity):
                 return self.do(FindNearestStick(self, self.driver, False, init_turn=np.pi/6, turn_offset=np.pi/3, window=self.window))
 
             if isinstance(self.activity, BypassStick):
+                self.prev_stick, angle = self.pop_ret()
                 return self.find_next_stick()
 
             if isinstance(self.activity, FindNearestStick):
@@ -136,12 +137,11 @@ class ThirdTask(Activity):
                     self.finish_passed = True
                     return self.do(PassGate(self, self.driver, fov=FOV_GREEN, find_attempts=0, window=self.window))
                 else:
-                    return self.do(BypassStick(self, self.driver, stick_coors, self.prev_color, self.prev_stick, stick_color))
+                    return self.do(BypassStick(self, self.driver, self.prev_stick, self.prev_color, stick_coors, stick_color))
 
         return self.end()
 
     def find_next_stick(self):
-        self.prev_stick, angle = self.pop_ret()
         turn_left = self.prev_color == CONST.RED
         return self.do(FindNearestStick(self, self.driver, turn_left=turn_left, turn_offset=np.pi/2, window=self.window))
 
@@ -456,6 +456,8 @@ class FindNearestStick(Activity):
                 return self.end()
 
 
+# Scan for sticks of all colors.
+# Return (coordinates, distance from bot, color) of the nearest stick.
 class ScanForNearest(Activity):
     def __init__(self, parent, driver,
                  window=False,
