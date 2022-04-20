@@ -5,8 +5,9 @@ import time
 import math
 
 INFO = True  # TODO
-FORWARD_SPEED = 0.3
-TURN_SPEED = np.pi/6
+FORWARD_SPEED = 0.5
+TURN_SPEED = np.pi/3
+FIND_GATE_TURN_SPEED = np.pi/6
 HEIGHT_DIFF_FACTOR = 1.05
 FOV_GREEN = (60 + 20) * 2*np.pi / 360
 START_GATE_FIND_ATTEMPTS = 1
@@ -263,7 +264,7 @@ class GoThroughGate(Activity):
 # Return the angle at which the gate has been found or None if run out of attempts.
 class FindGate(Activity):
 
-    def __init__(self, parent, driver, color, fov=None, init_dir=1, speed=TURN_SPEED, window=False,
+    def __init__(self, parent, driver, color, fov=None, init_dir=1, speed=FIND_GATE_TURN_SPEED, window=False,
                  height_diff_factor=HEIGHT_DIFF_FACTOR,
                  center_limit_min=2,
                  center_limit_step=2,
