@@ -101,9 +101,44 @@ class ThirdTask(Activity):
         if self.busy:
             return self.activity.perform()
 
+        #TODO
+        print(self.turtle.get_current_position())
+
         if self.activity is None:
+            return self.do(Turn(self, self.driver, np.pi / 2))
+
+        if isinstance(self.activity, Turn):
             return self.do(MoveStraight(self, self.driver, 0.5))
 
+        return self.end()
+
+
+# Turn a set amount of degrees.
+# ONLY WORKS FOR <-pi;+pi> TURNS. (no larger)
+class Turn(Activity):
+
+    # degree ... in radians, left: positive, right: negative
+    def __init__(self, parent, driver, degree, speed=TURN_SPEED):
+        Activity.__init__(self, parent, driver)
+        self.degree = degree
+        self.direction = 1 if degree > 0 else -1
+        self.speed = abs(speed)
+        self.step = (CONST.SLEEP / 1000) * speed
+        self.start_angle = None
+
+    def start(self):
+        self.turtle.stop()
+        self.start_angle = self.turtle.get_current_angle()
+        self.turtle.set_speed(0, self.direction * self.speed)
+
+    def perform(self):
+        Activity.perform_init(self)
+
+        angle = self.turtle.get_current_angle()
+        if abs(self.degree - (angle - self.start_angle)) > self.step / 2:
+            return
+
+        self.turtle.stop()
         return self.end()
 
 
@@ -119,13 +154,13 @@ class MoveStraight(Activity):
 
     def start(self):
         self.turtle.stop()
-        self.start_pos = self.turtle.get_current_position()
+        self.start_pos = self.turtle.get_current_coors()
         self.turtle.set_speed(self.speed, 0)
 
     def perform(self):
         Activity.perform_init(self)
 
-        pos = self.turtle.get_current_position()
+        pos = self.turtle.get_current_coors()
         if self.dist - np.linalg.norm(pos - self.start_pos) < self.step / 2:
             self.turtle.stop()
             return self.end()

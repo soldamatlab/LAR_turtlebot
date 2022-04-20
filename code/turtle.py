@@ -128,8 +128,18 @@ class Turtle:
     def get_odometry(self):
         return self.bot.get_odometry()
 
-    # [x, z]
-    # x ... right, z ... forward
+    # x, z, angle
     def get_current_position(self):
         odo = self.get_odometry()
+        return np.array([-odo[1], odo[0], odo[2]])
+
+    # [x, z]
+    # x ... right, z ... forward
+    def get_current_coors(self):
+        odo = self.get_odometry()
         return np.array([-odo[1], odo[0]])
+
+    # <-pi,+pi>, left: positive, right: negative, forward: zero, backwards: +-pi
+    def get_current_angle(self):
+        odo = self.get_odometry()
+        return odo[2]
