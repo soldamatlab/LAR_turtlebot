@@ -4,7 +4,7 @@ from camera import *
 import time
 import math
 
-INFO = True  # TODO
+INFO = False  # TODO
 FORWARD_SPEED = 0.2
 TURN_SPEED = np.pi/8
 HEIGHT_DIFF_FACTOR = 1.05
@@ -496,7 +496,8 @@ class ScanForNearest(Activity):
         if self.window:
             self.w_bin.show(bin_to_rgb(bin_all_colors))
 
-        self.parent.ret = self.nearest_coors, self.nearest_dist, self.nearest_color
+        transformed_coors = transform_coors(self.driver.turtle.get_current_position(), self.nearest_coors)
+        self.parent.ret = transformed_coors, self.nearest_dist, self.nearest_color
         return self.end()
 
 
@@ -518,6 +519,7 @@ class BypassStick(Activity):
         self.second = None
         self.finish = None
         self.forward_angle = None
+        self.step = None
 
     def start(self):
         self.turtle.stop()  # safety
@@ -526,7 +528,6 @@ class BypassStick(Activity):
         left_dir = np.array([-forward_dir[1], forward_dir[0]])
         gap = CONST.ROBOT_WIDTH + self.reserve
 
-        self.step = None
         self.center = (self.current_stick + self.next_stick) / 2
         if self.next_color == CONST.RED:
             self.first = self.next_stick - (forward_dir * gap) + (left_dir * gap)
