@@ -1,7 +1,6 @@
 import CONST
 import numpy as np
 from camera import *
-import time
 import math
 from dance import dance
 
