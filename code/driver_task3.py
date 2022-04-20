@@ -428,6 +428,10 @@ class GotoCoors(Activity):
             if move_vec[0] > 0:
                 alpha *= -1
         alpha -= start_angle
+        if alpha > np.pi:
+            alpha -= 2*np.pi
+        elif alpha < -np.pi:
+            alpha += 2*np.pi
         self.alpha = alpha
 
     def perform(self):
