@@ -15,6 +15,7 @@ MAX_GATE_AREA_DIFF = 20000
 GATE_TURN_OFFSET = CONST.ROBOT_WIDTH/2 + 0.05
 GATE_STICK_MIN_AREA = 3000
 STICK_PASS_RESERVE = 0.05
+FINAL_GATE_OVERSHOOT = (CONST.ROBOT_WIDTH / 2)
 
 
 class Driver:
@@ -147,7 +148,7 @@ class ThirdTask(Activity):
 
                 if stick_color == CONST.GREEN:
                     self.finish_passed = True
-                    return self.do(PassGate(self, self.driver, fov=FOV_GREEN, find_attempts=0, window=self.window))
+                    return self.do(PassGate(self, self.driver, fov=FOV_GREEN, find_attempts=0, window=self.window, overshoot=FINAL_GATE_OVERSHOOT))
                 else:
                     return self.do(PassStick(self, self.driver, self.prev_stick, self.prev_color, stick_coors, stick_color))
 
