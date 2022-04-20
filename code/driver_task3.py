@@ -153,7 +153,6 @@ class ThirdTask(Activity):
                 else:
                     return self.do(PassStick(self, self.driver, self.prev_stick, self.prev_color, stick_coors, stick_color))
 
-        dance()
         return self.end()
 
 
