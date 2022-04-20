@@ -7,6 +7,9 @@ import math
 INFO = False  # TODO
 FORWARD_SPEED = 0.2
 TURN_SPEED = np.pi/8
+HEIGHT_DIFF_FACTOR = 1.05
+FOV_GREEN = (60 + 20) * 2*np.pi / 360
+START_GATE_FIND_ATTEMPTS = 1
 
 
 class Driver:
@@ -102,8 +105,107 @@ class ThirdTask(Activity):
             return self.activity.perform()
 
         if self.activity is None:
-            return self.do(GotoCoors(self, self.driver, [0.2, 0.]))
+            return self.do(FindGate(self, self.driver, CONST.GREEN, fov=FOV_GREEN, attempts=START_GATE_FIND_ATTEMPTS))
 
+        return self.end()
+
+
+# Find gate of given color by turning and center itself on it.
+# Return the angle at which the gate has been found or None if run out of attempts.
+class FindGate(Activity):
+
+    def __init__(self, parent, driver, color, fov=None, init_dir=1, speed=TURN_SPEED, window=False,
+                 height_diff_factor=HEIGHT_DIFF_FACTOR,
+                 center_limit_min=2,
+                 center_limit_step=2,
+                 center_limit_max=24,
+                 attempts=0,  # 1 attempt means left,center,right,center within the fov; set to 0 for unlimited attempts
+                 ):
+        Activity.__init__(self, parent, driver)
+        self.color = color
+        self.speed = speed
+        self.fov = None if fov is None else abs(fov)
+        self.height_diff_factor = height_diff_factor
+        self.center_limit_min = center_limit_min  # in pixels
+        self.center_limit_step = center_limit_step  # in pixels
+        self.center_limit_max = center_limit_max  # in pixels
+        self.center_limit = center_limit_min
+        self.window = window
+        self.w_bin = None
+        self.dir = -1 if init_dir < 0 else 1
+        self.max_attempts = attempts
+        self.half_turns = 0
+        self.last_angle = None
+        self.start_angle = None
+
+    def start(self):
+        self.turtle.stop()
+        self.start_angle = self.turtle.get_current_angle()
+        if self.window:
+            self.w_bin = Window("FindTwoSticks")
+
+    def perform(self):
+        Activity.perform_init(self)
+
+        # Process image
+        hsv = self.turtle.get_hsv_image()
+        bin_img = img_threshold(hsv, self.color)
+        sticks = self.driver.turtle.get_segments(self.color, bin_img=bin_img)
+
+        # Testing window
+        if self.window:
+            self.w_bin.show(bin_to_rgb(bin_img))
+
+        if sticks.count < 2:
+            self.turtle.set_speed(0, self.dir * self.speed)
+            return self.continue_search()
+
+        # Pick A,B
+        args = np.argsort(sticks.heights())
+        A_height = sticks.height(args[-1])
+        B_height = sticks.height(args[-2])
+        A_centroid = sticks.centroids[args[-1]]
+        B_centroid = sticks.centroids[args[-2]]
+
+        # Check same height
+        if (A_height / B_height) > self.height_diff_factor:
+            self.turtle.set_speed(0, self.dir * self.speed)
+            return self.continue_search()
+
+        # Center on sticks
+        center = (A_centroid + B_centroid) / 2
+        diff = center[0] - (np.shape(bin_img)[1] / 2)
+        if diff < 0:
+            new_dir = 1
+        else:
+            new_dir = -1
+        if new_dir != self.dir:
+            if abs(diff) < self.center_limit:
+                return self.done()
+            elif self.center_limit < self.center_limit_max:
+                self.center_limit += self.center_limit_step
+        self.dir = new_dir
+        self.turtle.set_speed(0, self.dir * self.speed)
+
+    def continue_search(self):
+        # Keep in FOV
+        if self.fov is not None:
+            angle = (self.turtle.get_current_angle() - self.start_angle)
+            if abs(angle) > self.fov:
+                self.dir = -1 if angle > 0 else 1
+                self.turtle.set_speed(0, self.dir * self.speed)
+            if (self.max_attempts > 0) and (self.last_angle is not None) and (self.last_angle * angle) < 0:
+                self.half_turns += 1
+                if self.half_turns / 2 >= self.max_attempts:
+                    self.parent.ret = None
+                    return self.end()
+            self.last_angle = angle
+        return
+
+    def done(self):
+        self.turtle.stop()
+        angle = self.turtle.get_current_angle()
+        self.parent.ret = angle
         return self.end()
 
 
