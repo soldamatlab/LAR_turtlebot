@@ -115,17 +115,17 @@ class MoveStraight(Activity):
         self.dist = dist
         self.speed = speed
         self.step = self.speed * (CONST.SLEEP / 1000)
-        self.start = None
+        self.start_pos = None
 
     def start(self):
         self.turtle.stop()
-        self.start = self.turtle.get_current_position()
+        self.start_pos = self.turtle.get_current_position()
         self.turtle.set_speed(self.speed, 0)
 
     def perform(self):
         Activity.perform_init(self)
 
         pos = self.turtle.get_current_position()
-        if self.dist - np.linalg.norm(pos - self.start) < self.step / 2:
+        if self.dist - np.linalg.norm(pos - self.start_pos) < self.step / 2:
             self.turtle.stop()
             return self.end()
