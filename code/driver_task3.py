@@ -10,7 +10,7 @@ TURN_SPEED = np.pi/8
 HEIGHT_DIFF_FACTOR = 1.05
 FOV_GREEN = (60 + 20) * 2*np.pi / 360
 START_GATE_FIND_ATTEMPTS = 1
-MAX_GATE_AREA_DIFF = 1000
+MAX_GATE_AREA_DIFF = 1500
 
 
 class Driver:
@@ -169,6 +169,7 @@ class FindGate(Activity):
         # Check area diff
         if (abs(sticks.area(A) - sticks.area(B))) > MAX_GATE_AREA_DIFF:
             print("AREA DIFF TOO LARGE")  #TODO
+            print(abs(sticks.area(A) - sticks.area(B)))
             self.turtle.set_speed(0, self.dir * self.speed)
             return self.continue_search()
 
