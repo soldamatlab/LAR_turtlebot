@@ -10,7 +10,11 @@ TURN_SPEED = np.pi/8
 HEIGHT_DIFF_FACTOR = 1.05
 FOV_GREEN = (60 + 20) * 2*np.pi / 360
 START_GATE_FIND_ATTEMPTS = 1
+START_GATE_BACKWARD_DIST = 0.1
 MAX_GATE_AREA_DIFF = 20000
+GATE_TURN_OFFSET = CONST.ROBOT_WIDTH/2 + 0.05
+GATE_OVERSHOOT = 0.05  # CONST.ROBOT_WIDTH/2
+GATE_STICK_MIN_AREA = 3000
 
 
 class Driver:
@@ -111,6 +115,106 @@ class ThirdTask(Activity):
         return self.end()
 
 
+# Pass the starting gate.
+# If find [FindGate] fails, the bot moves backwards and tries again.
+class PassStartGate(Activity):
+
+    def __init__(self, parent, driver, color=CONST.GREEN, fov=None, init_dir=1, window=False,
+                 turn_offset=GATE_TURN_OFFSET,
+                 overshoot=GATE_OVERSHOOT,
+                 find_attempts=START_GATE_FIND_ATTEMPTS,
+                 backward_dist=START_GATE_BACKWARD_DIST,
+                 ):
+        Activity.__init__(self, parent, driver)
+        self.color = color
+        self.fov = fov
+        self.init_dir = init_dir
+        self.window = window
+        self.turn_offset = turn_offset
+        self.overshoot = overshoot
+        self.step = 0
+        self.second_step = None
+        self.side = None
+        self.find_attempts = find_attempts
+        self.backward_dist = backward_dist
+
+    def perform(self):
+        Activity.perform_init(self)
+        if self.busy:
+            return self.activity.perform()
+
+        if (self.activity is None)\
+                or (isinstance(self.activity, MoveStraight))\
+                or (isinstance(self.activity, MeasureGateCoordinates) and self.ret is None):
+            return self.do(FindGate(self, self.driver, self.color, attempts=self.find_attempts, fov=self.fov, init_dir=self.init_dir, window=self.window))
+
+        if isinstance(self.activity, FindGate):
+            side = self.pop_ret()
+            if side is None:
+                return self.do(MoveStraight(self, self.driver, self.backward_dist, speed=-FORWARD_SPEED))
+            else:
+                self.side = -1 if side < 0 else 1
+                return self.do(MeasureGateCoordinates(self, self.driver, self.color))
+
+        if isinstance(self.activity, MeasureGateCoordinates):
+            A, B = self.pop_ret()
+            return self.do(GoThroughGate(self, self.driver, A, B, turn_offset=self.turn_offset, overshoot=self.overshoot))
+
+        if isinstance(self.activity, GoThroughGate):
+            self.parent.ret = self.side
+            return self.end()
+
+
+# Go through a gate given the coordinates of its two sticks.
+class GoThroughGate(Activity):
+
+    def __init__(self, parent, driver, stick_A, stick_B,
+                 turn_offset=GATE_TURN_OFFSET,
+                 overshoot=GATE_OVERSHOOT,
+    ):
+        Activity.__init__(self, parent, driver)
+        self.A = stick_A
+        self.B = stick_B
+        self.turn_offset = turn_offset
+        self.overshoot = overshoot
+        self.step = 0
+        self.gate_center = None
+        self.midturn_point = None
+
+    def start(self):
+        self.gate_center = (self.A + self.B) / 2
+        self.midturn_point = self.calculate_midturn_point(self.A, self.B, self.gate_center, self.turn_offset)
+
+    def perform(self):
+        Activity.perform_init(self)
+        if self.busy:
+            return self.activity.perform()
+
+        if self.step == 0:
+            self.step = 1
+            return self.do(GotoCoors(self, self.driver, self.midturn_point))
+
+        if self.step == 1:
+            self.step = 2
+            return self.do(GotoCoors(self, self.driver, self.gate_center))
+
+        if self.step == 2:
+            self.step = 3
+            return self.do(MoveStraight(self, self.driver, self.overshoot))
+
+        return self.end()
+
+    # Calculate the first step of the turn. (Vector from start of the turn to the mid-turn point.)
+    # B has higher x-coordinate than A
+    @staticmethod
+    def calculate_midturn_point(A, B, C, turn_offset):
+        D = B - A
+        N = np.array([D[1], -D[0]])
+        N /= math.sqrt(N[0] ** 2 + N[1] ** 2)
+        midturn = C + turn_offset * N
+        return midturn
+
+
 # Find gate of given color by turning and center itself on it.
 # Return the angle at which the gate has been found or None if run out of attempts.
 class FindGate(Activity):
@@ -151,7 +255,7 @@ class FindGate(Activity):
         # Process image
         hsv = self.turtle.get_hsv_image()
         bin_img = img_threshold(hsv, self.color)
-        sticks = self.driver.turtle.get_segments(self.color, bin_img=bin_img)
+        sticks = self.driver.turtle.get_segments(self.color, bin_img=bin_img, min_area=GATE_STICK_MIN_AREA)
 
         # Testing window
         if self.window:
@@ -166,19 +270,15 @@ class FindGate(Activity):
         A = args[-1]
         B = args[-2]
 
-        print(sticks.area(A))
-        print(sticks.area(B))
-        print(abs(sticks.area(A) - sticks.area(B)))
-
-        # Check area diff
-        if (abs(sticks.area(A) - sticks.area(B))) > MAX_GATE_AREA_DIFF:
-            print("AREA DIFF TOO LARGE")  #TODO
-            self.turtle.set_speed(0, self.dir * self.speed)
-            return self.continue_search()
+        # # Check area diff
+        # if (abs(sticks.area(A) - sticks.area(B))) > MAX_GATE_AREA_DIFF:
+        #     print("AREA DIFF TOO LARGE")  #TODO
+        #     self.turtle.set_speed(0, self.dir * self.speed)
+        #     return self.continue_search()
 
         # Center on sticks
-        A_centroid = sticks.centroids[args[-1]]
-        B_centroid = sticks.centroids[args[-2]]
+        A_centroid = sticks.centroids[A]
+        B_centroid = sticks.centroids[B]
 
         center = (A_centroid + B_centroid) / 2
         diff = center[0] - (np.shape(bin_img)[1] / 2)
@@ -213,6 +313,51 @@ class FindGate(Activity):
         self.turtle.stop()
         angle = self.turtle.get_current_angle()
         self.parent.ret = angle
+        return self.end()
+
+
+# Measure a distance of the closest gate of the given color. (without turning)
+# return None ... if all attempts fail
+# return (A, B) ... coordinates, A is left stick, B is right stick
+class MeasureGateCoordinates(Activity):
+
+    def __init__(self, parent, driver, color,
+                 attempts=12,
+                 ):
+        Activity.__init__(self, parent, driver)
+        self.color = color
+        self.attempts = attempts
+
+    def perform(self):
+        Activity.perform_init(self)
+
+        if self.attempts <= 0:
+            if INFO: print("\n MeasureGateDist FAILED")
+            self.parent.ret = None
+            return self.end()
+
+        sticks = self.driver.turtle.get_segments(self.color)
+        if sticks.count < 2:
+            self.attempts -= 1
+            return self.perform()
+
+        pc = self.turtle.get_point_cloud(convert_to_bot=True)
+        sticks.calculate_coors(pc)
+
+        # Make sure A left, B right
+        args = np.argsort(sticks.areas())
+        A = sticks.coors[args[-1]]
+        B = sticks.coors[args[-2]]
+        if A[0] > B[0]:
+            tmp = A
+            A = B
+            B = tmp
+
+        # Transform coordinates into real world.
+        current_position = self.turtle.get_current_position()
+        A_real = transform_coors(current_position, A)
+        B_real = transform_coors(current_position, B)
+        self.parent.ret = (A_real, B_real)
         return self.end()
 
 
@@ -301,3 +446,14 @@ class MoveStraight(Activity):
         if self.dist - np.linalg.norm(pos - self.start_pos) < self.step / 2:
             self.turtle.stop()
             return self.end()
+
+
+def transform_coors(bot_position, cam_coordinates):
+    cam_coors = [cam_coordinates[0], cam_coordinates[2]]
+    return rotate_vector(cam_coors, bot_position[2]) + bot_position[0:2]
+
+
+def rotate_vector(vec, alpha):
+    s, c = np.sin(alpha), np.cos(alpha)
+    R = np.array([[c, -s], [s, c]])
+    return np.matmul(R, vec)
