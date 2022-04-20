@@ -5,7 +5,7 @@ from dance import dance
 from driver_task3 import Driver
 import CONST
 
-turtle = None
+turtle = Turtlebot()
 driver = None
 running = False
 
