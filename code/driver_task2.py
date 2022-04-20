@@ -1,5 +1,3 @@
-import math
-
 import CONST
 import numpy as np
 from camera import *

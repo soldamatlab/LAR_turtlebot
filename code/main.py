@@ -6,7 +6,7 @@ import cv2
 from camera import *
 from dance import dance
 from color_harvest import *
-from driver import Driver
+from driver_task3 import Driver
 import CONST
 
 turtle = None
@@ -19,12 +19,10 @@ def button_0():
     running = not running
 
 def button_1():
-    K = turtle.get_depth_K()
-    print(K)
-    print(np.linalg.inv(K))
+    return None
 
 def button_2():
-    turtle.get_segments(CONST.GREEN, info=True)
+    return None
 
 def bumper():
     global running
@@ -45,9 +43,6 @@ if __name__ == '__main__':
     turtle.reset_odometry()
 
     driver = Driver(turtle)
-
-    # w_rgb = Window("RGB")
-    # w_bin = Window("BIN")
 
     # INIT ACTIONS
     # rate.sleep()
