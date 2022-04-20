@@ -477,7 +477,7 @@ class ScanForNearest(Activity):
         # Process image
         hsv = self.turtle.get_hsv_image()
         if self.window:
-            bin_all_colors = np.zeros_like(np.shape(hsv)[0:2])
+            bin_all_colors = np.zeros_like(np.shape(hsv[:, :, 0]))
 
         for color in [CONST.RED, CONST.BLUE, CONST.GREEN]:
             bin_img = img_threshold(hsv, color)
