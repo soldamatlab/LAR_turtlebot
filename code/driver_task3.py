@@ -205,7 +205,7 @@ class GoThroughGate(Activity):
 
     def __init__(self, parent, driver, stick_A, stick_B,
                  turn_offset=GATE_TURN_OFFSET,
-                 overshoot=GATE_OVERSHOOT,
+                 overshoot=0,
     ):
         Activity.__init__(self, parent, driver)
         self.A = stick_A
