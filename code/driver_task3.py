@@ -523,7 +523,7 @@ class BypassStick(Activity):
         self.turtle.stop()  # safety
         forward_dir = self.next_stick - self.current_stick
         forward_dir /= np.linalg.norm(forward_dir)
-        left_dir = np.array(-[forward_dir[1], forward_dir[0]])
+        left_dir = np.array([-forward_dir[1], forward_dir[0]])
         gap = CONST.ROBOT_WIDTH + self.reserve
 
         self.step = None
