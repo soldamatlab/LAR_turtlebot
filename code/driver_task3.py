@@ -158,7 +158,6 @@ class FindGate(Activity):
 
         if sticks.count < 2:
             self.turtle.set_speed(0, self.dir * self.speed)
-            print("MALO STICKU")  #TODO
             return self.continue_search()
 
         # Pick A,B
@@ -170,8 +169,11 @@ class FindGate(Activity):
 
         # Check same height
         if (A_height / B_height) > self.height_diff_factor:
+            print("DEBUG")
+            print(A_height)
+            print(B_height)
+            print(A_height / B_height) # TODO
             self.turtle.set_speed(0, self.dir * self.speed)
-            print("JINAK VELKY")  #TODO
             return self.continue_search()
 
         # Center on sticks
