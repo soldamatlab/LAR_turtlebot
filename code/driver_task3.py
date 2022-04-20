@@ -110,6 +110,9 @@ class ThirdTask(Activity):
             return self.activity.perform()
 
         if self.activity is None:
+            return self.do(GotoCoors(self, self.driver, [0.2, 0.2]))
+
+        if isinstance(self.activity, GotoCoors):
             return self.do(MeasureGateCoordinates(self, self.driver, CONST.GREEN))
             # return self.do(PassStartGate(self, self.driver, fov=FOV_GREEN))
 
