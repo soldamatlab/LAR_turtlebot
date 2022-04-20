@@ -547,8 +547,7 @@ class PassStick(Activity):
             self.zeroth = self.current_stick + (forward_dir * gap) + (left_dir * gap)
         elif self.current_color == CONST.BLUE:
             self.zeroth = self.current_stick + (forward_dir * gap) - (left_dir * gap)
-        else:
-            raise ValueError("BypassStick [current_color] needs to be RED or BLUE.")
+
         if self.next_color == CONST.RED:
             self.first = self.next_stick - (forward_dir * gap) + (left_dir * gap)
             self.second = self.next_stick + (forward_dir * gap) + (left_dir * gap)
