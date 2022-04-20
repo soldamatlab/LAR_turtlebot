@@ -488,7 +488,7 @@ class ScanForNearest(Activity):
                 continue
             nearest_idx = np.argsort(sticks.dists)[-1]
             min_dist = sticks.dists[nearest_idx]
-            if (min_dist is None) or (min_dist < self.nearest_dist):
+            if (self.nearest_dist is None) or (min_dist < self.nearest_dist):
                 self.nearest_dist = min_dist
                 self.nearest_coors = sticks.get_flat_coors[nearest_idx]
                 self.nearest_color = color
