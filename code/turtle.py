@@ -101,6 +101,7 @@ class Turtle:
         target_ratio=CONST.TARGET_RATIO,
         max_ratio_diff=CONST.MAX_RATIO_DIFF,
         get_coors=False,
+        get_dists=False,
         info=False,
     ):
         if bin_img is None:
@@ -113,6 +114,8 @@ class Turtle:
             if pc is None:
                 pc = self.get_point_cloud(convert_to_bot=True)
             segments.calculate_coors(pc)
+            if get_dists:
+                segments.calculate_dists()
         return segments
 
     def play_sound(self):

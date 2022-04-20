@@ -23,6 +23,7 @@ class Segments:
         self.params = params  # params of each segment: params[i] = [leftest, highest, width, height, area]
         self.centroids = centroids  # centroid of each segment: [down, right]
         self.coors = None  # median coors of each segment, x->right, y->down, z->forward
+        self.dists = None  # distances from bot at the moment of the picute being taken
 
     def leftest(self, i):
         return self.params[i][0]
@@ -54,6 +55,12 @@ class Segments:
     def areas(self):
         return [self.area(i) for i in range(0, self.count)]
 
+    def get_flat_coors(self, i):
+        return [self.coors[i][0], self.coors[i][2]]
+
+    def flat_coors(self):
+        return [self.get_flat_coors(i) for i in range(self.count)]
+
     def remove(self, index):
         self.count -= 1
         self.params.pop(index)
@@ -81,6 +88,12 @@ class Segments:
             coors.append(np.median(values, axis=0))
 
         self.coors = coors
+
+    # Coors have to be calculated already!
+    def calculate_dists(self):
+        self.dists = self.count * [0.]
+        for i in range(self.count):
+            self.dists[i] = np.linalg.norm(self.get_flat_coors(i))
 
     # # Calculate coors of a segment as a median of a few central pixels.
     # def calculate_coors(self, pc, index):

@@ -459,7 +459,7 @@ class FindGate(Activity):
             self.turtle.set_speed(0, self.dir * self.speed)
             return self.continue_search()
 
-        # Center on sticks
+        # Center of sticks
         center = (A_coors + B_coors) / 2
         diff = center[0] - (np.shape(bin_img)[1] / 2)
         if diff < 0:
