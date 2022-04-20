@@ -110,9 +110,9 @@ class ThirdTask(Activity):
             return self.activity.perform()
 
         if self.activity is None:
-            return self.do(MoveStraight(self, self.driver, 0.5))
+            return self.do(GotoCoors(self, self.driver, [0.5, 0.5]))
 
-        if isinstance(self.activity, MoveStraight):
+        if isinstance(self.activity, GotoCoors):
             return self.do(PassStartGate(self, self.driver, fov=FOV_GREEN))
 
         return self.end()
