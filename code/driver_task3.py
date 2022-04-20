@@ -100,6 +100,10 @@ class ThirdTask(Activity):
 
     def __init__(self, parent, driver):
         Activity.__init__(self, parent, driver)
+        self.start_passed = False
+        self.finish_passed = False
+        self.prev_stick = None
+        self.prev_color = None
 
     def start(self):
         self.turtle.stop()
@@ -110,57 +114,38 @@ class ThirdTask(Activity):
         if self.busy:
             return self.activity.perform()
 
-        if self.activity is None:
-            return self.do(MoveStraight(self, self.driver, 0.1))
+        if not self.start_passed:
+            self.start_passed = True
+            return self.do(PassGate(self, self.driver, fov=FOV_GREEN))
 
-        if isinstance(self.activity, MoveStraight):
-            return self.do(Turn(self, self.driver, np.pi))
+        if self.start_passed and not self.finish_passed:
+            if isinstance(self.activity, PassGate):
+                A, B = self.pop_ret()
+                self.prev_stick = (A + B) / 2
+                return self.do(FindNearestStick(self, self.driver, False, init_turn=np.pi/6, turn_offset=np.pi))
 
-        if isinstance(self.activity, Turn):
-            return self.do(GotoCoors(self, self.driver, [-0.1, 0.1]))
+            if isinstance(self.activity, BypassStick):
+                self.prev_stick, angle = self.pop_ret()
+                turn_left = self.prev_color == CONST.RED
+                return self.do(FindNearestStick(self, self.driver, turn_left=turn_left, turn_offset=np.pi))
+
+            if isinstance(self.activity, FindNearestStick):
+                stick_coors, stick_dist, stick_color = self.pop_ret()
+                self.prev_color = stick_color
+
+                if stick_color == CONST.GREEN:
+                    self.finish_passed = True
+                    return self.do(PassGate(self, self.driver, fov=FOV_GREEN, find_attempts=0))
+                else:
+                    return self.do(BypassStick(self, self.driver, stick_coors, self.prev_stick, stick_color))
 
         return self.end()
-
-
-# class ThirdTask(Activity):
-#
-#     def __init__(self, parent, driver):
-#         Activity.__init__(self, parent, driver)
-#         self.start_passed = False
-#         self.finish_passed = False
-#
-#     def start(self):
-#         self.turtle.stop()
-#         self.turtle.reset_odometry()
-#
-#     def perform(self):
-#         Activity.perform_init(self)
-#         if self.busy:
-#             return self.activity.perform()
-#
-#         if not self.start_passed:
-#             self.start_passed = True
-#             return self.do(PassGate(self, self.driver, fov=FOV_GREEN))
-#
-#         if self.start_passed and not self.finish_passed:
-#             if isinstance(self.activity, FindStick):
-#                 stick_coors, stick_color = self.pop_ret()
-#                 if stick_color == CONST.GREEN:
-#                     self.finish_passed = True
-#                     return self.do(PassGate(self, self.driver, fov=FOV_GREEN, find_attempts=0))
-#                 else:
-#                     # TODO
-#                     return self.do(PassStick)
-#             else:
-#                 # TODO
-#                 return self.do(FindStick)
-#
-#         return self.end()
 
 
 # Pass a gate.
 # If find [FindGate] fails, the bot moves backwards and tries again.
 # Set [find_attempts] to 0 for unlimited attempts. (This means no backing up.)
+# Return coordinates of the gate sticks.
 class PassGate(Activity):
 
     def __init__(self, parent, driver, color=CONST.GREEN, fov=None, init_dir=1, window=False,
@@ -181,6 +166,8 @@ class PassGate(Activity):
         self.side = None
         self.find_attempts = find_attempts
         self.backward_dist = backward_dist
+        self.A = None
+        self.B = None
 
     def perform(self):
         Activity.perform_init(self)
@@ -201,11 +188,11 @@ class PassGate(Activity):
                 return self.do(MeasureGateCoordinates(self, self.driver, self.color))
 
         if isinstance(self.activity, MeasureGateCoordinates):
-            A, B = self.pop_ret()
-            return self.do(GoThroughGate(self, self.driver, A, B, turn_offset=self.turn_offset, overshoot=self.overshoot))
+            self.A, self.B = self.pop_ret()
+            return self.do(GoThroughGate(self, self.driver, self.A, self.B, turn_offset=self.turn_offset, overshoot=self.overshoot))
 
         if isinstance(self.activity, GoThroughGate):
-            self.parent.ret = self.side
+            self.parent.ret = self.A, self.B
             return self.end()
 
 
@@ -404,29 +391,40 @@ class MeasureGateCoordinates(Activity):
         return self.end()
 
 
+# Find the nearest stick (by measuring coordinates).
+# Return coors, dist, color of the nearest stick.
 class FindNearestStick(Activity):
 
     def __init__(self, parent, driver, turn_left,
                  turn_offset=np.pi,
                  n_subturns=4,
                  speed=TURN_SPEED,
-                 window=False):
+                 window=False,
+                 init_turn=0,
+                 ):
         Activity.__init__(self, parent, driver)
-        self.look_left = turn_left
+        self.turn_left = turn_left
         self.turn_offset = turn_offset
         self.n_subturns = n_subturns
         self.subturn_offset = None
         self.subturns_done = 0
+        self.init_turn = init_turn
 
         self.speed = speed
         self.window = window
         self.w_bin = None
+
+        self.nearest_coors = None
+        self.nearest_dist = None
+        self.nearest_color = None
     
     def start(self):
         self.turtle.stop()  # safety
         if window:
             self.w_bin = Window("FindNearestStick")
-        self.subturn_offset = self.turn_offset / self.n_subturns
+        subturn_offset = self.turn_offset / self.n_subturns
+        subturn_offset *= 1 if self.turn_left else -1
+        self.subturn_offset = subturn_offset
     
     def perform(self):
         Activity.perform_init(self)
@@ -434,15 +432,22 @@ class FindNearestStick(Activity):
             return self.activity.perform()
 
         if self.activity is None:
+            return self.do(Turn(self, self.driver, self.init_turn))
+
+        if isinstance(self.activity, Turn):
             return self.do(ScanForNearest(self, self.driver, window=self.window, w_bin=self.w_bin))
 
         if isinstance(self.activity, ScanForNearest):
+            coors, dist, color = self.pop_ret()
+            if self.nearest_dist is None or dist < self.nearest_dist:
+                self.nearest_coors, self.nearest_dist, self.nearest_color = coors, dist, color
+
             if self.subturns_done < self.n_subturns:
                 self.subturns_done += 1
                 return self.do(Turn(self, self.driver, self.subturn_offset))
 
             else:
-                print("TODO")
+                self.parent.ret = self.nearest_coors, self.nearest_dist, self.nearest_color
                 return self.end()
 
 
@@ -484,10 +489,12 @@ class ScanForNearest(Activity):
         if self.window:
             self.w_bin.show(bin_to_rgb(bin_all_colors))
 
-        self.parent.ret = self.nearest_coors, self.nearest_color
+        self.parent.ret = self.nearest_coors, self.nearest_dist, self.nearest_color
         return self.end()
 
 
+# Bypass a stick.
+# Return  coordinates of the bypassed stick and the angle of approach.
 class BypassStick(Activity):
 
     def __init__(self, parent, driver, current_stick, next_stick, next_color,
