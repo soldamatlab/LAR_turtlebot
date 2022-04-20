@@ -110,14 +110,7 @@ class ThirdTask(Activity):
             return self.activity.perform()
 
         if self.activity is None:
-            return self.do(MoveStraight(self, self.driver, 0.5))
-
-        if isinstance(self.activity, MoveStraight):
-            return self.do(MeasureGateCoordinates(self, self.driver, CONST.GREEN))
-
-        if isinstance(self.activity, MeasureGateCoordinates):
-            print("GATE COORDINATES")
-            print(self.pop_ret())
+            return self.do(GotoCoors(self, self.driver, [0.5, 0.5]))
 
         return self.end()
 
@@ -374,19 +367,23 @@ class GotoCoors(Activity):
     def __init__(self, parent, driver, target):
         Activity.__init__(self, parent, driver)
         self.target = target
-        self.start_pos = None
-
-        x = target[0]
-        z = target[1]
-        self.dist = np.sqrt(x ** 2 + z ** 2)
-        alpha = np.arccos(z / self.dist)
-        if x > 0:
-            alpha *= -1
-        self.alpha = alpha
+        self.dist = None
+        self.alpha = None
 
     def start(self):
         self.turtle.stop()
-        self.start_pos = self.turtle.get_current_position()
+        start_pos = self.turtle.get_current_position()
+        start_coors = start_pos[0:2]
+        start_angle = start_pos[2]
+
+        move_vec = self.target - start_coors
+        self.dist = np.sqrt(move_vec[0] ** 2 + move_vec[1] ** 2)
+
+        alpha = np.arccos(move_vec[1] / self.dist)
+        if move_vec[0] > 0:
+            alpha *= -1
+        alpha += start_angle
+        self.alpha = alpha
 
     def perform(self):
         Activity.perform_init(self)
