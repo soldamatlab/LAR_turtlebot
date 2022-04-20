@@ -496,8 +496,11 @@ class ScanForNearest(Activity):
         if self.window:
             self.w_bin.show(bin_to_rgb(bin_all_colors))
 
-        transformed_coors = transform_coors(self.driver.turtle.get_current_position(), self.nearest_coors)
-        self.parent.ret = transformed_coors, self.nearest_dist, self.nearest_color
+        if self.nearest_coors is not None:
+            coors = transform_coors(self.driver.turtle.get_current_position(), self.nearest_coors)
+        else:
+            coors = None
+        self.parent.ret = coors, self.nearest_dist, self.nearest_color
         return self.end()
 
 
