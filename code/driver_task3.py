@@ -10,7 +10,7 @@ TURN_SPEED = np.pi/8
 HEIGHT_DIFF_FACTOR = 1.05
 FOV_GREEN = (60 + 20) * 2*np.pi / 360
 START_GATE_FIND_ATTEMPTS = 1
-GREEN_GATE_DIST_LIMIT = 0.5 + 0.1
+MAX_GATE_AREA_DIFF = 1000
 
 
 class Driver:
@@ -151,7 +151,7 @@ class FindGate(Activity):
         # Process image
         hsv = self.turtle.get_hsv_image()
         bin_img = img_threshold(hsv, self.color)
-        sticks = self.driver.turtle.get_segments(self.color, bin_img=bin_img, get_coors=True)
+        sticks = self.driver.turtle.get_segments(self.color, bin_img=bin_img)
 
         # Testing window
         if self.window:
@@ -166,8 +166,9 @@ class FindGate(Activity):
         A = args[-1]
         B = args[-2]
 
-        # Check stick distance
-        if (np.linalg.norm(sticks.coors[A] - sticks.coors[B])) > GREEN_GATE_DIST_LIMIT:
+        # Check area diff
+        if (abs(sticks.area(A) - sticks.area(B))) > MAX_GATE_AREA_DIFF:
+            print("AREA DIFF TOO LARGE")  #TODO
             self.turtle.set_speed(0, self.dir * self.speed)
             return self.continue_search()
 
