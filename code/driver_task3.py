@@ -136,7 +136,7 @@ class ThirdTask(Activity):
                     self.finish_passed = True
                     return self.do(PassGate(self, self.driver, fov=FOV_GREEN, find_attempts=0, window=self.window))
                 else:
-                    return self.do(BypassStick(self, self.driver, stick_coors, self.prev_stick, stick_color))
+                    return self.do(BypassStick(self, self.driver, stick_coors, self.prev_color, self.prev_stick, stick_color))
 
         return self.end()
 
@@ -504,10 +504,11 @@ class ScanForNearest(Activity):
 # Return  coordinates of the bypassed stick and the angle of approach.
 class BypassStick(Activity):
 
-    def __init__(self, parent, driver, current_stick, next_stick, next_color,
+    def __init__(self, parent, driver, current_stick, current_color, next_stick, next_color,
                  reserve=0.05):
         Activity.__init__(self, parent, driver)
         self.current_stick = current_stick
+        self.current_color = current_color
         self.next_stick = next_stick
         self.next_color = next_color
         self.reserve = reserve
@@ -548,8 +549,12 @@ class BypassStick(Activity):
             return self.activity.perform()
 
         if self.activity is None:
-            step = 'center'
-            return self.do(GotoCoors(self, self.driver, self.center))
+            if self.next_color == self.current_color:
+                self.step = 'first'
+                return self.do(GotoCoors(self, self.driver, self.first))
+            else:
+                self.step = 'center'
+                return self.do(GotoCoors(self, self.driver, self.center))
 
         if isinstance(self.activity, GotoCoors):
             if self.step == 'center':
