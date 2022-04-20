@@ -5,8 +5,8 @@ import math
 from dance import dance
 
 INFO = True  # TODO
-FORWARD_SPEED = 0.5
-TURN_SPEED = np.pi/3
+FORWARD_SPEED = 0.4
+TURN_SPEED = np.pi/4
 FIND_GATE_TURN_SPEED = np.pi/6
 HEIGHT_DIFF_FACTOR = 1.05
 FOV_GREEN = (60 + 20) * 2*np.pi / 360
@@ -133,7 +133,7 @@ class ThirdTask(Activity):
                 self.prev_stick, angle, self.prev_color = self.pop_ret()
                 turn_left = self.prev_color == CONST.BLUE
                 self.last_find_stick_direction = turn_left
-                return self.do(FindNearestStick(self, self.driver, turn_left=turn_left, turn_offset=np.pi/2, window=self.window))
+                return self.do(FindNearestStick(self, self.driver, turn_left=turn_left, turn_offset=np.pi/3, window=self.window))
 
             if isinstance(self.activity, FindNearestStick):
                 stick_coors, stick_dist, stick_color = self.pop_ret()
@@ -145,7 +145,7 @@ class ThirdTask(Activity):
                     else:
                         turn_left = not self.last_find_stick_direction
                         self.last_find_stick_direction = turn_left
-                        return self.do(FindNearestStick(self, self.driver, turn_left=turn_left, turn_offset=np.pi/2, window=self.window))
+                        return self.do(FindNearestStick(self, self.driver, turn_left=turn_left, turn_offset=np.pi/3, window=self.window))
 
                 if stick_color == CONST.GREEN:
                     self.finish_passed = True
