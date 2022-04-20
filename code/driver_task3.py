@@ -161,6 +161,8 @@ class PassStartGate(Activity):
 
         if isinstance(self.activity, MeasureGateCoordinates):
             A, B = self.pop_ret()
+            print(A, B)
+            return
             return self.do(GoThroughGate(self, self.driver, A, B, turn_offset=self.turn_offset, overshoot=self.overshoot))
 
         if isinstance(self.activity, GoThroughGate):
