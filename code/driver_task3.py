@@ -13,7 +13,6 @@ START_GATE_FIND_ATTEMPTS = 1
 START_GATE_BACKWARD_DIST = 0.1
 MAX_GATE_AREA_DIFF = 20000
 GATE_TURN_OFFSET = CONST.ROBOT_WIDTH/2 + 0.05
-GATE_OVERSHOOT = 0.05  # CONST.ROBOT_WIDTH/2
 GATE_STICK_MIN_AREA = 3000
 
 
@@ -155,7 +154,7 @@ class PassGate(Activity):
 
     def __init__(self, parent, driver, color=CONST.GREEN, fov=None, init_dir=1, window=False,
                  turn_offset=GATE_TURN_OFFSET,
-                 overshoot=GATE_OVERSHOOT,
+                 overshoot=0,
                  find_attempts=START_GATE_FIND_ATTEMPTS,
                  backward_dist=START_GATE_BACKWARD_DIST,
                  ):
@@ -490,7 +489,7 @@ class ScanForNearest(Activity):
             min_dist = sticks.dists[nearest_idx]
             if (self.nearest_dist is None) or (min_dist < self.nearest_dist):
                 self.nearest_dist = min_dist
-                self.nearest_coors = sticks.get_flat_coors[nearest_idx]
+                self.nearest_coors = sticks.get_flat_coors(nearest_idx)
                 self.nearest_color = color
 
         # Testing window
