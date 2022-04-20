@@ -101,14 +101,42 @@ class ThirdTask(Activity):
         if self.busy:
             return self.activity.perform()
 
-        #TODO
-        print(self.turtle.get_current_position())
+        if self.activity is None:
+            return self.do(GotoCoors(self, self.driver, [0.2, 0.5]))
+
+        return self.end()
+
+
+# Move to the given coordinates. [x, z], x .. right, z .. forward
+class GotoCoors(Activity):
+
+    def __init__(self, parent, driver, target):
+        Activity.__init__(self, parent, driver)
+        self.target = target
+        self.start_pos = None
+
+        x = target[0]
+        z = target[1]
+        self.dist = np.sqrt(x ** 2 + z ** 2)
+        alpha = np.arccos(z / self.dist)
+        if x > 0:
+            alpha *= -1
+        self.alpha = alpha
+
+    def start(self):
+        self.turtle.stop()
+        self.start_pos = self.turtle.get_current_position()
+
+    def perform(self):
+        Activity.perform_init(self)
+        if self.busy:
+            return self.activity.perform()
 
         if self.activity is None:
-            return self.do(Turn(self, self.driver, np.pi / 2))
+            return self.do(Turn(self, self.driver, self.alpha))
 
         if isinstance(self.activity, Turn):
-            return self.do(MoveStraight(self, self.driver, 0.5))
+            return self.do(MoveStraight(self, self.driver, self.dist))
 
         return self.end()
 
