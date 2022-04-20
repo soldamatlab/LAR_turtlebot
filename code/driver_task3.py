@@ -489,7 +489,7 @@ class ScanForNearest(Activity):
             min_dist = sticks.dists[nearest_idx]
             if (self.nearest_dist is None) or (min_dist < self.nearest_dist):
                 self.nearest_dist = min_dist
-                self.nearest_coors = sticks.get_flat_coors(nearest_idx)
+                self.nearest_coors = sticks.coors[nearest_idx]
                 self.nearest_color = color
 
         # Testing window
