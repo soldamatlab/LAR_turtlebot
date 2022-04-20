@@ -10,6 +10,7 @@ TURN_SPEED = np.pi/8
 HEIGHT_DIFF_FACTOR = 1.05
 FOV_GREEN = (60 + 20) * 2*np.pi / 360
 START_GATE_FIND_ATTEMPTS = 1
+GREEN_GATE_DIST_LIMIT = 0.5 + 0.1
 
 
 class Driver:
@@ -150,7 +151,7 @@ class FindGate(Activity):
         # Process image
         hsv = self.turtle.get_hsv_image()
         bin_img = img_threshold(hsv, self.color)
-        sticks = self.driver.turtle.get_segments(self.color, bin_img=bin_img)
+        sticks = self.driver.turtle.get_segments(self.color, bin_img=bin_img, get_coors=True)
 
         # Testing window
         if self.window:
@@ -161,22 +162,19 @@ class FindGate(Activity):
             return self.continue_search()
 
         # Pick A,B
-        args = np.argsort(sticks.heights())
-        A_height = sticks.height(args[-1])
-        B_height = sticks.height(args[-2])
-        A_centroid = sticks.centroids[args[-1]]
-        B_centroid = sticks.centroids[args[-2]]
+        args = np.argsort(sticks.areas())
+        A = args[-1]
+        B = args[-2]
 
-        # Check same height
-        if (A_height / B_height) > self.height_diff_factor:
-            print("DEBUG")
-            print(A_height)
-            print(B_height)
-            print(A_height / B_height) # TODO
+        # Check stick distance
+        if (np.linalg.norm(sticks.coors[A] - sticks.coors[B])) > GREEN_GATE_DIST_LIMIT:
             self.turtle.set_speed(0, self.dir * self.speed)
             return self.continue_search()
 
         # Center on sticks
+        A_centroid = sticks.centroids[args[-1]]
+        B_centroid = sticks.centroids[args[-2]]
+
         center = (A_centroid + B_centroid) / 2
         diff = center[0] - (np.shape(bin_img)[1] / 2)
         if diff < 0:
