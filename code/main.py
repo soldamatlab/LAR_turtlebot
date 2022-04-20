@@ -4,7 +4,6 @@ from turtle import Turtle
 import numpy as np
 import cv2
 from camera import *
-from dance import dance
 from driver_task3 import Driver
 import CONST
 
