@@ -110,7 +110,7 @@ class ThirdTask(Activity):
             return self.activity.perform()
 
         if self.activity is None:
-            return self.do(GotoCoors(self, self.driver, [0.1,0.1]))
+            return self.do(MoveStraight(self, self.driver, 0.1))
 
         return self.end()
 
@@ -413,12 +413,15 @@ class GotoCoors(Activity):
         start_angle = start_pos[2]
 
         move_vec = self.target - start_coors
-        self.dist = np.sqrt(move_vec[0] ** 2 + move_vec[1] ** 2)
+        self.dist = np.linalg.norm(move_vec)
 
-        alpha = np.arccos(move_vec[1] / self.dist)
-        if move_vec[0] > 0:
-            alpha *= -1
-        alpha += start_angle
+        if move_vec[0] == 0:
+            alpha = np.pi if move_vec[1] < 0 else 0
+        else:
+            alpha = np.arccos(move_vec[1] / self.dist)
+            if move_vec[0] > 0:
+                alpha *= -1
+            alpha += start_angle
         self.alpha = alpha
 
     def perform(self):
