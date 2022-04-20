@@ -539,7 +539,7 @@ class PassStick(Activity):
         forward_dir = self.next_stick - self.current_stick
         forward_dir /= np.linalg.norm(forward_dir)
         left_dir = np.array([-forward_dir[1], forward_dir[0]])
-        gap = (CONST.ROBOT_WIDTH / 2) + self.reserve
+        gap = (CONST.ROBOT_WIDTH / 2) + self.reserve + (CONST.STICK_WIDTH / 2)
 
         self.center = (self.current_stick + self.next_stick) / 2
         if self.next_color == CONST.RED:
