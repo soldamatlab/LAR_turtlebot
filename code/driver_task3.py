@@ -5,7 +5,7 @@ import math
 from dance import dance
 
 INFO = True  # TODO
-FORWARD_SPEED = 0.3
+FORWARD_SPEED = 0.2
 TURN_SPEED = np.pi/5
 FIND_GATE_TURN_SPEED = np.pi/6
 HEIGHT_DIFF_FACTOR = 1.05
@@ -530,7 +530,7 @@ class PassStick(Activity):
         self.next_color = next_color
         self.reserve = reserve
 
-        self.center = None
+        self.zeroth = None
         self.first = None
         self.second = None
         self.finish = None
@@ -544,11 +544,12 @@ class PassStick(Activity):
         left_dir = np.array([-forward_dir[1], forward_dir[0]])
         gap = (CONST.ROBOT_WIDTH / 2) + self.reserve + (CONST.STICK_WIDTH / 2)
 
-        self.center = (self.current_stick + self.next_stick) / 2
         if self.next_color == CONST.RED:
+            self.zeroth = self.current_stick + (forward_dir * gap) + (left_dir * gap)
             self.first = self.next_stick - (forward_dir * gap) + (left_dir * gap)
             self.second = self.next_stick + (forward_dir * gap) + (left_dir * gap)
         elif self.next_color == CONST.BLUE:
+            self.zeroth = self.current_stick + (forward_dir * gap) - (left_dir * gap)
             self.first = self.next_stick - (forward_dir * gap) - (left_dir * gap)
             self.second = self.next_stick + (forward_dir * gap) - (left_dir * gap)
         else:
@@ -569,11 +570,11 @@ class PassStick(Activity):
                 self.step = 'first'
                 return self.do(GotoCoors(self, self.driver, self.first))
             else:
-                self.step = 'center'
-                return self.do(GotoCoors(self, self.driver, self.center))
+                self.step = 'zeroth'
+                return self.do(GotoCoors(self, self.driver, self.zeroth))
 
         if isinstance(self.activity, GotoCoors):
-            if self.step == 'center':
+            if self.step == 'zeroth':
                 self.step = 'first'
                 return self.do(GotoCoors(self, self.driver, self.first))
             if self.step == 'first':
