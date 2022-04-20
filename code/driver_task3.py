@@ -102,7 +102,7 @@ class ThirdTask(Activity):
             return self.activity.perform()
 
         if self.activity is None:
-            return self.do(GotoCoors(self, self.driver, [0.2, 0.5]))
+            return self.do(GotoCoors(self, self.driver, [0.2, 0.]))
 
         return self.end()
 
