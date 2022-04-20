@@ -482,7 +482,7 @@ class ScanForNearest(Activity):
         for color in [CONST.RED, CONST.BLUE, CONST.GREEN]:
             bin_img = img_threshold(hsv, color)
             if self.window:
-                bin_all_colors = bin_all_colors | np.array(bin_img)
+                bin_all_colors = np.logical_or(bin_all_colors, np.array(bin_img))
             sticks = self.driver.turtle.get_segments(color, bin_img=bin_img, get_coors=True, get_dists=True)
             if sticks.count == 0:
                 continue
