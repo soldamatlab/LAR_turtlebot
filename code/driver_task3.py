@@ -16,7 +16,6 @@ MAX_GATE_AREA_DIFF = 20000
 GATE_TURN_OFFSET = CONST.ROBOT_WIDTH/2 + 0.05
 GATE_STICK_MIN_AREA = 3000
 STICK_PASS_RESERVE = 0.05
-FINAL_GATE_OVERSHOOT = (CONST.ROBOT_WIDTH / 2)
 
 
 class Driver:
@@ -119,7 +118,7 @@ class ThirdTask(Activity):
 
         if not self.start_passed:
             self.start_passed = True
-            return self.do(PassGate(self, self.driver, fov=FOV_GREEN, window=self.window))
+            return self.do(PassGate(self, self.driver, fov=FOV_GREEN, window=self.window, overshoot=(CONST.ROBOT_WIDTH / 2)))
 
         if self.start_passed and not self.finish_passed:
             if isinstance(self.activity, PassGate):
@@ -149,7 +148,7 @@ class ThirdTask(Activity):
 
                 if stick_color == CONST.GREEN:
                     self.finish_passed = True
-                    return self.do(PassGate(self, self.driver, fov=FOV_GREEN, find_attempts=0, window=self.window, overshoot=FINAL_GATE_OVERSHOOT))
+                    return self.do(PassGate(self, self.driver, fov=FOV_GREEN, find_attempts=0, window=self.window, overshoot=(CONST.ROBOT_WIDTH / 2)))
                 else:
                     return self.do(PassStick(self, self.driver, self.prev_stick, self.prev_color, stick_coors, stick_color))
 
@@ -544,12 +543,16 @@ class PassStick(Activity):
         left_dir = np.array([-forward_dir[1], forward_dir[0]])
         gap = (CONST.ROBOT_WIDTH / 2) + self.reserve + (CONST.STICK_WIDTH / 2)
 
-        if self.next_color == CONST.RED:
+        if self.current_color == CONST.RED:
             self.zeroth = self.current_stick + (forward_dir * gap) + (left_dir * gap)
+        elif self.current_color == CONST.BLUE:
+            self.zeroth = self.current_stick + (forward_dir * gap) - (left_dir * gap)
+        else:
+            raise ValueError("BypassStick [current_color] needs to be RED or BLUE.")
+        if self.next_color == CONST.RED:
             self.first = self.next_stick - (forward_dir * gap) + (left_dir * gap)
             self.second = self.next_stick + (forward_dir * gap) + (left_dir * gap)
         elif self.next_color == CONST.BLUE:
-            self.zeroth = self.current_stick + (forward_dir * gap) - (left_dir * gap)
             self.first = self.next_stick - (forward_dir * gap) - (left_dir * gap)
             self.second = self.next_stick + (forward_dir * gap) - (left_dir * gap)
         else:
@@ -566,7 +569,7 @@ class PassStick(Activity):
             return self.activity.perform()
 
         if self.activity is None:
-            if self.next_color == self.current_color:
+            if self.next_color == self.current_color or self.current_color == CONST.GREEN:
                 self.step = 'first'
                 return self.do(GotoCoors(self, self.driver, self.first))
             else:
