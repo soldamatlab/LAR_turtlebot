@@ -110,11 +110,10 @@ class ThirdTask(Activity):
             return self.activity.perform()
 
         if self.activity is None:
-            return self.do(Turn(self, self.driver, -np.pi/2))
+            return self.do(MoveStraight(self, self.driver, 0.5))
 
-        if isinstance(self.activity, Turn):
+        if isinstance(self.activity, MoveStraight):
             return self.do(MeasureGateCoordinates(self, self.driver, CONST.GREEN))
-            # return self.do(PassStartGate(self, self.driver, fov=FOV_GREEN))
 
         if isinstance(self.activity, MeasureGateCoordinates):
             print("GATE COORDINATES")
@@ -461,6 +460,7 @@ def transform_coors(bot_position, cam_coordinates):
     return rotate_vector(cam_coors, bot_position[2]) + bot_position[0:2]
 
 
+# positive alpha to left
 def rotate_vector(vec, alpha):
     s, c = np.sin(alpha), np.cos(alpha)
     R = np.array([[c, -s], [s, c]])
