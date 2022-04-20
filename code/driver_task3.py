@@ -110,10 +110,10 @@ class ThirdTask(Activity):
             return self.activity.perform()
 
         if self.activity is None:
-            return self.do(GotoCoors(self, self.driver, [0.5, 0.5]))
+            return self.do(MoveStraight(self, self.driver, 0.5))
 
-        if isinstance(self.activity, GotoCoors):
-            return self.do(PassStartGate(self, self.driver, fov=FOV_GREEN))
+        if isinstance(self.activity, MoveStraight):
+            return self.do(GotoCoors(self, self.driver, [0.5, 0.5]))
 
         return self.end()
 
@@ -161,9 +161,7 @@ class PassStartGate(Activity):
 
         if isinstance(self.activity, MeasureGateCoordinates):
             A, B = self.pop_ret()
-            print(A, B) # TODO
-            return
-            # return self.do(GoThroughGate(self, self.driver, A, B, turn_offset=self.turn_offset, overshoot=self.overshoot))
+            return self.do(GoThroughGate(self, self.driver, A, B, turn_offset=self.turn_offset, overshoot=self.overshoot))
 
         if isinstance(self.activity, GoThroughGate):
             self.parent.ret = self.side
@@ -277,7 +275,6 @@ class FindGate(Activity):
 
         # # Check area diff
         # if (abs(sticks.area(A) - sticks.area(B))) > MAX_GATE_AREA_DIFF:
-        #     print("AREA DIFF TOO LARGE")  #TODO
         #     self.turtle.set_speed(0, self.dir * self.speed)
         #     return self.continue_search()
 
