@@ -118,9 +118,46 @@ class ThirdTask(Activity):
         return self.end()
 
 
-# Pass the starting gate.
+# class ThirdTask(Activity):
+#
+#     def __init__(self, parent, driver):
+#         Activity.__init__(self, parent, driver)
+#         self.start_passed = False
+#         self.finish_passed = False
+#
+#     def start(self):
+#         self.turtle.stop()
+#         self.turtle.reset_odometry()
+#
+#     def perform(self):
+#         Activity.perform_init(self)
+#         if self.busy:
+#             return self.activity.perform()
+#
+#         if not self.start_passed:
+#             self.start_passed = True
+#             return self.do(PassGate(self, self.driver, fov=FOV_GREEN))
+#
+#         if self.start_passed and not self.finish_passed:
+#             if isinstance(self.activity, FindStick):
+#                 stick_coors, stick_color = self.pop_ret()
+#                 if stick_color == CONST.GREEN:
+#                     self.finish_passed = True
+#                     return self.do(PassGate(self, self.driver, fov=FOV_GREEN, find_attempts=0))
+#                 else:
+#                     # TODO
+#                     return self.do(PassStick)
+#             else:
+#                 # TODO
+#                 return self.do(FindStick)
+#
+#         return self.end()
+
+
+# Pass a gate.
 # If find [FindGate] fails, the bot moves backwards and tries again.
-class PassStartGate(Activity):
+# Set [find_attempts] to 0 for unlimited attempts. (This means no backing up.)
+class PassGate(Activity):
 
     def __init__(self, parent, driver, color=CONST.GREEN, fov=None, init_dir=1, window=False,
                  turn_offset=GATE_TURN_OFFSET,
