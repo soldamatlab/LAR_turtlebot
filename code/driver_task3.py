@@ -14,6 +14,7 @@ START_GATE_BACKWARD_DIST = 0.1
 MAX_GATE_AREA_DIFF = 20000
 GATE_TURN_OFFSET = CONST.ROBOT_WIDTH/2 + 0.05
 GATE_STICK_MIN_AREA = 3000
+STICK_PASS_RESERVE = 0.05
 
 
 class Driver:
@@ -103,6 +104,7 @@ class ThirdTask(Activity):
         self.prev_stick = None
         self.prev_color = None
         self.window = window
+        self.last_find_stick_direction = None
 
     def start(self):
         self.turtle.stop()
@@ -121,29 +123,35 @@ class ThirdTask(Activity):
             if isinstance(self.activity, PassGate):
                 A, B = self.pop_ret()
                 self.prev_stick = (A + B) / 2
+                self.prev_color = CONST.GREEN
+                self.last_find_stick_direction = False
                 return self.do(FindNearestStick(self, self.driver, False, init_turn=np.pi/6, turn_offset=np.pi/3, window=self.window))
 
-            if isinstance(self.activity, BypassStick):
-                self.prev_stick, angle = self.pop_ret()
-                return self.find_next_stick()
+            if isinstance(self.activity, PassStick):
+                self.prev_stick, angle, self.prev_color = self.pop_ret()
+                turn_left = self.prev_color == CONST.BLUE
+                self.last_find_stick_direction = turn_left
+                return self.do(FindNearestStick(self, self.driver, turn_left=turn_left, turn_offset=np.pi/2, window=self.window))
 
             if isinstance(self.activity, FindNearestStick):
                 stick_coors, stick_dist, stick_color = self.pop_ret()
                 if stick_coors is None:
-                    return self.find_next_stick()
+                    if self.prev_color == CONST.GREEN:
+                        turn_left = not self.last_find_stick_direction
+                        self.last_find_stick_direction = turn_left
+                        return self.do(FindNearestStick(self, self.driver, turn_left=turn_left, turn_offset=np.pi/3, window=self.window))
+                    else:
+                        turn_left = not self.last_find_stick_direction
+                        self.last_find_stick_direction = turn_left
+                        return self.do(FindNearestStick(self, self.driver, turn_left=turn_left, turn_offset=np.pi/2, window=self.window))
 
-                self.prev_color = stick_color
                 if stick_color == CONST.GREEN:
                     self.finish_passed = True
                     return self.do(PassGate(self, self.driver, fov=FOV_GREEN, find_attempts=0, window=self.window))
                 else:
-                    return self.do(BypassStick(self, self.driver, self.prev_stick, self.prev_color, stick_coors, stick_color))
+                    return self.do(PassStick(self, self.driver, self.prev_stick, self.prev_color, stick_coors, stick_color))
 
         return self.end()
-
-    def find_next_stick(self):
-        turn_left = self.prev_color == CONST.RED
-        return self.do(FindNearestStick(self, self.driver, turn_left=turn_left, turn_offset=np.pi/2, window=self.window))
 
 
 # Pass a gate.
@@ -507,11 +515,11 @@ class ScanForNearest(Activity):
 
 
 # Bypass a stick.
-# Return  coordinates of the bypassed stick and the angle of approach.
-class BypassStick(Activity):
+# Return  coordinates of the bypassed stick, the angle of approach and the color of the stick.
+class PassStick(Activity):
 
     def __init__(self, parent, driver, current_stick, current_color, next_stick, next_color,
-                 reserve=0.05):
+                 reserve=STICK_PASS_RESERVE):
         Activity.__init__(self, parent, driver)
         self.current_stick = current_stick
         self.current_color = current_color
@@ -531,7 +539,7 @@ class BypassStick(Activity):
         forward_dir = self.next_stick - self.current_stick
         forward_dir /= np.linalg.norm(forward_dir)
         left_dir = np.array([-forward_dir[1], forward_dir[0]])
-        gap = CONST.ROBOT_WIDTH + self.reserve
+        gap = (CONST.ROBOT_WIDTH / 2) + self.reserve
 
         self.center = (self.current_stick + self.next_stick) / 2
         if self.next_color == CONST.RED:
@@ -542,7 +550,6 @@ class BypassStick(Activity):
             self.second = self.next_stick + (forward_dir * gap) - (left_dir * gap)
         else:
             raise ValueError("BypassStick [next_color] needs to be RED or BLUE.")
-        self.finish = self.next_stick + (forward_dir * gap)
 
         forward_angle = np.arccos(forward_dir[1])
         if forward_dir[0] > 0:
@@ -570,10 +577,7 @@ class BypassStick(Activity):
                 self.step = 'second'
                 return self.do(GotoCoors(self, self.driver, self.second))
             if self.step == 'second':
-                self.step = 'finish'
-                return self.do(GotoCoors(self, self.driver, self.finish))
-            if self.step == 'finish':
-                self.parent.ret = self.next_stick, self.forward_angle
+                self.parent.ret = self.next_stick, self.forward_angle, self.next_color
                 self.driver.turtle.stop()
                 return self.end()
 
