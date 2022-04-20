@@ -1,7 +1,6 @@
 from __future__ import print_function
 from robolab_turtlebot import Turtlebot, Rate, get_time
 from turtle import Turtle
-from dance import dance
 from driver_task3 import Driver
 import CONST
 
