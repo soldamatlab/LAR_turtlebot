@@ -5,8 +5,8 @@ import time
 import math
 
 INFO = False  # TODO
-FORWARD_SPEED = 0.2
-TURN_SPEED = np.pi/8
+FORWARD_SPEED = 0.3
+TURN_SPEED = np.pi/6
 HEIGHT_DIFF_FACTOR = 1.05
 FOV_GREEN = (60 + 20) * 2*np.pi / 360
 START_GATE_FIND_ATTEMPTS = 1
