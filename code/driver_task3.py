@@ -110,13 +110,13 @@ class ThirdTask(Activity):
             return self.activity.perform()
 
         if self.activity is None:
-            return self.do(MoveStraight(self, self.driver, 0.5))
+            return self.do(MoveStraight(self, self.driver, 0.1))
 
         if isinstance(self.activity, MoveStraight):
             return self.do(Turn(self, self.driver, np.pi))
 
         if isinstance(self.activity, Turn):
-            return self.do(GotoCoors(self, self.driver, [0.5, 0.5]))
+            return self.do(GotoCoors(self, self.driver, [0.1, 0.1]))
 
         return self.end()
 
@@ -452,18 +452,32 @@ class Turn(Activity):
         self.direction = 1 if degree > 0 else -1
         self.speed = abs(speed)
         self.step = (CONST.SLEEP / 1000) * speed
-        self.start_angle = None
+        self.target = None
+        self.angle_diff_sign = None
 
     def start(self):
         self.turtle.stop()
-        self.start_angle = self.turtle.get_current_angle()
+        start_angle = self.turtle.get_current_angle()
+
+        target = start_angle + self.degree
+        if abs(target) > 2*np.pi:
+            target %= 2*np.pi
+        if target > np.pi:
+            target = -2*np.pi + target
+        elif target < -np.pi:
+            target = 2*np.pi + target
+        self.target = target
+
+        self.angle_diff_sign = -1 if self.turtle.get_current_angle() - self.target < 0 else 1
+
         self.turtle.set_speed(0, self.direction * self.speed)
 
     def perform(self):
         Activity.perform_init(self)
 
-        angle = self.turtle.get_current_angle()
-        if abs(self.degree - (angle - self.start_angle)) > self.step / 2:
+        angle_diff = self.turtle.get_current_angle() - self.target
+
+        if (abs(angle_diff) < self.step / 2) or (angle_diff * self.angle_diff_sign == -1):
             return
 
         self.turtle.stop()
