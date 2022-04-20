@@ -427,7 +427,7 @@ class GotoCoors(Activity):
             alpha = np.arccos(move_vec[1] / self.dist)
             if move_vec[0] > 0:
                 alpha *= -1
-            alpha += start_angle
+        alpha -= start_angle
         self.alpha = alpha
 
     def perform(self):
