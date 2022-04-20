@@ -113,6 +113,9 @@ class ThirdTask(Activity):
             return self.do(MoveStraight(self, self.driver, 0.5))
 
         if isinstance(self.activity, MoveStraight):
+            return self.do(Turn(self, self.driver, np.pi))
+
+        if isinstance(self.activity, Turn):
             return self.do(GotoCoors(self, self.driver, [0.5, 0.5]))
 
         return self.end()
