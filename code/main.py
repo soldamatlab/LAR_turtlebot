@@ -1,11 +1,6 @@
 from __future__ import print_function
 from robolab_turtlebot import Rate
 from turtle import Turtle
-import numpy as np
-import cv2
-from camera import *
-from dance import dance
-from color_harvest import *
 from driver_task3 import Driver
 import CONST
 
