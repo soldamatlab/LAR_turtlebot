@@ -25,7 +25,7 @@ class Driver:
         self.main = ThirdTask(self, self)
         self.counter = 0
         self.color = CONST.GREEN
-        self.window_enabled = True
+        self.window_enabled = False
         self.window = None
 
         if self.window_enabled:
