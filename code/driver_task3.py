@@ -4,7 +4,7 @@ from camera import *
 import time
 import math
 
-INFO = True  # TODO
+INFO = False  # TODO
 FORWARD_SPEED = 0.2
 TURN_SPEED = np.pi/8
 HEIGHT_DIFF_FACTOR = 1.05
@@ -478,10 +478,9 @@ class Turn(Activity):
         angle_diff = self.turtle.get_current_angle() - self.target
 
         if (abs(angle_diff) < self.step / 2) or (angle_diff * self.angle_diff_sign == -1):
-            return
-
-        self.turtle.stop()
-        return self.end()
+            self.turtle.stop()
+            return self.end()
+        return
 
 
 # Go straight a set distance.
