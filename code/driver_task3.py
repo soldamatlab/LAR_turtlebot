@@ -110,7 +110,12 @@ class ThirdTask(Activity):
             return self.activity.perform()
 
         if self.activity is None:
-            return self.do(PassStartGate(self, self.driver, fov=FOV_GREEN))
+            return self.do(MeasureGateCoordinates(self, self.driver, CONST.GREEN))
+            # return self.do(PassStartGate(self, self.driver, fov=FOV_GREEN))
+
+        if isinstance(self.activity, MeasureGateCoordinates):
+            print("GATE COORDINATES")
+            print(self.pop_ret())
 
         return self.end()
 
