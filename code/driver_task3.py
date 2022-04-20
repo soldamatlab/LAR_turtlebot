@@ -107,6 +107,73 @@ class ThirdTask(Activity):
         return self.end()
 
 
+class BypassStick(Activity):
+    def __init__(self, parent, driver, current_stick, next_stick, next_color,
+                 reserve=0.05):
+        Activity.__init__(self, parent, driver)
+        self.current_stick = current_stick
+        self.next_stick = next_stick
+        self.next_color = next_color
+        self.reserve = reserve
+
+        self.center = None
+        self.first = None
+        self.second = None
+        self.finish = None
+        self.forward_angle = None
+
+    def start(self):
+        self.turtle.stop()  # safety
+        forward_dir = self.next_stick - self.current_stick
+        forward_dir /= np.linalg.norm(forward_dir)
+        left_dir = np.array(-[forward_dir[1], forward_dir[0]])
+        gap = CONST.ROBOT_WIDTH + self.reserve
+
+        self.step = None
+        self.center = (self.current_stick + self.next_stick) / 2
+        if self.next_color == CONST.RED:
+            self.first = self.next_stick - (forward_dir * gap) + (left_dir * gap)
+            self.second = self.next_stick + (forward_dir * gap) + (left_dir * gap)
+        elif self.next_color == CONST.BLUE:
+            self.first = self.next_stick - (forward_dir * gap) - (left_dir * gap)
+            self.second = self.next_stick + (forward_dir * gap) - (left_dir * gap)
+        else:
+            raise ValueError("BypassStick [next_color] needs to be RED or BLUE.")
+        self.finish = self.next_stick + (forward_dir * gap)
+
+        forward_angle = np.arccos(forward_dir[1])
+        if forward_dir[0] > 0:
+            forward_angle *= -1
+        self.forward_angle = forward_angle
+        
+    def perform(self):
+        Activity.perform_init(self)
+        if self.busy:
+            return self.activity.perform()
+
+        if self.activity is None:
+            step = 'center'
+            return self.do(GotoCoors(self, self.driver, self.center))
+
+        if isinstance(self.activity, GotoCoors):
+            if self.step == 'center':
+                self.step = 'first'
+                return self.do(GotoCoors(self, self.driver, self.first))
+            if self.step == 'first':
+                self.step = 'second'
+                return self.do(GotoCoors(self, self.driver, self.second))
+            if self.step == 'second':
+                self.step = 'finish'
+                return self.do(GotoCoors(self, self.driver, self.finish))
+            if self.step == 'finish':
+                self.parent.ret = self.next_stick, self.forward_angle
+                return self.end()
+
+        
+
+    #def done(self):
+
+
 # Move to the given coordinates. [x, z], x .. right, z .. forward
 class GotoCoors(Activity):
 
