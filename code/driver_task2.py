@@ -6,7 +6,7 @@ from camera import *
 import time
 import math
 
-INFO = False # TODO
+INFO = False  # TODO
 FORWARD_SPEED = 0.2
 TURN_SPEED = np.pi/8
 ANGLE_MARGIN = np.pi / 12
@@ -24,7 +24,7 @@ class Driver:
     def __init__(self, turtle):
         self.turtle = turtle
         self.busy = True
-        self.main = MainActivity(self, self, window=False)
+        self.main = SecondTask(self, self, window=False)
         self.counter = 0
         self.color = CONST.GREEN
 
@@ -94,7 +94,7 @@ class Activity:
         return ret
 
 
-class MainActivity(Activity):
+class SecondTask(Activity):
 
     def __init__(self, parent, driver, window=False):
         Activity.__init__(self, parent, driver)
@@ -460,12 +460,6 @@ class FindGate(Activity):
         if (A_height / B_height) > self.height_diff_factor:
             self.turtle.set_speed(0, self.dir * self.speed)
             return self.continue_search()
-
-        # TODO rem
-        print("HEIGHT DIFF")
-        print(A_height)
-        print(B_height)
-        print(A_height / B_height)
 
         # Center on sticks
         center = (A_coors + B_coors) / 2
