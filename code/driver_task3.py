@@ -5,8 +5,8 @@ import math
 from dance import dance
 
 INFO = True  # TODO
-FORWARD_SPEED = 0.4
-TURN_SPEED = np.pi/4
+FORWARD_SPEED = 0.3
+TURN_SPEED = np.pi/5
 FIND_GATE_TURN_SPEED = np.pi/6
 HEIGHT_DIFF_FACTOR = 1.05
 FOV_GREEN = (60 + 20) * 2*np.pi / 360
