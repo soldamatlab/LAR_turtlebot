@@ -4,7 +4,7 @@ from camera import *
 import time
 import math
 
-INFO = True  # TODO
+INFO = False  # TODO
 FORWARD_SPEED = 0.2
 TURN_SPEED = np.pi/8
 HEIGHT_DIFF_FACTOR = 1.05
@@ -586,6 +586,7 @@ class GotoCoors(Activity):
         self.target = target
         self.dist = None
         self.alpha = None
+        print(target)  # TODO rem
 
     def start(self):
         self.turtle.stop()
