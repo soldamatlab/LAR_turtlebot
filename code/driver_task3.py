@@ -4,7 +4,7 @@ from camera import *
 import time
 import math
 
-INFO = False  # TODO
+INFO = True  # TODO
 FORWARD_SPEED = 0.2
 TURN_SPEED = np.pi/8
 
@@ -91,6 +91,10 @@ class ThirdTask(Activity):
 
     def __init__(self, parent, driver):
         Activity.__init__(self, parent, driver)
+
+    def start(self):
+        self.turtle.stop()
+        self.turtle.reset_odometry()
 
     def perform(self):
         Activity.perform_init(self)
