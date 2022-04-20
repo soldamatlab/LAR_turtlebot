@@ -105,7 +105,7 @@ class ThirdTask(Activity):
             return self.activity.perform()
 
         if self.activity is None:
-            return self.do(FindGate(self, self.driver, CONST.GREEN, fov=FOV_GREEN, attempts=START_GATE_FIND_ATTEMPTS))
+            return self.do(FindGate(self, self.driver, CONST.GREEN, fov=FOV_GREEN, attempts=0))
 
         return self.end()
 
