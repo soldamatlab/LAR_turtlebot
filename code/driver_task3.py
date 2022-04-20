@@ -121,7 +121,7 @@ class ThirdTask(Activity):
             if isinstance(self.activity, PassGate):
                 A, B = self.pop_ret()
                 self.prev_stick = (A + B) / 2
-                return self.do(FindNearestStick(self, self.driver, False, init_turn=np.pi/6, turn_offset=np.pi, window=self.window))
+                return self.do(FindNearestStick(self, self.driver, False, init_turn=np.pi/6, turn_offset=np.pi/3, window=self.window))
 
             if isinstance(self.activity, BypassStick):
                 return self.find_next_stick()
@@ -143,7 +143,7 @@ class ThirdTask(Activity):
     def find_next_stick(self):
         self.prev_stick, angle = self.pop_ret()
         turn_left = self.prev_color == CONST.RED
-        return self.do(FindNearestStick(self, self.driver, turn_left=turn_left, turn_offset=np.pi, window=self.window))
+        return self.do(FindNearestStick(self, self.driver, turn_left=turn_left, turn_offset=np.pi/2, window=self.window))
 
 
 # Pass a gate.
