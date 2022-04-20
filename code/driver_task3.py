@@ -4,7 +4,7 @@ from camera import *
 import time
 import math
 
-INFO = False  # TODO
+INFO = True  # TODO
 FORWARD_SPEED = 0.2
 TURN_SPEED = np.pi/8
 HEIGHT_DIFF_FACTOR = 1.05
