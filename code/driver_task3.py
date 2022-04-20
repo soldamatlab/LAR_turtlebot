@@ -4,7 +4,7 @@ from camera import *
 import time
 import math
 
-INFO = False  # TODO
+INFO = True  # TODO
 FORWARD_SPEED = 0.2
 TURN_SPEED = np.pi/8
 HEIGHT_DIFF_FACTOR = 1.05
@@ -489,18 +489,15 @@ class ScanForNearest(Activity):
             min_dist = sticks.dists[nearest_idx]
             if (self.nearest_dist is None) or (min_dist < self.nearest_dist):
                 self.nearest_dist = min_dist
-                self.nearest_coors = sticks.coors[nearest_idx]
+                current_position = self.driver.turtle.get_current_position()
+                self.nearest_coors = transform_coors(current_position, sticks.coors[nearest_idx])
                 self.nearest_color = color
 
         # Testing window
         if self.window:
             self.w_bin.show(bin_to_rgb(bin_all_colors))
 
-        if self.nearest_coors is not None:
-            coors = transform_coors(self.driver.turtle.get_current_position(), self.nearest_coors)
-        else:
-            coors = None
-        self.parent.ret = coors, self.nearest_dist, self.nearest_color
+        self.parent.ret = self.nearest_coors, self.nearest_dist, self.nearest_color
         return self.end()
 
 
