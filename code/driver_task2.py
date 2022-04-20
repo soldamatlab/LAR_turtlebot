@@ -426,7 +426,7 @@ class FindGate(Activity):
         self.last_angle = None
 
     def start(self):
-        self.turtle.stop()  # safety
+        self.turtle.stop()
         self.turtle.reset_odometry()
         if self.window:
             self.w_bin = Window("FindTwoSticks")
@@ -451,16 +451,16 @@ class FindGate(Activity):
         args = np.argsort(sticks.heights())
         A_height = sticks.height(args[-1])
         B_height = sticks.height(args[-2])
-        A_coors = sticks.centroids[args[-1]]
-        B_coors = sticks.centroids[args[-2]]
+        A_centroid = sticks.centroids[args[-1]]
+        B_centroid = sticks.centroids[args[-2]]
 
         # Check same height
         if (A_height / B_height) > self.height_diff_factor:
             self.turtle.set_speed(0, self.dir * self.speed)
             return self.continue_search()
 
-        # Center of sticks
-        center = (A_coors + B_coors) / 2
+        # Center on sticks
+        center = (A_centroid + B_centroid) / 2
         diff = center[0] - (np.shape(bin_img)[1] / 2)
         if diff < 0:
             new_dir = 1

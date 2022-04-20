@@ -1,3 +1,2 @@
 git pull
-python3 main.py
-
+python3 code/main.py
