@@ -116,7 +116,7 @@ class ThirdTask(Activity):
 
         if not self.start_passed:
             self.start_passed = True
-            return self.do(PassGate(self, self.driver, fov=FOV_GREEN))
+            return self.do(PassGate(self, self.driver, fov=FOV_GREEN, window=self.window))
 
         if self.start_passed and not self.finish_passed:
             if isinstance(self.activity, PassGate):
