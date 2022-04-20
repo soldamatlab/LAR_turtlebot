@@ -4,7 +4,7 @@ from turtle import Turtle
 from driver_task3 import Driver
 import CONST
 
-turtle = Turtlebot()
+turtle = Turtlebot()  # !!! DO NOT DELETE !!! (or something bad will happen)
 driver = None
 running = False
 

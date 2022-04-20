@@ -3,6 +3,7 @@ import numpy as np
 from camera import *
 import time
 import math
+from dance import dance
 
 INFO = True  # TODO
 FORWARD_SPEED = 0.5
@@ -153,6 +154,7 @@ class ThirdTask(Activity):
                 else:
                     return self.do(PassStick(self, self.driver, self.prev_stick, self.prev_color, stick_coors, stick_color))
 
+        dance(self.turtle)
         return self.end()
 
 
