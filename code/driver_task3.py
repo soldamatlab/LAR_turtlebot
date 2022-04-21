@@ -567,19 +567,21 @@ class PassStick(Activity):
             return self.activity.perform()
 
         if self.activity is None:
-            if self.next_color == self.current_color or self.current_color == CONST.GREEN:
-                print("SAME COLORS")  # TODO rem
+            if self.current_color == CONST.GREEN:
                 self.step = 'first'
                 return self.do(GotoCoors(self, self.driver, self.first))
             else:
-                print("DIFF COLORS")  # TODO rem
                 self.step = 'zeroth'
                 return self.do(GotoCoors(self, self.driver, self.zeroth))
 
         if isinstance(self.activity, GotoCoors):
             if self.step == 'zeroth':
-                self.step = 'first'
-                return self.do(GotoCoors(self, self.driver, self.first))
+                if self.next_color == self.current_color:
+                    self.step = 'second'
+                    return self.do(GotoCoors(self, self.driver, self.second))
+                else:
+                    self.step = 'first'
+                    return self.do(GotoCoors(self, self.driver, self.first))
             if self.step == 'first':
                 self.step = 'second'
                 return self.do(GotoCoors(self, self.driver, self.second))
