@@ -102,8 +102,8 @@ class ThirdTask(Activity):
         Activity.__init__(self, parent, driver)
         self.start_passed = False
         self.finish_passed = False
-        self.prev_stick = None
-        self.prev_color = None
+        self.prev_stick_coors = None
+        self.prev_stick_color = None
         self.window = window
         self.last_find_stick_direction = None
 
@@ -123,34 +123,32 @@ class ThirdTask(Activity):
         if self.start_passed and not self.finish_passed:
             if isinstance(self.activity, PassGate):
                 A, B = self.pop_ret()
-                self.prev_stick = (A + B) / 2
-                self.prev_color = CONST.GREEN
+                self.prev_stick_coors = (A + B) / 2
+                self.prev_stick_color = CONST.GREEN
                 self.last_find_stick_direction = False
                 return self.do(FindNearestStick(self, self.driver, False, init_turn=np.pi/6, turn_offset=np.pi/3, window=self.window))
 
             if isinstance(self.activity, PassStick):
-                self.prev_stick, angle, self.prev_color = self.pop_ret()
-                turn_left = self.prev_color == CONST.BLUE
+                self.prev_stick_coors, angle, self.prev_stick_color = self.pop_ret()
+                turn_left = self.prev_stick_color == CONST.BLUE
                 self.last_find_stick_direction = turn_left
                 return self.do(FindNearestStick(self, self.driver, turn_left=turn_left, turn_offset=np.pi/3, window=self.window))
 
             if isinstance(self.activity, FindNearestStick):
                 stick_coors, stick_dist, stick_color = self.pop_ret()
                 if stick_coors is None:
-                    if self.prev_color == CONST.GREEN:
-                        turn_left = not self.last_find_stick_direction
-                        self.last_find_stick_direction = turn_left
+                    turn_left = not self.last_find_stick_direction
+                    self.last_find_stick_direction = turn_left
+                    if self.prev_stick_color == CONST.GREEN:
                         return self.do(FindNearestStick(self, self.driver, turn_left=turn_left, turn_offset=np.pi/3, window=self.window))
                     else:
-                        turn_left = not self.last_find_stick_direction
-                        self.last_find_stick_direction = turn_left
                         return self.do(FindNearestStick(self, self.driver, turn_left=turn_left, turn_offset=np.pi/3, window=self.window))
 
                 if stick_color == CONST.GREEN:
                     self.finish_passed = True
                     return self.do(PassGate(self, self.driver, fov=FOV_GREEN, find_attempts=0, window=self.window, overshoot=(CONST.ROBOT_WIDTH / 2)))
                 else:
-                    return self.do(PassStick(self, self.driver, self.prev_stick, self.prev_color, stick_coors, stick_color))
+                    return self.do(PassStick(self, self.driver, self.prev_stick_coors, self.prev_stick_color, stick_coors, stick_color))
 
         dance(self.turtle)
         return self.end()
@@ -468,6 +466,7 @@ class FindNearestStick(Activity):
 
 # Scan for sticks of all colors.
 # Return (coordinates, distance from bot, color) of the nearest stick.
+# Return None, None, None if no stick found.
 class ScanForNearest(Activity):
     def __init__(self, parent, driver,
                  window=False,
