@@ -16,7 +16,8 @@ MAX_GATE_AREA_DIFF = 20000
 GATE_TURN_OFFSET = CONST.ROBOT_WIDTH/2 + 0.05
 GATE_MIN_STICK_AREA = 3000
 MIN_STICK_AREA = 800
-STICK_PASS_RESERVE = 0.05
+STICK_PASS_RESERVE_SIDE = 0.05
+STICK_PASS_RESERVE_FORWARD = 0.03
 
 
 class Driver:
@@ -547,13 +548,14 @@ class ScanForNearest(Activity):
 class PassStick(Activity):
 
     def __init__(self, parent, driver, current_stick, current_color, next_stick, next_color,
-                 reserve=STICK_PASS_RESERVE):
+                 reserve_side=STICK_PASS_RESERVE_SIDE, reserve_forward=STICK_PASS_RESERVE_FORWARD):
         Activity.__init__(self, parent, driver)
         self.current_stick = current_stick
         self.current_color = current_color
         self.next_stick = next_stick
         self.next_color = next_color
-        self.reserve = reserve
+        self.reserve_side = reserve_side
+        self.reserve_forward = reserve_forward
 
         self.zeroth = None
         self.first = None
@@ -567,19 +569,20 @@ class PassStick(Activity):
         forward_dir = self.next_stick - self.current_stick
         forward_dir /= np.linalg.norm(forward_dir)
         left_dir = np.array([-forward_dir[1], forward_dir[0]])
-        gap = (CONST.ROBOT_WIDTH / 2) + self.reserve + (CONST.STICK_WIDTH / 2)
+        gap_side = (CONST.ROBOT_WIDTH / 2) + self.reserve_side + (CONST.STICK_WIDTH / 2)
+        gap_forward = (CONST.ROBOT_WIDTH / 2) + self.reserve_forward + (CONST.STICK_WIDTH / 2)
 
         if self.current_color == CONST.RED:
-            self.zeroth = self.current_stick + (forward_dir * gap) + (left_dir * gap)
+            self.zeroth = self.current_stick + (forward_dir * gap_forward) + (left_dir * gap_side)
         elif self.current_color == CONST.BLUE:
-            self.zeroth = self.current_stick + (forward_dir * gap) - (left_dir * gap)
+            self.zeroth = self.current_stick + (forward_dir * gap_forward) - (left_dir * gap_side)
 
         if self.next_color == CONST.RED:
-            self.first = self.next_stick - (forward_dir * gap) + (left_dir * gap)
-            self.second = self.next_stick + (forward_dir * gap) + (left_dir * gap)
+            self.first = self.next_stick - (forward_dir * gap_forward) + (left_dir * gap_side)
+            self.second = self.next_stick + (forward_dir * gap_forward) + (left_dir * gap_side)
         elif self.next_color == CONST.BLUE:
-            self.first = self.next_stick - (forward_dir * gap) - (left_dir * gap)
-            self.second = self.next_stick + (forward_dir * gap) - (left_dir * gap)
+            self.first = self.next_stick - (forward_dir * gap_forward) - (left_dir * gap_side)
+            self.second = self.next_stick + (forward_dir * gap_forward) - (left_dir * gap_side)
         else:
             raise ValueError("BypassStick [next_color] needs to be RED or BLUE.")
 
