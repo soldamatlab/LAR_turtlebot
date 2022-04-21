@@ -158,7 +158,7 @@ class ThirdTask(Activity):
             self.finish_passed = True
             return self.do(PassGate(self, self.driver, fov=FOV_GREEN, find_attempts=0, window=self.window, overshoot=(CONST.ROBOT_WIDTH / 2)))
 
-        dance(self.turtle)
+        dance(self.turtle.bot)
         return self.end()
 
 

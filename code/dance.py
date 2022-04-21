@@ -20,12 +20,12 @@ def rot_right(turtle):
 def stop(turtle):
     turtle.cmd_velocity(linear=0, angular=0)
 
-def dance(turtle):
-    turtle.play_sound()
-    do_for(0.5, lambda: step(turtle))
-    do_for(0.1, lambda: stop(turtle))
-    do_for(0.5, lambda: step(turtle))
-    do_for(0.25, lambda: rot_left(turtle))
-    do_for(0.25, lambda: rot_right(turtle))
-    do_for(0.25, lambda: rot_left(turtle))
-    stop(turtle)
+def dance(turtlebot):
+    turtlebot.play_sound()
+    do_for(0.5, lambda: step(turtlebot))
+    do_for(0.1, lambda: stop(turtlebot))
+    do_for(0.5, lambda: step(turtlebot))
+    do_for(0.25, lambda: rot_left(turtlebot))
+    do_for(0.25, lambda: rot_right(turtlebot))
+    do_for(0.25, lambda: rot_left(turtlebot))
+    stop(turtlebot)
