@@ -14,8 +14,9 @@ START_GATE_FIND_ATTEMPTS = 1
 START_GATE_BACKWARD_DIST = 0.05
 MAX_GATE_AREA_DIFF = 20000
 GATE_TURN_OFFSET = CONST.ROBOT_WIDTH/2 + 0.05
-GATE_STICK_MIN_AREA = 3000
+GATE_MIN_STICK_AREA = 3000
 STICK_PASS_RESERVE = 0.05
+MIN_STICK_AREA = 200
 
 
 class Driver:
@@ -120,7 +121,7 @@ class ThirdTask(Activity):
 
         if not self.start_passed:
             self.start_passed = True
-            return self.do(PassGate(self, self.driver, fov=FOV_GREEN, window=self.window, overshoot=(CONST.ROBOT_WIDTH / 2)))
+            return self.do(PassGate(self, self.driver, fov=FOV_GREEN, find_attempts=START_GATE_FIND_ATTEMPTS, min_stick_area=GATE_MIN_STICK_AREA, window=self.window, overshoot=(CONST.ROBOT_WIDTH / 2)))
 
         if self.start_passed and not self.finish_found:
             if isinstance(self.activity, PassGate):
@@ -156,7 +157,7 @@ class ThirdTask(Activity):
 
         if self.finish_found and not self.finish_passed:
             self.finish_passed = True
-            return self.do(PassGate(self, self.driver, fov=FOV_GREEN, find_attempts=0, window=self.window, overshoot=(CONST.ROBOT_WIDTH / 2)))
+            return self.do(PassGate(self, self.driver, fov=FOV_GREEN, find_attempts=0, min_stick_area=MIN_STICK_AREA, window=self.window, overshoot=(CONST.ROBOT_WIDTH / 2)))
 
         dance(self.turtle.bot)
         return self.end()
@@ -171,8 +172,9 @@ class PassGate(Activity):
     def __init__(self, parent, driver, color=CONST.GREEN, fov=None, init_dir=1, window=False,
                  turn_offset=GATE_TURN_OFFSET,
                  overshoot=0,
-                 find_attempts=START_GATE_FIND_ATTEMPTS,
+                 find_attempts=1,
                  backward_dist=START_GATE_BACKWARD_DIST,
+                 min_stick_area=GATE_MIN_STICK_AREA,
                  ):
         Activity.__init__(self, parent, driver)
         self.color = color
@@ -186,6 +188,7 @@ class PassGate(Activity):
         self.side = None
         self.find_attempts = find_attempts
         self.backward_dist = backward_dist
+        self.min_stick_area = min_stick_area
         self.A = None
         self.B = None
 
@@ -197,7 +200,7 @@ class PassGate(Activity):
         if (self.activity is None)\
                 or (isinstance(self.activity, MoveStraight))\
                 or (isinstance(self.activity, MeasureGateCoordinates) and self.ret is None):
-            return self.do(FindGate(self, self.driver, self.color, attempts=self.find_attempts, fov=self.fov, init_dir=self.init_dir, window=self.window))
+            return self.do(FindGate(self, self.driver, self.color, attempts=self.find_attempts, min_stick_area=self.min_stick_area, fov=self.fov, init_dir=self.init_dir, window=self.window))
 
         if isinstance(self.activity, FindGate):
             side = self.pop_ret()
@@ -205,7 +208,7 @@ class PassGate(Activity):
                 return self.do(MoveStraight(self, self.driver, self.backward_dist, speed=-FORWARD_SPEED))
             else:
                 self.side = -1 if side < 0 else 1
-                return self.do(MeasureGateCoordinates(self, self.driver, self.color))
+                return self.do(MeasureGateCoordinates(self, self.driver, self.color, min_stick_area=self.min_stick_area))
 
         if isinstance(self.activity, MeasureGateCoordinates):
             self.A, self.B = self.pop_ret()
@@ -276,6 +279,7 @@ class FindGate(Activity):
                  center_limit_step=2,
                  center_limit_max=24,
                  attempts=0,  # 1 attempt means left,center,right,center within the fov; set to 0 for unlimited attempts
+                 min_stick_area=GATE_MIN_STICK_AREA,
                  ):
         Activity.__init__(self, parent, driver)
         self.color = color
@@ -290,6 +294,7 @@ class FindGate(Activity):
         self.w_bin = None
         self.dir = -1 if init_dir < 0 else 1
         self.max_attempts = attempts
+        self.min_stick_area = min_stick_area
         self.half_turns = 0
         self.last_angle = None
         self.start_angle = None
@@ -306,7 +311,7 @@ class FindGate(Activity):
         # Process image
         hsv = self.turtle.get_hsv_image()
         bin_img = img_threshold(hsv, self.color)
-        sticks = self.driver.turtle.get_segments(self.color, bin_img=bin_img, min_area=GATE_STICK_MIN_AREA)
+        sticks = self.driver.turtle.get_segments(self.color, bin_img=bin_img, min_area=self.min_stick_area)
 
         # Testing window
         if self.window:
@@ -373,10 +378,12 @@ class MeasureGateCoordinates(Activity):
 
     def __init__(self, parent, driver, color,
                  attempts=12,
+                 min_stick_area=GATE_MIN_STICK_AREA,
                  ):
         Activity.__init__(self, parent, driver)
         self.color = color
         self.attempts = attempts
+        self.min_stick_area = min_stick_area
 
     def perform(self):
         Activity.perform_init(self)
@@ -386,7 +393,7 @@ class MeasureGateCoordinates(Activity):
             self.parent.ret = None
             return self.end()
 
-        sticks = self.driver.turtle.get_segments(self.color)
+        sticks = self.driver.turtle.get_segments(self.color, min_area=self.min_stick_area)
         if sticks.count < 2:
             self.attempts -= 1
             return self.perform()
@@ -504,7 +511,7 @@ class ScanForNearest(Activity):
             bin_img = img_threshold(hsv, color)
             if self.window:
                 bin_all_colors = np.logical_or(bin_all_colors, np.array(bin_img))
-            sticks = self.driver.turtle.get_segments(color, bin_img=bin_img, get_coors=True)
+            sticks = self.driver.turtle.get_segments(color, bin_img=bin_img, get_coors=True, min_area=MIN_STICK_AREA)
             if sticks.count == 0:
                 continue
             dists = self.calculate_dists(sticks.count, sticks.coors)
