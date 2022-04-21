@@ -100,12 +100,14 @@ class ThirdTask(Activity):
 
     def __init__(self, parent, driver, window=False):
         Activity.__init__(self, parent, driver)
-        self.start_passed = False
-        self.finish_passed = False
         self.prev_stick_coors = None
         self.prev_stick_color = None
         self.window = window
         self.last_find_stick_direction = None
+
+        self.start_passed = False
+        self.finish_found = False
+        self.finish_passed = False
 
     def start(self):
         self.turtle.stop()
@@ -120,7 +122,7 @@ class ThirdTask(Activity):
             self.start_passed = True
             return self.do(PassGate(self, self.driver, fov=FOV_GREEN, window=self.window, overshoot=(CONST.ROBOT_WIDTH / 2)))
 
-        if self.start_passed and not self.finish_passed:
+        if self.start_passed and not self.finish_found:
             if isinstance(self.activity, PassGate):
                 A, B = self.pop_ret()
                 self.prev_stick_coors = (A + B) / 2
@@ -145,10 +147,16 @@ class ThirdTask(Activity):
                         return self.do(FindNearestStick(self, self.driver, turn_left=turn_left, turn_offset=np.pi/3, window=self.window))
 
                 if stick_color == CONST.GREEN:
-                    self.finish_passed = True
-                    return self.do(PassGate(self, self.driver, fov=FOV_GREEN, find_attempts=0, window=self.window, overshoot=(CONST.ROBOT_WIDTH / 2)))
+                    self.finish_found = True
+                    current_position = self.turtle.get_current_position()
+                    alpha = calculate_angle_of_target(current_position, stick_coors)
+                    return self.do(Turn(self, self.driver, alpha))
                 else:
                     return self.do(PassStick(self, self.driver, self.prev_stick_coors, self.prev_stick_color, stick_coors, stick_color))
+
+        if self.finish_found and not self.finish_passed:
+            self.finish_passed = True
+            return self.do(PassGate(self, self.driver, fov=FOV_GREEN, find_attempts=0, window=self.window, overshoot=(CONST.ROBOT_WIDTH / 2)))
 
         dance(self.turtle)
         return self.end()
@@ -604,23 +612,11 @@ class GotoCoors(Activity):
         self.turtle.stop()
         start_pos = self.turtle.get_current_position()
         start_coors = start_pos[0:2]
-        start_angle = start_pos[2]
 
         move_vec = self.target - start_coors
         self.dist = np.linalg.norm(move_vec)
 
-        if move_vec[0] == 0:
-            alpha = np.pi if move_vec[1] < 0 else 0
-        else:
-            alpha = np.arccos(move_vec[1] / self.dist)
-            if move_vec[0] > 0:
-                alpha *= -1
-        alpha -= start_angle
-        if alpha > np.pi:
-            alpha -= 2*np.pi
-        elif alpha < -np.pi:
-            alpha += 2*np.pi
-        self.alpha = alpha
+        self.alpha = calculate_angle_of_target(start_pos, self.target)
 
     def perform(self):
         Activity.perform_init(self)
@@ -712,3 +708,23 @@ def rotate_vector(vec, alpha):
     s, c = np.sin(alpha), np.cos(alpha)
     R = np.array([[c, -s], [s, c]])
     return np.matmul(R, vec)
+
+
+def calculate_angle_of_target(bot_position, target):
+    start_coors = bot_position[0:2]
+    start_angle = bot_position[2]
+    move_vec = target - start_coors
+    dist = np.linalg.norm(move_vec)
+
+    if move_vec[0] == 0:
+        alpha = np.pi if move_vec[1] < 0 else 0
+    else:
+        alpha = np.arccos(move_vec[1] / dist)
+        if move_vec[0] > 0:
+            alpha *= -1
+    alpha -= start_angle
+    if alpha > np.pi:
+        alpha -= 2 * np.pi
+    elif alpha < -np.pi:
+        alpha += 2 * np.pi
+    return alpha
