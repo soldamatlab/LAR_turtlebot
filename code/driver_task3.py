@@ -23,7 +23,7 @@ class Driver:
     def __init__(self, turtle):
         self.turtle = turtle
         self.busy = True
-        self.main = ThirdTask(self, self, window=True)
+        self.main = ThirdTask(self, self, window=False)
         self.counter = 0
         self.color = CONST.GREEN
         self.window_enabled = False
