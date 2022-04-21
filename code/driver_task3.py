@@ -4,7 +4,7 @@ from camera import *
 import math
 from dance import dance
 
-INFO = False  # TODO
+INFO = True  # TODO
 FORWARD_SPEED = 0.2
 TURN_SPEED = np.pi/5
 FIND_GATE_TURN_SPEED = np.pi/6
