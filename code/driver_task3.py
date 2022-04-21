@@ -4,7 +4,7 @@ from camera import *
 import math
 from dance import dance
 
-INFO = True  # TODO
+INFO = False  # TODO
 FORWARD_SPEED = 0.2
 TURN_SPEED = np.pi/5
 FIND_GATE_TURN_SPEED = np.pi/6
@@ -568,9 +568,11 @@ class PassStick(Activity):
 
         if self.activity is None:
             if self.next_color == self.current_color or self.current_color == CONST.GREEN:
+                print("SAME COLORS")  # TODO rem
                 self.step = 'first'
                 return self.do(GotoCoors(self, self.driver, self.first))
             else:
+                print("DIFF COLORS")  # TODO rem
                 self.step = 'zeroth'
                 return self.do(GotoCoors(self, self.driver, self.zeroth))
 
