@@ -128,13 +128,13 @@ class ThirdTask(Activity):
                 self.prev_stick_coors = (A + B) / 2
                 self.prev_stick_color = CONST.GREEN
                 self.last_find_stick_direction = False
-                return self.do(FindNearestStick(self, self.driver, False, init_turn=np.pi/6, turn_offset=np.pi/3, window=self.window))
+                return self.do(FindNearestStick(self, self.driver, self.prev_stick_coors, False, init_turn=np.pi/6, turn_offset=np.pi/3, window=self.window))
 
             if isinstance(self.activity, PassStick):
                 self.prev_stick_coors, angle, self.prev_stick_color = self.pop_ret()
                 turn_left = self.prev_stick_color == CONST.BLUE
                 self.last_find_stick_direction = turn_left
-                return self.do(FindNearestStick(self, self.driver, turn_left=turn_left, turn_offset=np.pi/3, window=self.window))
+                return self.do(FindNearestStick(self, self.driver, self.prev_stick_coors, turn_left=turn_left, turn_offset=np.pi/3, window=self.window))
 
             if isinstance(self.activity, FindNearestStick):
                 stick_coors, stick_dist, stick_color = self.pop_ret()
@@ -142,9 +142,9 @@ class ThirdTask(Activity):
                     turn_left = not self.last_find_stick_direction
                     self.last_find_stick_direction = turn_left
                     if self.prev_stick_color == CONST.GREEN:
-                        return self.do(FindNearestStick(self, self.driver, turn_left=turn_left, turn_offset=np.pi/3, window=self.window))
+                        return self.do(FindNearestStick(self, self.driver, self.prev_stick_coors, turn_left=turn_left, turn_offset=np.pi/3, window=self.window))
                     else:
-                        return self.do(FindNearestStick(self, self.driver, turn_left=turn_left, turn_offset=np.pi/3, window=self.window))
+                        return self.do(FindNearestStick(self, self.driver, self.prev_stick_coors, turn_left=turn_left, turn_offset=np.pi/3, window=self.window))
 
                 if stick_color == CONST.GREEN:
                     self.finish_found = True
@@ -415,7 +415,7 @@ class MeasureGateCoordinates(Activity):
 # Return coors, dist, color of the nearest stick.
 class FindNearestStick(Activity):
 
-    def __init__(self, parent, driver, turn_left,
+    def __init__(self, parent, driver, prev_stick_coors, turn_left,
                  turn_offset=np.pi,
                  n_subturns=4,
                  speed=TURN_SPEED,
@@ -423,6 +423,7 @@ class FindNearestStick(Activity):
                  init_turn=0,
                  ):
         Activity.__init__(self, parent, driver)
+        self.prev_stick_coors = prev_stick_coors
         self.turn_left = turn_left
         self.turn_offset = turn_offset
         self.n_subturns = n_subturns
@@ -455,7 +456,7 @@ class FindNearestStick(Activity):
             return self.do(Turn(self, self.driver, self.init_turn))
 
         if isinstance(self.activity, Turn):
-            return self.do(ScanForNearest(self, self.driver, window=self.window, w_bin=self.w_bin))
+            return self.do(ScanForNearest(self, self.driver, self.prev_stick_coors, window=self.window, w_bin=self.w_bin))
 
         if isinstance(self.activity, ScanForNearest):
             coors, dist, color = self.pop_ret()
@@ -476,10 +477,12 @@ class FindNearestStick(Activity):
 # Return (coordinates, distance from bot, color) of the nearest stick.
 # Return None, None, None if no stick found.
 class ScanForNearest(Activity):
-    def __init__(self, parent, driver,
+    def __init__(self, parent, driver, prev_stick_coors,
                  window=False,
                  w_bin=None):
         Activity.__init__(self, parent, driver)
+        self.prev_stick_coors = prev_stick_coors
+
         self.nearest_coors = None
         self.nearest_color = None
         self.nearest_dist = None
@@ -501,11 +504,12 @@ class ScanForNearest(Activity):
             bin_img = img_threshold(hsv, color)
             if self.window:
                 bin_all_colors = np.logical_or(bin_all_colors, np.array(bin_img))
-            sticks = self.driver.turtle.get_segments(color, bin_img=bin_img, get_coors=True, get_dists=True)
+            sticks = self.driver.turtle.get_segments(color, bin_img=bin_img, get_coors=True)
             if sticks.count == 0:
                 continue
-            nearest_idx = np.argsort(sticks.dists)[0]
-            min_dist = sticks.dists[nearest_idx]
+            dists = self.calculate_dists(sticks.count, sticks.coors)
+            nearest_idx = np.argsort(dists)[0]
+            min_dist = dists[nearest_idx]
             if (self.nearest_dist is None) or (min_dist < self.nearest_dist):
                 self.nearest_dist = min_dist
                 self.nearest_coors = sticks.coors[nearest_idx]
@@ -521,6 +525,14 @@ class ScanForNearest(Activity):
             coors = None
         self.parent.ret = coors, self.nearest_dist, self.nearest_color
         return self.end()
+
+    def calculate_dists(self, stick_count, sticks_coors):
+        bot_position = self.turtle.get_current_position()
+        dists = stick_count * [0.]
+        for i in range(stick_count):
+            abs_stick_coors = transform_coors(bot_position, sticks_coors[i])
+            dists[i] = np.linalg.norm(abs_stick_coors - self.prev_stick_coors)
+        return dists
 
 
 # Bypass a stick.
