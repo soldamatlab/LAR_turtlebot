@@ -497,7 +497,7 @@ class ScanForNearest(Activity):
             sticks = self.driver.turtle.get_segments(color, bin_img=bin_img, get_coors=True, get_dists=True)
             if sticks.count == 0:
                 continue
-            nearest_idx = np.argsort(sticks.dists)[-1]
+            nearest_idx = np.argsort(sticks.dists)[0]
             min_dist = sticks.dists[nearest_idx]
             if (self.nearest_dist is None) or (min_dist < self.nearest_dist):
                 self.nearest_dist = min_dist
